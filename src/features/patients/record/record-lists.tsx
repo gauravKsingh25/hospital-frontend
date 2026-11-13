@@ -1,12 +1,10 @@
-import { AlertOctagon, BedDouble, FileText, FlaskConical, IndianRupee } from "lucide-react";
+import { AlertOctagon, BedDouble, FileText, FlaskConical } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
-import { InvoiceStatusChip } from "@/components/status-chip";
 import { LinkButton } from "@/components/ui/link-button";
-import { formatMoney, isPositive } from "@/features/billing/money";
 import { cn } from "@/lib/utils";
-import type { AdmissionSummary, DischargeSummary, InvoiceSummary, ReportSummary } from "@/types/api";
+import type { AdmissionSummary, DischargeSummary, ReportSummary } from "@/types/api";
 
 /** A titled list section with an icon and a calm empty state. */
 export function RecordSection({
@@ -210,69 +208,6 @@ export function ReportsList({ reports }: { reports: ReportSummary[] }) {
           </li>
         ))}
       </ul>
-    </RecordSection>
-  );
-}
-
-export function InvoicesList({ invoices }: { invoices: InvoiceSummary[] }) {
-  const t = useTranslations("record");
-  const format = useFormatter();
-
-  return (
-    <RecordSection
-      icon={<IndianRupee aria-hidden className="size-5" />}
-      title={t("tabBilling")}
-      hint={t("billingHint")}
-      empty={t("noInvoices")}
-      isEmpty={invoices.length === 0}
-      testId="invoices-list"
-    >
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="text-muted-foreground text-xs">
-            <tr className="border-b">
-              <th className="px-4 py-2 text-left font-medium">{t("invoice")}</th>
-              <th className="px-4 py-2 text-left font-medium">{t("status")}</th>
-              <th className="px-4 py-2 text-right font-medium">{t("total")}</th>
-              <th className="px-4 py-2 text-right font-medium">{t("paid")}</th>
-              <th className="px-4 py-2 text-right font-medium">{t("balance")}</th>
-              <th className="px-4 py-2" />
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {invoices.map((invoice) => (
-              <tr key={invoice.id}>
-                <td className="px-4 py-2.5">
-                  <p className="tabular font-medium">{invoice.invoice_number}</p>
-                  <p className="text-muted-foreground text-xs">
-                    {format.dateTime(new Date(invoice.issued_at ?? invoice.created_at), {
-                      dateStyle: "medium",
-                    })}
-                  </p>
-                </td>
-                <td className="px-4 py-2.5">
-                  <InvoiceStatusChip status={invoice.status} />
-                </td>
-                <td className="tabular px-4 py-2.5 text-right">{formatMoney(invoice.grand_total)}</td>
-                <td className="tabular px-4 py-2.5 text-right">{formatMoney(invoice.amount_paid)}</td>
-                <td
-                  className={cn(
-                    "tabular px-4 py-2.5 text-right font-semibold",
-                    isPositive(invoice.balance_due) && "text-critical",
-                  )}
-                >
-                  {formatMoney(invoice.balance_due)}
-                </td>
-                <td className="px-4 py-2.5 text-right">
-                  <LinkButton variant="outline" size="sm" href={`/billing/${invoice.encounter_id}`}>
-                    {t("openAccount")}
-                  </LinkButton>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </RecordSection>
   );
 }

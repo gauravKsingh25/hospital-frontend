@@ -32,12 +32,18 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="bg-background/95 supports-[backdrop-filter]:bg-background/75 sticky top-0 z-30 flex h-16 items-center gap-2 border-b px-3 backdrop-blur sm:gap-3 sm:px-5 no-print">
           <MobileNav permissions={user.permissions} />
-          <UniversalSearch />
+          {/* Patient search, so only for people who may open a patient — the
+              platform console has none. */}
+          {can(user, "patient:read") && !can(user, "platform:console") ? (
+            <UniversalSearch />
+          ) : null}
           <div className="ml-auto flex items-center gap-1">
             {/* In the top bar so it is one tap from any screen, which is where a
                 nurse is when a card is handed over. A scan only opens a
                 patient, so it is offered only to those who may read one. */}
-            {can(user, "patient:read") ? <CameraScanButton /> : null}
+            {can(user, "patient:read") && !can(user, "platform:console") ? (
+              <CameraScanButton />
+            ) : null}
             <LocaleSwitcher />
             <UserMenu user={user} />
           </div>

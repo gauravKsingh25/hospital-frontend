@@ -10,11 +10,8 @@ import { PatientMessaging } from "@/features/messages/patient-messaging";
 import { ProblemList } from "@/features/patients/record/problem-list";
 import { ProfilePanel } from "@/features/patients/record/profile-panel";
 import { RecordHeader } from "@/features/patients/record/record-header";
-import {
-  AdmissionsList,
-  InvoicesList,
-  ReportsList,
-} from "@/features/patients/record/record-lists";
+import { PatientBills } from "@/features/patients/record/patient-bills";
+import { AdmissionsList, ReportsList } from "@/features/patients/record/record-lists";
 import { parseTab, RecordTabs, type RecordTab } from "@/features/patients/record/record-tabs";
 import { StatStrip } from "@/features/patients/record/stat-strip";
 import { OUTCOME_VISITS, VisitList, type VisitPermissions } from "@/features/patients/record/visit-list";
@@ -25,9 +22,9 @@ import { can } from "@/lib/permissions";
 import { safetyBannerFor } from "@/lib/safety-banner";
 import type {
   AdmissionSummary,
+  BillHistory,
   DischargeSummary,
   Encounter,
-  InvoiceSummary,
   Page,
   Patient,
   PatientClinicalSummary,
@@ -68,7 +65,8 @@ async function loadOutcomes(visits: PatientVisit[]): Promise<Map<string, Encount
  *
  * Who they are, whether anything about them is dangerous, how often they have
  * been here, what they were treated for, and every visit, stay, report and
- * bill — each section shown only to the roles allowed to read it.
+ * bill — each section shown only to the roles allowed to read it. Finance
+ * staff land on the Billing tab, where a bill's payment is recorded in place.
  *
  * Sections are URL tabs rendered on the server: only the section being read
  * is fetched, the URL says where you are, and the page ships no tab library.
@@ -102,15 +100,21 @@ export default async function PatientPage({
   }
 
   const canSeeVisits = can(user, "encounter:read");
+  // A patient's bills across visits — not `invoice:read`, which the front
+  // desk holds to collect today's fee and which must not open the history.
+  const canSeeBills = can(user, "patient_bills:read");
   const allowed: Record<RecordTab, boolean> = {
     overview: true,
     visits: canSeeVisits,
     admissions: can(user, "admission:read"),
     reports: can(user, "report:read"),
-    billing: can(user, "invoice:read"),
+    billing: canSeeBills,
     profile: true,
   };
-  const requested = parseTab(query.tab);
+  // Finance staff (who read the bills but not the problem list) open a
+  // patient to settle money, so the record opens on Billing for them.
+  const landing: RecordTab = canSeeBills && !can(user, "diagnosis:read") ? "billing" : "overview";
+  const requested = query.tab ? parseTab(query.tab) : landing;
   const tab: RecordTab = allowed[requested] ? requested : "overview";
 
   const summary = canSeeVisits
@@ -160,7 +164,7 @@ export default async function PatientPage({
 
       {summary ? <StatStrip summary={summary} /> : null}
 
-      <RecordTabs patientId={patient.id} active={tab} tabs={tabs} />
+      <RecordTabs patientId={patient.id} active={tab} tabs={tabs} landing={landing} />
 
       <div data-testid={`record-panel-${tab}`}>
         {tab === "overview" ? (
@@ -211,14 +215,13 @@ export default async function PatientPage({
             {(items) => <ReportsList reports={items} />}
           </Capped>
         ) : tab === "billing" ? (
-          <Capped
-            page={await serverFetch<Page<InvoiceSummary>>("/billing/invoices", {
-              query: { patient_id: patient.id, limit: LIST_LIMIT },
-            })}
-            note={(shown, total) => t("partialList", { shown, total })}
-          >
-            {(items) => <InvoicesList invoices={items} />}
-          </Capped>
+          <PatientBills
+            history={await serverFetch<BillHistory>(`/billing/patients/${patient.id}/history`)}
+            patientIsDeceased={patient.is_deceased}
+            canRecordPayment={can(user, "payment:record")}
+            canOpenAccounts={can(user, "accounts:read")}
+            canOpenVisit={can(user, "charge:read")}
+          />
         ) : (
           <ProfilePanel patient={patient} />
         )}

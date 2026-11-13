@@ -32,7 +32,16 @@ import { isExpiring, parseSession, SESSION_COOKIE_NAME } from "@/lib/session-coo
 /** Reachable without a session. Everything else requires one. */
 // The idle lock's two handlers (SEC-04) are public: unlocking happens with
 // no session at all, which is the point of a lock.
-const PUBLIC_PATHS = ["/login", "/auth/refresh", "/auth/lock", "/auth/unlock", "/health"];
+// `/invite`: the link in an invitation email, opened before the person has an
+// account — the token in the path is the credential.
+const PUBLIC_PATHS = [
+  "/login",
+  "/invite",
+  "/auth/refresh",
+  "/auth/lock",
+  "/auth/unlock",
+  "/health",
+];
 
 /** Where a user with `must_change_password` is allowed to go (CLAUDE.md §12). */
 const PASSWORD_CHANGE_PATH = "/change-password";

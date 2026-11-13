@@ -94,6 +94,9 @@ export async function signIn(
       // password". Distinguishing them tells an attacker which hospital
       // email addresses are real, which is the first step of a targeted
       // phishing campaign against named staff.
+      // A suspended hospital is not a wrong password, and saying so is no
+      // leak: the person already proved their password to get this far.
+      if (error.code === "hospital_suspended") return { error: error.message };
       if (error.status === 401 || error.status === 403) {
         return { error: t("invalidCredentials") };
       }
@@ -102,7 +105,19 @@ export async function signIn(
     throw error;
   }
 
-  const next = safeNext(formData.get("next"));
+  return completeSignIn(store, result, safeNext(formData.get("next")));
+}
+
+/**
+ * The shared tail of every way into a session: a password at `/login`, or a
+ * new password set from an invitation. Either the tokens are written, or —
+ * when an authenticator code is needed next — the five-minute challenge is.
+ */
+function completeSignIn(
+  store: Awaited<ReturnType<typeof cookies>>,
+  result: TokenPair | TwoFactorChallenge,
+  next: string,
+): never {
   if ("two_factor_required" in result) {
     // SEC-05: the password was right; the code from the app comes next.
     store.set({
@@ -126,6 +141,64 @@ export async function signIn(
   // purpose: catching it would swallow the navigation and leave the user
   // staring at the login form after a successful sign-in.
   redirect(session.mustChangePassword ? "/change-password" : next);
+}
+
+// ---------------------------------------------------------------------------
+// Accepting an invitation
+// ---------------------------------------------------------------------------
+export type InviteFormState = {
+  error?: string;
+  fieldErrors?: Partial<Record<"password" | "confirmPassword", string>>;
+};
+
+const INVITE_ERRORS = {
+  invite_used: "linkUsed",
+  invite_revoked: "linkRevoked",
+  invite_expired: "linkExpired",
+  invite_invalid: "linkInvalid",
+} as const;
+
+/**
+ * Set the password an invitation offers, then sign straight in.
+ *
+ * Bound to the token by the page (`acceptInvite.bind(null, token)`). That is
+ * convenience, not secrecy — bound arguments are serialised to the browser —
+ * and it needs none: the token is already in the page's own URL.
+ */
+export async function acceptInvite(
+  token: string,
+  _previous: InviteFormState,
+  formData: FormData,
+): Promise<InviteFormState> {
+  const t = await getTranslations("invite");
+  const auth = await getTranslations("auth");
+  const password = String(formData.get("password") ?? "");
+  const confirm = String(formData.get("confirmPassword") ?? "");
+
+  if (password.length < 12) {
+    return { fieldErrors: { password: auth("passwordTooShort", { min: 12 }) } };
+  }
+  if (password !== confirm) {
+    return { fieldErrors: { confirmPassword: auth("passwordsDoNotMatch") } };
+  }
+
+  let result: TokenPair | TwoFactorChallenge;
+  try {
+    result = await callApi<TokenPair | TwoFactorChallenge>("/invites/accept", {
+      method: "POST",
+      body: { token, password },
+    });
+  } catch (error) {
+    if (error instanceof ApiError) {
+      const key = INVITE_ERRORS[error.code as keyof typeof INVITE_ERRORS];
+      if (key) return { error: t(key) };
+      if (error.code === "weak_password") return { fieldErrors: { password: error.message } };
+      return { error: error.message };
+    }
+    throw error;
+  }
+
+  return completeSignIn(await cookies(), result, "/");
 }
 
 export async function signOut(): Promise<never> {

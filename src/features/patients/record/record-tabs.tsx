@@ -30,10 +30,13 @@ export function RecordTabs({
   patientId,
   active,
   tabs,
+  landing = "overview",
 }: {
   patientId: string;
   active: RecordTab;
   tabs: { key: RecordTab; label: string; count?: number }[];
+  /** The tab the bare `/patients/{id}` opens on for this user. */
+  landing?: RecordTab;
 }) {
   return (
     <nav aria-label="Patient record" className="border-border -mx-1 overflow-x-auto border-b">
@@ -43,7 +46,7 @@ export function RecordTabs({
           return (
             <li key={tab.key}>
               <Link
-                href={tab.key === "overview" ? `/patients/${patientId}` : `/patients/${patientId}?tab=${tab.key}`}
+                href={tab.key === landing ? `/patients/${patientId}` : `/patients/${patientId}?tab=${tab.key}`}
                 scroll={false}
                 aria-current={current ? "page" : undefined}
                 data-testid={`record-tab-${tab.key}`}

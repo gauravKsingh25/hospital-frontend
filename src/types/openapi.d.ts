@@ -740,6 +740,9 @@ export interface paths {
          * The invoice worklist
          * @description `awaiting_settlement=true` is the bills left behind by a death, a referral
          *     or a patient who walked out (CLAUDE.md §6).
+         *
+         *     Scoped to one visit, `invoice:read` is enough; wider needs more — see
+         *     `_require_list_scope`.
          */
         get: operations["list_invoices_api_v1_billing_invoices_get"];
         put?: never;
@@ -914,6 +917,10 @@ export interface paths {
         /**
          * A patient's bill history
          * @description Every bill-bearing visit, newest first, with lifetime billed, paid, due.
+         *
+         *     The accountant's patient page and the patient record's Billing tab. The
+         *     phone is masked for a reader who may not see contact numbers — a doctor
+         *     reads the dues here, not the patient's mobile.
          */
         get: operations["patient_bill_history_api_v1_billing_patients__patient_id__history_get"];
         put?: never;
@@ -954,6 +961,9 @@ export interface paths {
         /**
          * Payments and collections
          * @description With `method` and `since`, this is the shift's collection report.
+         *
+         *     Receipts for one bill need only `payment:read`; wider lists need more —
+         *     see `_require_list_scope`.
          */
         get: operations["list_payments_api_v1_billing_payments_get"];
         put?: never;
@@ -2132,6 +2142,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/invites/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept an invite: set a password and sign in */
+        post: operations["accept_invite_api_v1_invites_accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invites/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview an invite */
+        post: operations["preview_invite_api_v1_invites_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/ipd/admission-requests": {
         parameters: {
             query?: never;
@@ -3276,6 +3320,211 @@ export interface paths {
         put?: never;
         /** Merge a duplicate into this record */
         post: operations["merge_patients_api_v1_patients__patient_id__merge_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Activity across the platform */
+        get: operations["list_activity_api_v1_platform_audit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/emails": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Emails the platform sent */
+        get: operations["list_emails_api_v1_platform_emails_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/hospitals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Every hospital */
+        get: operations["list_hospitals_api_v1_platform_hospitals_get"];
+        put?: never;
+        /** Onboard a hospital and invite its first administrator */
+        post: operations["create_hospital_with_admin_api_v1_platform_hospitals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/hospitals/{hospital_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One hospital */
+        get: operations["get_hospital_api_v1_platform_hospitals__hospital_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/hospitals/{hospital_id}/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Invite an administrator to a hospital */
+        post: operations["invite_hospital_admin_api_v1_platform_hospitals__hospital_id__invites_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List invites */
+        get: operations["list_invites_api_v1_platform_invites_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/invites/{invite_id}/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resend an invite */
+        post: operations["resend_invite_api_v1_platform_invites__invite_id__resend_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/invites/{invite_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel an invite */
+        post: operations["revoke_invite_api_v1_platform_invites__invite_id__revoke_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Console overview */
+        get: operations["get_overview_api_v1_platform_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/team": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The platform team */
+        get: operations["list_team_api_v1_platform_team_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/team/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Invite someone to the platform team */
+        post: operations["invite_team_member_api_v1_platform_team_invites_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/team/{user_id}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Remove someone from the platform team */
+        post: operations["deactivate_team_member_api_v1_platform_team__user_id__deactivate_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4593,6 +4842,24 @@ export interface components {
             provider_message_id: string | null;
             /** Succeeded */
             succeeded: boolean;
+        };
+        /** AttentionItemRead */
+        AttentionItemRead: {
+            /** At */
+            at: string | null;
+            /** Email */
+            email: string | null;
+            /** Hospital Id */
+            hospital_id: string | null;
+            /** Hospital Name */
+            hospital_name: string | null;
+            /** Invite Id */
+            invite_id: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "invite_expiring" | "email_failed" | "no_admin" | "no_admin_login";
         };
         /** AuditLogRead */
         AuditLogRead: {
@@ -6451,6 +6718,18 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** HospitalAdminInviteCreate */
+        HospitalAdminInviteCreate: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Full Name */
+            full_name: string;
+            /** Phone */
+            phone?: string | null;
+        };
         /** HospitalCreate */
         HospitalCreate: {
             /** Address Line1 */
@@ -6588,6 +6867,23 @@ export interface components {
             /** Upi Vpa */
             upi_vpa?: string | null;
         };
+        /** HospitalUsageRead */
+        HospitalUsageRead: {
+            /** Patients */
+            patients: number;
+            /** Staff */
+            staff: number;
+            /** Visits Last 7 Days */
+            visits_last_7_days: number;
+        };
+        /**
+         * HospitalWithAdminCreate
+         * @description A new hospital and the invite for its first administrator, together.
+         */
+        HospitalWithAdminCreate: {
+            admin: components["schemas"]["HospitalAdminInviteCreate"];
+            hospital: components["schemas"]["HospitalCreate"];
+        };
         /** IdentifierCreate */
         IdentifierCreate: {
             /** Identifier Type */
@@ -6633,6 +6929,93 @@ export interface components {
             /** Mortality Rate */
             mortality_rate?: number | null;
             window: components["schemas"]["DateWindow"];
+        };
+        /** InviteAccept */
+        InviteAccept: {
+            /** Password */
+            password: string;
+            /** Token */
+            token: string;
+        };
+        /**
+         * InvitePreviewRead
+         * @description What the set-password page shows. No token, no ids.
+         */
+        InvitePreviewRead: {
+            /** Email */
+            email: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** Full Name */
+            full_name: string;
+            /** Hospital Name */
+            hospital_name: string | null;
+            /** Role Codes */
+            role_codes: string[];
+            status: components["schemas"]["InviteStatus"];
+            /** Support Contact */
+            support_contact: string;
+        };
+        /** InviteRead */
+        InviteRead: {
+            /** Accepted At */
+            accepted_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Email */
+            email: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** Full Name */
+            full_name: string;
+            /** Hospital Id */
+            hospital_id: string | null;
+            /** Hospital Name */
+            hospital_name: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Invited By Name */
+            invited_by_name: string | null;
+            /** Last Email Error */
+            last_email_error: string | null;
+            last_email_status: components["schemas"]["PlatformEmailStatus"] | null;
+            /** Last Sent At */
+            last_sent_at: string | null;
+            /** Phone */
+            phone: string | null;
+            /** Revoked At */
+            revoked_at: string | null;
+            /** Role Codes */
+            role_codes: string[];
+            /** Send Count */
+            send_count: number;
+            status: components["schemas"]["InviteStatus"];
+        };
+        /**
+         * InviteStatus
+         * @enum {string}
+         */
+        InviteStatus: "PENDING" | "ACCEPTED" | "REVOKED" | "EXPIRED";
+        /**
+         * InviteToken
+         * @description The link token, in a request body — never a URL path, which every
+         *     access log would record.
+         */
+        InviteToken: {
+            /** Token */
+            token: string;
         };
         /**
          * InvoiceDraftRequest
@@ -7956,6 +8339,25 @@ export interface components {
              */
             total: number;
         };
+        /** Page[InviteRead] */
+        Page_InviteRead_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["InviteRead"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
         /** Page[InvoiceSummary] */
         Page_InvoiceSummary_: {
             /**
@@ -8193,6 +8595,63 @@ export interface components {
             readonly has_more: boolean;
             /** Items */
             items: components["schemas"]["PaymentRow"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
+        /** Page[PlatformEmailRead] */
+        Page_PlatformEmailRead_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["PlatformEmailRead"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
+        /** Page[PlatformHospitalRow] */
+        Page_PlatformHospitalRow_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["PlatformHospitalRow"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
+        /** Page[PlatformTeamRow] */
+        Page_PlatformTeamRow_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["PlatformTeamRow"][];
             /** Limit */
             limit: number;
             /** Offset */
@@ -9025,6 +9484,164 @@ export interface components {
             id: string;
             /** Module */
             module: string;
+        };
+        /** PlatformAdminRow */
+        PlatformAdminRow: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Email */
+            email: string;
+            /** Full Name */
+            full_name: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Active */
+            is_active: boolean;
+            /** Last Login At */
+            last_login_at: string | null;
+            /** Phone */
+            phone: string | null;
+            /** Two Factor Enabled */
+            two_factor_enabled: boolean;
+        };
+        /**
+         * PlatformEmailKind
+         * @enum {string}
+         */
+        PlatformEmailKind: "INVITE" | "INVITE_RESEND";
+        /** PlatformEmailRead */
+        PlatformEmailRead: {
+            /** Body Text */
+            body_text: string;
+            /** Error */
+            error: string | null;
+            /** From Email */
+            from_email: string;
+            /** Hospital Id */
+            hospital_id: string | null;
+            /** Hospital Name */
+            hospital_name: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Invite Id */
+            invite_id: string | null;
+            kind: components["schemas"]["PlatformEmailKind"];
+            /** Provider Message Id */
+            provider_message_id: string | null;
+            /**
+             * Sent At
+             * Format: date-time
+             */
+            sent_at: string;
+            /** Sent By Name */
+            sent_by_name: string | null;
+            status: components["schemas"]["PlatformEmailStatus"];
+            /** Subject */
+            subject: string;
+            /** To Email */
+            to_email: string;
+        };
+        /**
+         * PlatformEmailStatus
+         * @enum {string}
+         */
+        PlatformEmailStatus: "SENT" | "FAILED";
+        /** PlatformHospitalDetail */
+        PlatformHospitalDetail: {
+            /** Admins */
+            admins: components["schemas"]["PlatformAdminRow"][];
+            hospital: components["schemas"]["HospitalRead"];
+            /** Invites */
+            invites: components["schemas"]["InviteRead"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "suspended" | "invite_pending";
+            usage: components["schemas"]["HospitalUsageRead"];
+        };
+        /** PlatformHospitalRow */
+        PlatformHospitalRow: {
+            /** Admin Name */
+            admin_name: string | null;
+            /** City */
+            city: string | null;
+            /** Code */
+            code: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Active */
+            is_active: boolean;
+            /** Last Admin Login At */
+            last_admin_login_at: string | null;
+            /** Name */
+            name: string;
+            /** Staff Count */
+            staff_count: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "suspended" | "invite_pending";
+        };
+        /** PlatformOverviewRead */
+        PlatformOverviewRead: {
+            /** Active Hospitals */
+            active_hospitals: number;
+            /** Attention */
+            attention: components["schemas"]["AttentionItemRead"][];
+            /** Emails Failed 7D */
+            emails_failed_7d: number;
+            /** Pending Invites */
+            pending_invites: number;
+            /** Recent Activity */
+            recent_activity: components["schemas"]["AuditLogRead"][];
+            /** Staff Accounts */
+            staff_accounts: number;
+            /** Suspended Hospitals */
+            suspended_hospitals: number;
+        };
+        /** PlatformTeamRow */
+        PlatformTeamRow: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Email */
+            email: string;
+            /** Full Name */
+            full_name: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Active */
+            is_active: boolean;
+            /** Last Login At */
+            last_login_at: string | null;
+            /** Roles */
+            roles: string[];
+            /** Two Factor Enabled */
+            two_factor_enabled: boolean;
         };
         /**
          * PrintableBill
@@ -10491,6 +11108,21 @@ export interface components {
          * @enum {string}
          */
         SuppressionReason: "DECEASED" | "OPTED_OUT" | "INVALID_CONTACT" | "STAFF_BLOCK" | "UNIDENTIFIED" | "DISABLED";
+        /** TeamInviteCreate */
+        TeamInviteCreate: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Full Name */
+            full_name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "PLATFORM_ADMIN" | "PLATFORM_SUPPORT";
+        };
         /**
          * TemplatePreview
          * @description Render a template against sample values without sending anything.
@@ -15676,6 +16308,72 @@ export interface operations {
             };
         };
     };
+    accept_invite_api_v1_invites_accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InviteAccept"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenPair"] | components["schemas"]["TwoFactorChallengeRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_invite_api_v1_invites_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InviteToken"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitePreviewRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_admission_requests_api_v1_ipd_admission_requests_get: {
         parameters: {
             query?: {
@@ -18301,6 +18999,422 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PatientDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_activity_api_v1_platform_audit_get: {
+        parameters: {
+            query?: {
+                hospital_id?: string | null;
+                action?: string | null;
+                actor_user_id?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_AuditLogRead_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_emails_api_v1_platform_emails_get: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["PlatformEmailStatus"] | null;
+                kind?: components["schemas"]["PlatformEmailKind"] | null;
+                hospital_id?: string | null;
+                to?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PlatformEmailRead_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_hospitals_api_v1_platform_hospitals_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                status?: ("active" | "suspended" | "invite_pending") | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PlatformHospitalRow_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_hospital_with_admin_api_v1_platform_hospitals_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HospitalWithAdminCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformHospitalDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_hospital_api_v1_platform_hospitals__hospital_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                hospital_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformHospitalDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    invite_hospital_admin_api_v1_platform_hospitals__hospital_id__invites_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                hospital_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HospitalAdminInviteCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_invites_api_v1_platform_invites_get: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["InviteStatus"] | null;
+                hospital_id?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_InviteRead_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resend_invite_api_v1_platform_invites__invite_id__resend_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invite_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_invite_api_v1_platform_invites__invite_id__revoke_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invite_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_overview_api_v1_platform_overview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformOverviewRead"];
+                };
+            };
+        };
+    };
+    list_team_api_v1_platform_team_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PlatformTeamRow_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    invite_team_member_api_v1_platform_team_invites_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TeamInviteCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    deactivate_team_member_api_v1_platform_team__user_id__deactivate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformTeamRow"];
                 };
             };
             /** @description Validation Error */

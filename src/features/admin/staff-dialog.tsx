@@ -51,6 +51,12 @@ type Form = z.infer<typeof schema>;
 
 const FIELD_NAMES = ["full_name", "email", "phone", "password", "role_codes"] as const;
 
+// Administrator roles are never typed-in-a-password accounts: a new
+// administrator is invited by the platform and chooses their own password, and
+// an existing member of staff can be promoted from "Change roles". The backend
+// refuses these here (`invite_required`); the form does not offer them.
+const INVITE_ONLY_ROLES = new Set(["HOSPITAL_ADMIN", "PLATFORM_ADMIN", "PLATFORM_SUPPORT"]);
+
 export function StaffDialog({
   roles,
   open,
@@ -162,7 +168,9 @@ export function StaffDialog({
           <fieldset className="space-y-1.5">
             <legend className="text-sm font-medium">{t("roles")}</legend>
             <div className="grid grid-cols-2 gap-1.5">
-              {roles.map((role) => (
+              {roles
+                .filter((role) => !INVITE_ONLY_ROLES.has(role.code))
+                .map((role) => (
                 <label
                   key={role.code}
                   className="flex min-h-tap cursor-pointer items-center gap-2 text-sm"
@@ -183,6 +191,7 @@ export function StaffDialog({
                 </label>
               ))}
             </div>
+            <p className="text-muted-foreground text-xs">{t("adminByPromotion")}</p>
             <FieldError
               message={form.formState.errors.role_codes?.message}
               translate={t as (key: string) => string}

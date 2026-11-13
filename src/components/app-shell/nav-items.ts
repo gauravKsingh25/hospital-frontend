@@ -2,15 +2,21 @@ import type { LucideIcon } from "lucide-react";
 import {
   BedDouble,
   BedSingle,
+  Building2,
   ChartColumn,
   Contact,
   FlaskConical,
+  History,
   Home,
   IndianRupee,
+  LayoutDashboard,
+  Mail,
+  MailPlus,
   MessageSquareText,
   Pill,
   PillBottle,
   Settings,
+  ShieldCheck,
   UserPlus,
   Users,
 } from "lucide-react";
@@ -55,9 +61,63 @@ export type NavItem = {
   hiddenWith?: Permission[];
   /** Match child routes too — `/consultation/abc` should light up its parent. */
   prefix?: boolean;
+  /** A platform-console screen. See `visibleNavItems`. */
+  platform?: boolean;
 };
 
+/**
+ * The platform owner's console. Listed first and kept apart from the hospital
+ * screens: a platform user belongs to no hospital, so a link to Reception or
+ * the queue would open a screen with nothing behind it.
+ */
+const PLATFORM_ITEMS: NavItem[] = [
+  {
+    href: "/platform",
+    labelKey: "platformOverview",
+    icon: LayoutDashboard,
+    permissions: ["platform:console"],
+    platform: true,
+  },
+  {
+    href: "/platform/hospitals",
+    labelKey: "platformHospitals",
+    icon: Building2,
+    permissions: ["platform:hospital_read"],
+    prefix: true,
+    platform: true,
+  },
+  {
+    href: "/platform/invites",
+    labelKey: "platformInvites",
+    icon: MailPlus,
+    permissions: ["platform:invite_read"],
+    platform: true,
+  },
+  {
+    href: "/platform/emails",
+    labelKey: "platformEmails",
+    icon: Mail,
+    permissions: ["platform:invite_read"],
+    platform: true,
+  },
+  {
+    href: "/platform/activity",
+    labelKey: "platformActivity",
+    icon: History,
+    permissions: ["platform:audit_read"],
+    platform: true,
+  },
+  {
+    href: "/platform/team",
+    labelKey: "platformTeam",
+    icon: ShieldCheck,
+    permissions: ["platform:console"],
+    platform: true,
+  },
+];
+
 export const NAV_ITEMS: NavItem[] = [
+  ...PLATFORM_ITEMS,
   {
     href: "/reception",
     labelKey: "reception",
@@ -112,9 +172,10 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/billing",
     labelKey: "billing",
     icon: IndianRupee,
-    // Reading charges, not invoices: a cashier's entry point is the board of
-    // visits that owe money, which exists before any invoice does.
-    permissions: ["charge:read"],
+    // The board of every visit that owes money, and the accounts dashboard.
+    // `invoice:read_all`, not `charge:read`: nurses and doctors read a visit's
+    // charges, but what every patient owes is the money desk's business.
+    permissions: ["invoice:read_all", "accounts:read"],
     prefix: true,
   },
   {
@@ -198,8 +259,13 @@ export const PLANNED: readonly { href: string; permission: Permission }[] = [];
  */
 export function visibleNavItems(permissions: readonly string[]): NavItem[] {
   const held = new Set(permissions);
+  // The platform roles also hold most hospital permissions (for support work
+  // through the API), but a platform user has no hospital to open those
+  // screens in — so whoever holds the console sees the console and nothing else.
+  const platformUser = held.has("platform:console");
   return NAV_ITEMS.filter(
     (item) =>
+      Boolean(item.platform) === platformUser &&
       item.permissions.some((permission) => held.has(permission)) &&
       !item.hiddenWith?.some((permission) => held.has(permission)),
   );

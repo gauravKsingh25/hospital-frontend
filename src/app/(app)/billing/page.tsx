@@ -33,7 +33,9 @@ export default async function BillingPage({
   const user = await getCurrentUser();
 
   const canAccounts = can(user, "accounts:read");
-  const canCounter = can(user, "charge:read");
+  // The board lists every patient who owes — the money desk's, not everyone
+  // who can read one visit's charges.
+  const canCounter = can(user, "invoice:read_all");
   if (!canAccounts && !canCounter) return <NoPermission />;
 
   const { view } = await searchParams;

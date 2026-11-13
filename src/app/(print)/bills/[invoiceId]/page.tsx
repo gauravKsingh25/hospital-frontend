@@ -5,7 +5,7 @@ import { LinkButton } from "@/components/ui/link-button";
 import { PrintButton } from "@/features/billing/print/print-button";
 import { PrintedBill } from "@/features/billing/print/printed-bill";
 import { getCurrentUser, serverFetch } from "@/lib/api/server";
-import { can } from "@/lib/permissions";
+import { can, canAny, homePathFor } from "@/lib/permissions";
 import type { PrintableBill } from "@/types/api";
 
 export async function generateMetadata() {
@@ -31,7 +31,12 @@ export default async function PrintedInvoicePage({
   return (
     <>
       <div className="no-print mx-auto flex max-w-[210mm] items-center justify-between gap-3 px-6 pt-4">
-        <LinkButton href="/billing" variant="outline" className="h-tap">
+        {/* Reception prints the bill it just collected, and has no billing board. */}
+        <LinkButton
+          href={canAny(user, "invoice:read_all", "accounts:read") ? "/billing" : homePathFor(user)}
+          variant="outline"
+          className="h-tap"
+        >
           {t("back")}
         </LinkButton>
         <p className="text-muted-foreground text-sm">{t("pdfHint")}</p>

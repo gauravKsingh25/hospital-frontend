@@ -20,6 +20,7 @@ export const ACCOUNTS = {
   cashier: "cashier@demo.hospital",
   admissionDesk: "admission@demo.hospital",
   accountant: "accountant@demo.hospital",
+  platform: "platform@demo.hospital",
 } as const;
 
 export async function signIn(page: Page, email: string): Promise<void> {
@@ -34,7 +35,7 @@ export async function signOut(page: Page): Promise<void> {
   // The account menu, and only the menu: reception's doctor chips are buttons
   // named after doctors too ("Dr Vikram Rao, 4 waiting").
   await page
-    .getByRole("button", { name: /@demo\.hospital|Priya|Vikram|Asha|Lakshmi|Ravi|Meera|Ritu/ })
+    .getByRole("button", { name: /@demo\.hospital|Priya|Vikram|Asha|Lakshmi|Ravi|Meera|Ritu|Gaurav|E2E Admin/ })
     .and(page.locator("[aria-haspopup=menu]"))
     .click();
   await page.getByRole("menuitem", { name: "Sign out" }).click();
@@ -491,4 +492,38 @@ export async function findOnBoard(
   }
 
   throw new Error(`"${text}" was not found on any page of ${testId}`);
+}
+
+/**
+ * The newest invite link emailed to `email`.
+ *
+ * With `MAIL_BACKEND=console` and `MAIL_OUTBOX_DIR=.mail-outbox`, the API
+ * writes every email as an .eml file under `backend/.mail-outbox` — the same
+ * message Gmail would have delivered. Reading it here exercises the real link
+ * rather than a token fished out of the database.
+ */
+export async function latestInviteLink(email: string): Promise<string> {
+  const { readdir, readFile } = await import("node:fs/promises");
+  const { join } = await import("node:path");
+  const outbox = join(process.cwd(), "..", "backend", ".mail-outbox");
+  const safe = email.replace(/[^A-Za-z0-9@._-]/g, "_");
+
+  // The API writes the file after the request returns; give it a moment.
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const names = (await readdir(outbox).catch(() => [] as string[]))
+      .filter((name) => name.endsWith(`-${safe}.eml`))
+      .sort();
+    const newest = names.at(-1);
+    if (newest) {
+      const raw = await readFile(join(outbox, newest), "utf8");
+      // Quoted-printable: undo soft line breaks and =XX escapes.
+      const text = raw
+        .replace(/=\r?\n/g, "")
+        .replace(/=([0-9A-F]{2})/g, (_, hex: string) => String.fromCharCode(parseInt(hex, 16)));
+      const match = text.match(/https?:\/\/\S+\/invite\/[A-Za-z0-9_-]+/);
+      if (match) return new URL(match[0]).pathname;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error(`No invite email for ${email} in ${outbox}`);
 }

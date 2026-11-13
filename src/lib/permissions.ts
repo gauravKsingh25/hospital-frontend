@@ -52,12 +52,16 @@ export function hasAnyRole(user: CurrentUser | null, ...roles: Role[]): boolean 
 export function homePathFor(user: CurrentUser | null): string {
   if (!user) return "/login";
 
+  // The platform owner and their support staff belong to no hospital; their
+  // home is the console.
+  if (can(user, "platform:console")) return "/platform";
+
   // Doctors see OPD patients in person, on paper, and do no data entry there
   // — reception marks them seen. Their screen is the queue (who is waiting),
   // with the wards a click away for the inpatients they still chart.
   if (hasRole(user, "DOCTOR")) return "/queue";
   if (hasAnyRole(user, "LAB_TECH", "RADIOLOGIST")) return "/lab";
-  if (hasRole(user, "BILLING_STAFF")) return "/billing";
+  if (hasAnyRole(user, "BILLING_STAFF", "ACCOUNTANT")) return "/billing";
   if (hasAnyRole(user, "RECEPTIONIST", "CASHIER")) return "/reception";
   if (hasRole(user, "ADMISSION_DESK")) return "/admissions";
   if (hasRole(user, "NURSE")) return "/queue";
@@ -68,7 +72,7 @@ export function homePathFor(user: CurrentUser | null): string {
   if (can(user, "queue:read")) return "/queue";
   if (can(user, "patient:read")) return "/reception";
   if (can(user, "report:read")) return "/lab";
-  if (can(user, "charge:read")) return "/billing";
+  if (canAny(user, "invoice:read_all", "accounts:read")) return "/billing";
   if (can(user, "admission:desk")) return "/admissions";
 
   return "/no-home";

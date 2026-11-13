@@ -30,6 +30,21 @@ export type User = Schemas["UserRead"];
 export type Role = Schemas["RoleRead"];
 export type TokenPairResponse = Schemas["TokenPair"];
 
+// --- Platform console & invitations ----------------------------------------
+export type InvitePreview = Schemas["InvitePreviewRead"];
+export type Invite = Schemas["InviteRead"];
+export type InviteStatus = Schemas["InviteStatus"];
+export type PlatformEmail = Schemas["PlatformEmailRead"];
+export type PlatformEmailStatus = Schemas["PlatformEmailStatus"];
+export type PlatformHospitalRow = Schemas["PlatformHospitalRow"];
+export type PlatformHospitalStatus = PlatformHospitalRow["status"];
+export type PlatformHospitalDetail = Schemas["PlatformHospitalDetail"];
+export type PlatformAdmin = Schemas["PlatformAdminRow"];
+export type PlatformOverview = Schemas["PlatformOverviewRead"];
+export type AttentionItem = Schemas["AttentionItemRead"];
+export type PlatformTeamMember = Schemas["PlatformTeamRow"];
+export type AuditLogEntry = Schemas["AuditLogRead"];
+
 // --- Patients --------------------------------------------------------------
 export type Patient = Schemas["PatientDetail"];
 export type PatientListItem = Schemas["PatientRead"];

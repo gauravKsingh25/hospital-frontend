@@ -2077,6 +2077,88 @@
         "title": "AttemptRead",
         "type": "object"
       },
+      "AttentionItemRead": {
+        "properties": {
+          "at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "At"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "hospital_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Id"
+          },
+          "hospital_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Name"
+          },
+          "invite_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invite Id"
+          },
+          "kind": {
+            "enum": [
+              "invite_expiring",
+              "email_failed",
+              "no_admin",
+              "no_admin_login"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "hospital_id",
+          "hospital_name",
+          "invite_id",
+          "email",
+          "at"
+        ],
+        "title": "AttentionItemRead",
+        "type": "object"
+      },
       "AuditLogRead": {
         "properties": {
           "action": {
@@ -7286,6 +7368,40 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "HospitalAdminInviteCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "full_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Full Name",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          }
+        },
+        "required": [
+          "full_name",
+          "email"
+        ],
+        "title": "HospitalAdminInviteCreate",
+        "type": "object"
+      },
       "HospitalCreate": {
         "properties": {
           "address_line1": {
@@ -7831,6 +7947,47 @@
         "title": "HospitalUpdate",
         "type": "object"
       },
+      "HospitalUsageRead": {
+        "properties": {
+          "patients": {
+            "title": "Patients",
+            "type": "integer"
+          },
+          "staff": {
+            "title": "Staff",
+            "type": "integer"
+          },
+          "visits_last_7_days": {
+            "title": "Visits Last 7 Days",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "staff",
+          "patients",
+          "visits_last_7_days"
+        ],
+        "title": "HospitalUsageRead",
+        "type": "object"
+      },
+      "HospitalWithAdminCreate": {
+        "additionalProperties": false,
+        "description": "A new hospital and the invite for its first administrator, together.",
+        "properties": {
+          "admin": {
+            "$ref": "#/components/schemas/HospitalAdminInviteCreate"
+          },
+          "hospital": {
+            "$ref": "#/components/schemas/HospitalCreate"
+          }
+        },
+        "required": [
+          "hospital",
+          "admin"
+        ],
+        "title": "HospitalWithAdminCreate",
+        "type": "object"
+      },
       "IdentifierCreate": {
         "properties": {
           "identifier_type": {
@@ -7937,6 +8094,274 @@
           "window"
         ],
         "title": "InpatientReport",
+        "type": "object"
+      },
+      "InviteAccept": {
+        "additionalProperties": false,
+        "properties": {
+          "password": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          },
+          "token": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "password"
+        ],
+        "title": "InviteAccept",
+        "type": "object"
+      },
+      "InvitePreviewRead": {
+        "description": "What the set-password page shows. No token, no ids.",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "full_name": {
+            "title": "Full Name",
+            "type": "string"
+          },
+          "hospital_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Name"
+          },
+          "role_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Role Codes",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/components/schemas/InviteStatus"
+          },
+          "support_contact": {
+            "title": "Support Contact",
+            "type": "string"
+          }
+        },
+        "required": [
+          "full_name",
+          "email",
+          "hospital_name",
+          "role_codes",
+          "status",
+          "expires_at",
+          "support_contact"
+        ],
+        "title": "InvitePreviewRead",
+        "type": "object"
+      },
+      "InviteRead": {
+        "properties": {
+          "accepted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accepted At"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "full_name": {
+            "title": "Full Name",
+            "type": "string"
+          },
+          "hospital_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Id"
+          },
+          "hospital_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Name"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "invited_by_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invited By Name"
+          },
+          "last_email_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Email Error"
+          },
+          "last_email_status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlatformEmailStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_sent_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Sent At"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "revoked_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revoked At"
+          },
+          "role_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Role Codes",
+            "type": "array"
+          },
+          "send_count": {
+            "title": "Send Count",
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/InviteStatus"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "full_name",
+          "phone",
+          "hospital_id",
+          "hospital_name",
+          "role_codes",
+          "status",
+          "expires_at",
+          "accepted_at",
+          "revoked_at",
+          "last_sent_at",
+          "send_count",
+          "invited_by_name",
+          "last_email_status",
+          "last_email_error",
+          "created_at"
+        ],
+        "title": "InviteRead",
+        "type": "object"
+      },
+      "InviteStatus": {
+        "enum": [
+          "PENDING",
+          "ACCEPTED",
+          "REVOKED",
+          "EXPIRED"
+        ],
+        "title": "InviteStatus",
+        "type": "string"
+      },
+      "InviteToken": {
+        "additionalProperties": false,
+        "description": "The link token, in a request body — never a URL path, which every\naccess log would record.",
+        "properties": {
+          "token": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "title": "InviteToken",
         "type": "object"
       },
       "InvoiceDraftRequest": {
@@ -11495,6 +11920,45 @@
         "title": "Page[HospitalRead]",
         "type": "object"
       },
+      "Page_InviteRead_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/InviteRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[InviteRead]",
+        "type": "object"
+      },
       "Page_InvoiceSummary_": {
         "properties": {
           "has_more": {
@@ -12000,6 +12464,123 @@
           "has_more"
         ],
         "title": "Page[PaymentRow]",
+        "type": "object"
+      },
+      "Page_PlatformEmailRead_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformEmailRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[PlatformEmailRead]",
+        "type": "object"
+      },
+      "Page_PlatformHospitalRow_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformHospitalRow"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[PlatformHospitalRow]",
+        "type": "object"
+      },
+      "Page_PlatformTeamRow_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformTeamRow"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[PlatformTeamRow]",
         "type": "object"
       },
       "Page_RateCardRead_": {
@@ -14494,6 +15075,448 @@
           "description"
         ],
         "title": "PermissionRead",
+        "type": "object"
+      },
+      "PlatformAdminRow": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "full_name": {
+            "title": "Full Name",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "last_login_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Login At"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "two_factor_enabled": {
+            "title": "Two Factor Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "full_name",
+          "email",
+          "phone",
+          "is_active",
+          "two_factor_enabled",
+          "last_login_at",
+          "created_at"
+        ],
+        "title": "PlatformAdminRow",
+        "type": "object"
+      },
+      "PlatformEmailKind": {
+        "enum": [
+          "INVITE",
+          "INVITE_RESEND"
+        ],
+        "title": "PlatformEmailKind",
+        "type": "string"
+      },
+      "PlatformEmailRead": {
+        "properties": {
+          "body_text": {
+            "title": "Body Text",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "from_email": {
+            "title": "From Email",
+            "type": "string"
+          },
+          "hospital_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Id"
+          },
+          "hospital_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Name"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "invite_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invite Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PlatformEmailKind"
+          },
+          "provider_message_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Message Id"
+          },
+          "sent_at": {
+            "format": "date-time",
+            "title": "Sent At",
+            "type": "string"
+          },
+          "sent_by_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sent By Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PlatformEmailStatus"
+          },
+          "subject": {
+            "title": "Subject",
+            "type": "string"
+          },
+          "to_email": {
+            "title": "To Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "to_email",
+          "from_email",
+          "subject",
+          "body_text",
+          "hospital_id",
+          "hospital_name",
+          "invite_id",
+          "status",
+          "error",
+          "provider_message_id",
+          "sent_by_name",
+          "sent_at"
+        ],
+        "title": "PlatformEmailRead",
+        "type": "object"
+      },
+      "PlatformEmailStatus": {
+        "enum": [
+          "SENT",
+          "FAILED"
+        ],
+        "title": "PlatformEmailStatus",
+        "type": "string"
+      },
+      "PlatformHospitalDetail": {
+        "properties": {
+          "admins": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformAdminRow"
+            },
+            "title": "Admins",
+            "type": "array"
+          },
+          "hospital": {
+            "$ref": "#/components/schemas/HospitalRead"
+          },
+          "invites": {
+            "items": {
+              "$ref": "#/components/schemas/InviteRead"
+            },
+            "title": "Invites",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "suspended",
+              "invite_pending"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/HospitalUsageRead"
+          }
+        },
+        "required": [
+          "hospital",
+          "status",
+          "admins",
+          "invites",
+          "usage"
+        ],
+        "title": "PlatformHospitalDetail",
+        "type": "object"
+      },
+      "PlatformHospitalRow": {
+        "properties": {
+          "admin_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Admin Name"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "last_admin_login_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Admin Login At"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "staff_count": {
+            "title": "Staff Count",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "suspended",
+              "invite_pending"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "city",
+          "is_active",
+          "status",
+          "admin_name",
+          "staff_count",
+          "last_admin_login_at",
+          "created_at"
+        ],
+        "title": "PlatformHospitalRow",
+        "type": "object"
+      },
+      "PlatformOverviewRead": {
+        "properties": {
+          "active_hospitals": {
+            "title": "Active Hospitals",
+            "type": "integer"
+          },
+          "attention": {
+            "items": {
+              "$ref": "#/components/schemas/AttentionItemRead"
+            },
+            "title": "Attention",
+            "type": "array"
+          },
+          "emails_failed_7d": {
+            "title": "Emails Failed 7D",
+            "type": "integer"
+          },
+          "pending_invites": {
+            "title": "Pending Invites",
+            "type": "integer"
+          },
+          "recent_activity": {
+            "items": {
+              "$ref": "#/components/schemas/AuditLogRead"
+            },
+            "title": "Recent Activity",
+            "type": "array"
+          },
+          "staff_accounts": {
+            "title": "Staff Accounts",
+            "type": "integer"
+          },
+          "suspended_hospitals": {
+            "title": "Suspended Hospitals",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "active_hospitals",
+          "suspended_hospitals",
+          "pending_invites",
+          "staff_accounts",
+          "emails_failed_7d",
+          "attention",
+          "recent_activity"
+        ],
+        "title": "PlatformOverviewRead",
+        "type": "object"
+      },
+      "PlatformTeamRow": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "full_name": {
+            "title": "Full Name",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "last_login_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Login At"
+          },
+          "roles": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Roles",
+            "type": "array"
+          },
+          "two_factor_enabled": {
+            "title": "Two Factor Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "full_name",
+          "email",
+          "roles",
+          "is_active",
+          "two_factor_enabled",
+          "last_login_at",
+          "created_at"
+        ],
+        "title": "PlatformTeamRow",
         "type": "object"
       },
       "PrintableBill": {
@@ -18892,6 +19915,37 @@
         "title": "SuppressionReason",
         "type": "string"
       },
+      "TeamInviteCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "full_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Full Name",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "PLATFORM_ADMIN",
+              "PLATFORM_SUPPORT"
+            ],
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "full_name",
+          "email",
+          "role"
+        ],
+        "title": "TeamInviteCreate",
+        "type": "object"
+      },
       "TemplatePreview": {
         "description": "Render a template against sample values without sending anything.\n\nExists because the alternative way to find out that a template has a typo in\na placeholder name is to read it on a patient's phone.",
         "properties": {
@@ -23216,7 +24270,7 @@
     },
     "/api/v1/billing/invoices": {
       "get": {
-        "description": "`awaiting_settlement=true` is the bills left behind by a death, a referral\nor a patient who walked out (CLAUDE.md §6).",
+        "description": "`awaiting_settlement=true` is the bills left behind by a death, a referral\nor a patient who walked out (CLAUDE.md §6).\n\nScoped to one visit, `invoice:read` is enough; wider needs more — see\n`_require_list_scope`.",
         "operationId": "list_invoices_api_v1_billing_invoices_get",
         "parameters": [
           {
@@ -23785,7 +24839,7 @@
     },
     "/api/v1/billing/patients/{patient_id}/history": {
       "get": {
-        "description": "Every bill-bearing visit, newest first, with lifetime billed, paid, due.",
+        "description": "Every bill-bearing visit, newest first, with lifetime billed, paid, due.\n\nThe accountant's patient page and the patient record's Billing tab. The\nphone is masked for a reader who may not see contact numbers — a doctor\nreads the dues here, not the patient's mobile.",
         "operationId": "patient_bill_history_api_v1_billing_patients__patient_id__history_get",
         "parameters": [
           {
@@ -23939,7 +24993,7 @@
     },
     "/api/v1/billing/payments": {
       "get": {
-        "description": "With `method` and `since`, this is the shift's collection report.",
+        "description": "With `method` and `since`, this is the shift's collection report.\n\nReceipts for one bill need only `payment:read`; wider lists need more —\nsee `_require_list_scope`.",
         "operationId": "list_payments_api_v1_billing_payments_get",
         "parameters": [
           {
@@ -28972,6 +30026,96 @@
         ]
       }
     },
+    "/api/v1/invites/accept": {
+      "post": {
+        "operationId": "accept_invite_api_v1_invites_accept_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteAccept"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TokenPair"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TwoFactorChallengeRead"
+                    }
+                  ],
+                  "title": "Response Accept Invite Api V1 Invites Accept Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Accept an invite: set a password and sign in",
+        "tags": [
+          "invites"
+        ]
+      }
+    },
+    "/api/v1/invites/preview": {
+      "post": {
+        "operationId": "preview_invite_api_v1_invites_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteToken"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitePreviewRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview an invite",
+        "tags": [
+          "invites"
+        ]
+      }
+    },
     "/api/v1/ipd/admission-requests": {
       "get": {
         "description": "The desk's worklist (`?status=PENDING`), and the counter's view of what\nbecame of the patients it sent today (`?since=<midnight>`).",
@@ -33968,6 +35112,865 @@
         "summary": "Merge a duplicate into this record",
         "tags": [
           "patients"
+        ]
+      }
+    },
+    "/api/v1/platform/audit": {
+      "get": {
+        "operationId": "list_activity_api_v1_platform_audit_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "hospital_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Hospital Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "action",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Action"
+            }
+          },
+          {
+            "in": "query",
+            "name": "actor_user_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Actor User Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_AuditLogRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Activity across the platform",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/emails": {
+      "get": {
+        "operationId": "list_emails_api_v1_platform_emails_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PlatformEmailStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PlatformEmailKind"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "hospital_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Hospital Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 255,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PlatformEmailRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Emails the platform sent",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/hospitals": {
+      "get": {
+        "operationId": "list_hospitals_api_v1_platform_hospitals_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "active",
+                    "suspended",
+                    "invite_pending"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PlatformHospitalRow_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Every hospital",
+        "tags": [
+          "platform"
+        ]
+      },
+      "post": {
+        "operationId": "create_hospital_with_admin_api_v1_platform_hospitals_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HospitalWithAdminCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformHospitalDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Onboard a hospital and invite its first administrator",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/hospitals/{hospital_id}": {
+      "get": {
+        "operationId": "get_hospital_api_v1_platform_hospitals__hospital_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "hospital_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Hospital Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformHospitalDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "One hospital",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/hospitals/{hospital_id}/invites": {
+      "post": {
+        "operationId": "invite_hospital_admin_api_v1_platform_hospitals__hospital_id__invites_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "hospital_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Hospital Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HospitalAdminInviteCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Invite an administrator to a hospital",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/invites": {
+      "get": {
+        "operationId": "list_invites_api_v1_platform_invites_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/InviteStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "hospital_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Hospital Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_InviteRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List invites",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/invites/{invite_id}/resend": {
+      "post": {
+        "operationId": "resend_invite_api_v1_platform_invites__invite_id__resend_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invite_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Invite Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Resend an invite",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/invites/{invite_id}/revoke": {
+      "post": {
+        "operationId": "revoke_invite_api_v1_platform_invites__invite_id__revoke_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invite_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Invite Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Cancel an invite",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/overview": {
+      "get": {
+        "operationId": "get_overview_api_v1_platform_overview_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformOverviewRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Console overview",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/team": {
+      "get": {
+        "operationId": "list_team_api_v1_platform_team_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PlatformTeamRow_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "The platform team",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/team/invites": {
+      "post": {
+        "operationId": "invite_team_member_api_v1_platform_team_invites_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamInviteCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Invite someone to the platform team",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/team/{user_id}/deactivate": {
+      "post": {
+        "operationId": "deactivate_team_member_api_v1_platform_team__user_id__deactivate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformTeamRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Remove someone from the platform team",
+        "tags": [
+          "platform"
         ]
       }
     },

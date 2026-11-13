@@ -66,12 +66,21 @@ test("the accountant opens Billing on the Accounts dashboard, newest bill first"
   await expect(page).toHaveURL(/\/billing\/patients\/[0-9a-f-]+$/);
 });
 
-test("reception keeps the cash counter and has no Accounts tab", async ({ page }) => {
-  await signIn(page, ACCOUNTS.reception);
+test("the cashier keeps the cash counter and has no Accounts tab", async ({ page }) => {
+  await signIn(page, ACCOUNTS.cashier);
   await page.goto("/billing");
 
   await expect(page.getByRole("heading", { name: "Cash counter" })).toBeVisible();
   await expect(page.getByRole("tab", { name: "Accounts" })).toHaveCount(0);
+});
+
+test("reception collects at its own desk and has no billing board", async ({ page }) => {
+  // Every patient's dues are the money desk's; reception takes today's fee
+  // from the queue and reads nothing wider.
+  await signIn(page, ACCOUNTS.reception);
+  await expect(page.locator('a[href="/billing"]')).toHaveCount(0);
+  await page.goto("/billing");
+  await expect(page.getByRole("heading", { name: "Cash counter" })).toHaveCount(0);
 });
 
 test("a banner asks for the hospital profile while the address is missing", async ({
