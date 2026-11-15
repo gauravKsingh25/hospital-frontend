@@ -1,6 +1,6 @@
 # Frontend — Next.js 16 · React 19 · Tailwind v4 · shadcn/ui
 
-The staff-facing web app. The full manual is the root [README](../README.md#frontend);
+The staff-facing web app. The full system manual is the [hospital-backend README](https://github.com/gauravKsingh25/hospital-backend#frontend);
 this page gets you running and tells you where things go.
 
 ## Run it

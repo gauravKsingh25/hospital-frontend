@@ -29,8 +29,27 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const frontendDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const repoRoot = resolve(frontendDir, "..");
-const backendDir = join(repoRoot, "backend");
+
+/**
+ * The backend is its own repository (hospital-backend). Codegen reads it from
+ * BACKEND_DIR, or from a sibling checkout next to this one:
+ *
+ *   workspace/
+ *     hospital-backend/
+ *     hospital-frontend/   <- here
+ */
+const backendDir = resolve(process.env.BACKEND_DIR ?? join(frontendDir, "..", "hospital-backend"));
+
+if (!existsSync(join(backendDir, "scripts", "export_openapi.py"))) {
+  console.error(
+    `
+Cannot find hospital-backend at ${backendDir}.
+` +
+      `Clone it next to this repository, or set BACKEND_DIR to its path.
+`,
+  );
+  process.exit(1);
+}
 
 const check = process.argv.includes("--check");
 
@@ -43,11 +62,10 @@ const check = process.argv.includes("--check");
  */
 function findPython() {
   const candidates = [
-    join(repoRoot, ".venv", "Scripts", "python.exe"), // Windows
-    join(repoRoot, ".venv", "bin", "python"), // macOS / Linux
-    join(backendDir, ".venv", "Scripts", "python.exe"),
-    join(backendDir, ".venv", "bin", "python"),
-  ];
+    process.env.BACKEND_PYTHON,
+    join(backendDir, ".venv", "Scripts", "python.exe"), // Windows
+    join(backendDir, ".venv", "bin", "python"), // macOS / Linux
+  ].filter(Boolean);
 
   for (const candidate of candidates) {
     if (existsSync(candidate)) return candidate;

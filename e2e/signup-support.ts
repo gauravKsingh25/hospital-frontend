@@ -16,7 +16,7 @@ import { ACCOUNTS, PASSWORD as DEMO_PASSWORD } from "./support";
 export const API = process.env.E2E_API_URL ?? "http://localhost:8000/api/v1";
 /** The marketing website (`website/`), for the specs that start there. */
 export const SITE = (process.env.E2E_SITE_URL ?? "http://localhost:3100").replace(/\/+$/, "");
-const OUTBOX = resolve(process.env.E2E_MAIL_OUTBOX ?? "../backend/.mail-outbox");
+const OUTBOX = resolve(process.env.E2E_MAIL_OUTBOX ?? "../hospital-backend/.mail-outbox");
 export const PASSWORD = "signup-e2e-pass-2026";
 
 export function unique(prefix: string): string {

@@ -39,3 +39,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+!.env.example
+
+# Playwright output. Traces and screenshots capture real screens — test data
+# today, but the habit of committing them is the one that eventually commits a
+# screenshot of a real patient.
+/test-results/
+/playwright-report/
+/blob-report/
+/.playwright/
+
+# Editors / tooling
+.vscode/
+.idea/
+Thumbs.db
+.claude/settings.local.json
+.superpowers/
