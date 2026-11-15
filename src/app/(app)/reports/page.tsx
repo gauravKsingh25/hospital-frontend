@@ -7,6 +7,7 @@ import { ReportsDashboard } from "@/features/reports/dashboard";
 // client-reference stub, not a number.
 import { parsePeriod, periodDays } from "@/features/reports/windows";
 import { getCurrentUser, serverFetch } from "@/lib/api/server";
+import { hasFeature } from "@/lib/entitlements";
 import { can } from "@/lib/permissions";
 import type { Dashboard } from "@/types/api";
 
@@ -38,7 +39,10 @@ export default async function ReportsPage({
 
   if (!can(user, "report:operational")) return <NoPermission />;
 
-  const period = parsePeriod((await searchParams).period);
+  // A plan without period reports sees today, whatever the address asks for:
+  // the API refuses a longer window, and an error page is no way to say so.
+  const fullReports = hasFeature(user, "reports_full");
+  const period = fullReports ? parsePeriod((await searchParams).period) : "today";
   const dashboard = await serverFetch<Dashboard>(
     `/reports/dashboard?trailing_days=${periodDays(period)}`,
   );
@@ -46,5 +50,12 @@ export default async function ReportsPage({
   // Keyed on the period, so arriving by a link to a different one — the
   // sidebar's plain `/reports`, say — starts the dashboard afresh rather than
   // keeping the period it was last showing.
-  return <ReportsDashboard key={period} initial={dashboard} initialPeriod={period} />;
+  return (
+    <ReportsDashboard
+      key={period}
+      initial={dashboard}
+      initialPeriod={period}
+      todayOnly={!fullReports}
+    />
+  );
 }

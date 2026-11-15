@@ -22,7 +22,7 @@ export default async function MedicinesPage() {
   const t = await getTranslations("medicines");
   const user = await getCurrentUser();
 
-  if (!can(user, "medicine:read")) return <NoPermission />;
+  if (!can(user, "medicine:read")) return <NoPermission feature="medicines" />;
 
   return (
     <div className="space-y-6">

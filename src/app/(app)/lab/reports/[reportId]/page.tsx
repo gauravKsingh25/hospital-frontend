@@ -27,14 +27,14 @@ export default async function ReportPage({ params }: PageProps<"/lab/reports/[re
   const { reportId } = await params;
   const user = await getCurrentUser();
 
-  if (!can(user, "report:read")) return <NoPermission />;
+  if (!can(user, "report:read")) return <NoPermission feature="diagnostics" />;
 
   let report: DiagnosticReport;
   try {
     report = await serverFetch<DiagnosticReport>(`/diagnostics/reports/${reportId}`);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) notFound();
-    if (error instanceof ApiError && error.isForbidden) return <NoPermission />;
+    if (error instanceof ApiError && error.isForbidden) return <NoPermission feature="diagnostics" />;
     throw error;
   }
 

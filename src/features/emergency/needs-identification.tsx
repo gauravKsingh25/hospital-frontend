@@ -58,7 +58,7 @@ export function NeedsIdentification({ canIdentify }: { canIdentify: boolean }) {
             <div className="min-w-0 flex-1">
               <Link
                 href={`/patients/${row.id}`}
-                className="text-sm font-medium hover:underline"
+                className="min-h-tap inline-flex items-center text-sm font-medium hover:underline"
                 data-testid="unidentified-name"
               >
                 {row.full_name}

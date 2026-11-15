@@ -24,7 +24,7 @@ export default async function PrintedSummaryPage({
   const t = await getTranslations("summary");
   const bill = await getTranslations("bill");
   const user = await getCurrentUser();
-  if (!can(user, "summary:read") || !user.hospital_id) return <NoPermission />;
+  if (!can(user, "summary:read") || !user.hospital_id) return <NoPermission feature="ipd" />;
 
   const [{ admissionId }, { print }] = await Promise.all([params, searchParams]);
   const [admission, summary, hospital] = await Promise.all([

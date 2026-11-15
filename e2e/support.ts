@@ -21,6 +21,12 @@ export const ACCOUNTS = {
   admissionDesk: "admission@demo.hospital",
   accountant: "accountant@demo.hospital",
   platform: "platform@demo.hospital",
+  // The Standard-plan clinic (OPD only) that `seed_demo.py` also creates.
+  opdAdmin: "opd-admin@demo.hospital",
+  opdReception: "opd-reception@demo.hospital",
+  // The clinic whose subscription ended a month ago, reset by every seed.
+  lapsedAdmin: "lapsed-admin@demo.hospital",
+  lapsedReception: "lapsed-reception@demo.hospital",
 } as const;
 
 export async function signIn(page: Page, email: string): Promise<void> {

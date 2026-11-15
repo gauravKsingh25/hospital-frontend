@@ -15,8 +15,8 @@
  * request.
  */
 
-/** Every permission code, declared across 9 modules:
- * billing, clinical, diagnostics, identity, ipd, notifications, patients, reporting, scheduling.
+/** Every permission code, declared across 10 modules:
+ * billing, clinical, diagnostics, identity, ipd, notifications, patients, reporting, scheduling, subscriptions.
  */
 export const PERMISSIONS = [
   "accounts:read",
@@ -114,6 +114,9 @@ export const PERMISSIONS = [
   "platform:invite_resend",
   "platform:invite_revoke",
   "platform:invite_send",
+  "platform:payment_read",
+  "platform:payment_review",
+  "platform:subscription_manage",
   "platform:team_manage",
   "queue:manage",
   "queue:read",
@@ -137,6 +140,8 @@ export const PERMISSIONS = [
   "specimen:collect",
   "specimen:read",
   "specimen:receive",
+  "subscription:manage",
+  "subscription:read",
   "summary:read",
   "summary:sign",
   "summary:write",
@@ -519,6 +524,8 @@ export const DECLARED_ROLE_PERMISSIONS: Record<string, readonly Permission[]> = 
     "specimen:collect",
     "specimen:read",
     "specimen:receive",
+    "subscription:manage",
+    "subscription:read",
     "summary:read",
     "summary:sign",
     "summary:write",
@@ -751,6 +758,9 @@ export const DECLARED_ROLE_PERMISSIONS: Record<string, readonly Permission[]> = 
     "platform:invite_resend",
     "platform:invite_revoke",
     "platform:invite_send",
+    "platform:payment_read",
+    "platform:payment_review",
+    "platform:subscription_manage",
     "platform:team_manage",
     "queue:manage",
     "queue:read",
@@ -774,6 +784,8 @@ export const DECLARED_ROLE_PERMISSIONS: Record<string, readonly Permission[]> = 
     "specimen:collect",
     "specimen:read",
     "specimen:receive",
+    "subscription:manage",
+    "subscription:read",
     "summary:read",
     "summary:sign",
     "summary:write",
@@ -797,6 +809,7 @@ export const DECLARED_ROLE_PERMISSIONS: Record<string, readonly Permission[]> = 
     "platform:hospital_read",
     "platform:invite_read",
     "platform:invite_resend",
+    "platform:payment_read",
   ],
   "RADIOLOGIST": [
     "admission:read",

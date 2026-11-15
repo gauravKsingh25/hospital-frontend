@@ -23,7 +23,7 @@ export default async function RoundsPage() {
   const t = await getTranslations("chart");
   const user = await getCurrentUser();
 
-  if (!can(user, "medication:read")) return <NoPermission />;
+  if (!can(user, "medication:read")) return <NoPermission feature="ipd" />;
 
   const doses = await serverFetch<Page<Dose>>(
     `/ipd/doses?status=DUE&limit=${BOARD_PAGE_SIZE}`,

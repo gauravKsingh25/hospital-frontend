@@ -7,6 +7,7 @@ import { ApiError } from "@/lib/api/error";
 import { callApi, type ApiRequest } from "@/lib/api/fetch";
 import { ensureFreshSession } from "@/lib/api/refresh";
 import { readSession } from "@/lib/session";
+import { planPermissions } from "@/lib/entitlements";
 import type { CurrentUser } from "@/types/api";
 
 /**
@@ -69,7 +70,10 @@ export async function serverFetchOptional<T>(
  * components ask.
  */
 export const getCurrentUser = cache(async (): Promise<CurrentUser> => {
-  return serverFetch<CurrentUser>("/auth/me");
+  const user = await serverFetch<CurrentUser>("/auth/me");
+  // What the plan does not include, the app does not offer: see
+  // `planPermissions`. The API enforces the plan regardless.
+  return { ...user, permissions: planPermissions(user) };
 });
 
 /**

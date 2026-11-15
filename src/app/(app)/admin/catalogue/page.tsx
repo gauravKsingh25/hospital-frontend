@@ -12,7 +12,7 @@ export async function generateMetadata() {
 
 export default async function CatalogueAdminPage() {
   const user = await getCurrentUser();
-  if (!can(user, "catalogue:read")) return <NoPermission />;
+  if (!can(user, "catalogue:read")) return <NoPermission feature="diagnostics" />;
 
   return <CatalogueScreen canManage={can(user, "catalogue:manage")} />;
 }

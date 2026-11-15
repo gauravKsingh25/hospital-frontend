@@ -3,6 +3,7 @@ import {
   Bed,
   Building,
   Building2,
+  CreditCard,
   FlaskConical,
   IndianRupee,
   MessageSquareText,
@@ -34,6 +35,13 @@ export type AdminSection = {
 };
 
 export const ADMIN_SECTIONS: AdminSection[] = [
+  {
+    href: "/admin/subscription",
+    icon: CreditCard,
+    titleKey: "subscriptionTitle",
+    descriptionKey: "subscriptionCard",
+    permissions: ["subscription:read"],
+  },
   {
     href: "/admin/staff",
     icon: Users,

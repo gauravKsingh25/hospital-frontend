@@ -45,6 +45,18 @@ export type AttentionItem = Schemas["AttentionItemRead"];
 export type PlatformTeamMember = Schemas["PlatformTeamRow"];
 export type AuditLogEntry = Schemas["AuditLogRead"];
 
+// Signup payments (UPI orders) and the console's payment queue.
+export type PaymentOrderStatus = Schemas["PaymentOrderStatus"];
+export type OrderRead = Schemas["PaymentOrderRead"];
+export type OrderDetail = Schemas["PaymentOrderDetail"];
+export type PlatformPayment = Schemas["PlatformPaymentRow"];
+export type EmailOutcome = Schemas["EmailOutcome"];
+export type ContactMessage = Schemas["ContactMessageRead"];
+export type PlanOnSale = Schemas["PlanRead"];
+export type SubscriptionDetail = Schemas["SubscriptionDetail"];
+export type UpgradeQuote = Schemas["UpgradeQuote"];
+export type PlatformSubscription = Schemas["PlatformSubscriptionRow"];
+
 // --- Patients --------------------------------------------------------------
 export type Patient = Schemas["PatientDetail"];
 export type PatientListItem = Schemas["PatientRead"];

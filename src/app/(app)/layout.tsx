@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { IdleLock } from "@/components/app-shell/idle-lock";
 import { KeyboardShortcuts } from "@/components/app-shell/keyboard-shortcuts";
 import { Sidebar } from "@/components/app-shell/sidebar";
@@ -7,6 +9,10 @@ import { LocaleSwitcher } from "@/components/locale-switcher";
 import { CameraScanButton } from "@/features/scan/camera-scan-button";
 import { MobileNav } from "@/components/app-shell/mobile-nav";
 import { getCurrentUser } from "@/lib/api/server";
+import { SubscriptionBanner } from "@/components/app-shell/subscription-banner";
+import { SubscriptionEnded } from "@/components/subscription-ended";
+import { SubscriptionManager } from "@/features/subscriptions/subscription-manager";
+import { subscriptionState } from "@/lib/entitlements";
 import { can } from "@/lib/permissions";
 
 /**
@@ -24,24 +30,34 @@ import { can } from "@/lib/permissions";
  */
 export default async function AppLayout({ children }: LayoutProps<"/">) {
   const user = await getCurrentUser();
+  // Signed up, not yet paid: no hospital behind any screen here. The API
+  // refuses them everything anyway; this saves the page of failures.
+  if (!user.hospital_id && !can(user, "platform:console")) redirect("/get-started");
+  // A hospital whose subscription has ended gets one screen saying so: the
+  // API refuses everything else, and a sidebar of links that all fail is how
+  // staff learn to distrust software.
+  const subscription = subscriptionState(user);
+  const ended = subscription === "ended";
+  const permissions = ended ? [] : user.permissions;
+  const canManage = can(user, "subscription:manage");
 
   return (
     <div className="flex min-h-svh">
-      <Sidebar permissions={user.permissions} />
+      <Sidebar permissions={permissions} />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="bg-background/95 supports-[backdrop-filter]:bg-background/75 sticky top-0 z-30 flex h-16 items-center gap-2 border-b px-3 backdrop-blur sm:gap-3 sm:px-5 no-print">
-          <MobileNav permissions={user.permissions} />
+          <MobileNav permissions={permissions} />
           {/* Patient search, so only for people who may open a patient — the
               platform console has none. */}
-          {can(user, "patient:read") && !can(user, "platform:console") ? (
+          {!ended && can(user, "patient:read") && !can(user, "platform:console") ? (
             <UniversalSearch />
           ) : null}
           <div className="ml-auto flex items-center gap-1">
             {/* In the top bar so it is one tap from any screen, which is where a
                 nurse is when a card is handed over. A scan only opens a
                 patient, so it is offered only to those who may read one. */}
-            {can(user, "patient:read") && !can(user, "platform:console") ? (
+            {!ended && can(user, "patient:read") && !can(user, "platform:console") ? (
               <CameraScanButton />
             ) : null}
             <LocaleSwitcher />
@@ -52,10 +68,27 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
         {/* `min-w-0` matters: without it a wide table inside a flex column
             refuses to shrink and pushes the whole page into a horizontal
             scroll, which on a counter screen hides the primary action. */}
-        <main className="min-w-0 flex-1 px-3 py-5 sm:px-5 sm:py-6">{children}</main>
+        {subscription === "grace" ? (
+          <SubscriptionBanner
+            periodEnd={user.entitlements?.period_end ?? null}
+            canManage={canManage}
+          />
+        ) : null}
+
+        <main className="min-w-0 flex-1 px-3 py-5 sm:px-5 sm:py-6">
+          {ended ? (
+            <SubscriptionEnded canManage={canManage}>
+              {/* An administrator renews right here, from whatever screen
+                  they opened: every other screen is closed until they do. */}
+              {canManage ? <SubscriptionManager canManage /> : null}
+            </SubscriptionEnded>
+          ) : (
+            children
+          )}
+        </main>
       </div>
 
-      <KeyboardShortcuts permissions={user.permissions} />
+      <KeyboardShortcuts permissions={permissions} />
       {/* SEC-04: a shared tablet locks itself when nobody is using it. */}
       <IdleLock user={{ full_name: user.full_name, email: user.email }} />
     </div>

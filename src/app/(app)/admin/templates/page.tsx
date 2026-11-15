@@ -13,7 +13,7 @@ export async function generateMetadata() {
 export default async function TemplatesPage() {
   const user = await getCurrentUser();
 
-  if (!can(user, "notification_template:read")) return <NoPermission />;
+  if (!can(user, "notification_template:read")) return <NoPermission feature="messaging" />;
 
   return <TemplatesScreen canManage={can(user, "notification_template:manage")} />;
 }

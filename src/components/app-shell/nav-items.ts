@@ -8,6 +8,7 @@ import {
   FlaskConical,
   History,
   Home,
+  CreditCard,
   IndianRupee,
   LayoutDashboard,
   Mail,
@@ -76,6 +77,20 @@ const PLATFORM_ITEMS: NavItem[] = [
     labelKey: "platformOverview",
     icon: LayoutDashboard,
     permissions: ["platform:console"],
+    platform: true,
+  },
+  {
+    href: "/platform/payments",
+    labelKey: "platformPayments",
+    icon: IndianRupee,
+    permissions: ["platform:payment_read"],
+    platform: true,
+  },
+  {
+    href: "/platform/subscriptions",
+    labelKey: "platformSubscriptions",
+    icon: CreditCard,
+    permissions: ["platform:hospital_read"],
     platform: true,
   },
   {

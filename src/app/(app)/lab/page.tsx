@@ -23,7 +23,7 @@ export default async function LabPage() {
   const t = await getTranslations("lab");
   const user = await getCurrentUser();
 
-  if (!can(user, "report:read")) return <NoPermission />;
+  if (!can(user, "report:read")) return <NoPermission feature="diagnostics" />;
 
   // The same page size the client uses. They must match, or the rows past the
   // client's limit disappear from the first paint the moment it refetches.

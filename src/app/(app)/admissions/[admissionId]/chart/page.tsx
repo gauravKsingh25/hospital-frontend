@@ -28,7 +28,7 @@ export default async function ChartPage({
   const { admissionId } = await params;
   const user = await getCurrentUser();
 
-  if (!can(user, "medication:read")) return <NoPermission />;
+  if (!can(user, "medication:read")) return <NoPermission feature="ipd" />;
 
   let admission: Admission;
   let orders: Page<MedicationOrder>;
@@ -43,7 +43,7 @@ export default async function ChartPage({
     ]);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) notFound();
-    if (error instanceof ApiError && error.isForbidden) return <NoPermission />;
+    if (error instanceof ApiError && error.isForbidden) return <NoPermission feature="ipd" />;
     throw error;
   }
 

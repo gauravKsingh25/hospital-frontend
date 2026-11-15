@@ -3343,6 +3343,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/platform/contact-messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Messages from the website's contact form */
+        get: operations["list_contact_messages_api_v1_platform_contact_messages_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/platform/emails": {
         parameters: {
             query?: never;
@@ -3480,6 +3497,142 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/platform/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Payments, newest first */
+        get: operations["list_payments_api_v1_platform_payments_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/payments/{order_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One payment */
+        get: operations["get_payment_api_v1_platform_payments__order_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/payments/{order_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve: create the hospital, its admin, subscription and receipt */
+        post: operations["approve_payment_api_v1_platform_payments__order_id__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/payments/{order_id}/proof": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The payer's screenshot */
+        get: operations["get_proof_api_v1_platform_payments__order_id__proof_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/payments/{order_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject with a reason the payer will read */
+        post: operations["reject_payment_api_v1_platform_payments__order_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/payments/{order_id}/resend-receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Email the approval and receipt again */
+        post: operations["resend_receipt_api_v1_platform_payments__order_id__resend_receipt_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/subscriptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Every hospital's subscription, the soonest to end first */
+        get: operations["list_subscriptions_api_v1_platform_subscriptions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/subscriptions/{subscription_id}/extend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add days to a hospital's paid period */
+        post: operations["extend_subscription_api_v1_platform_subscriptions__subscription_id__extend_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/platform/team": {
         parameters: {
             query?: never;
@@ -3525,6 +3678,159 @@ export interface paths {
         put?: never;
         /** Remove someone from the platform team */
         post: operations["deactivate_team_member_api_v1_platform_team__user_id__deactivate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send a message from the website's contact form */
+        post: operations["contact_api_v1_public_contact_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/password/forgot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Email a password reset code */
+        post: operations["password_forgot_api_v1_public_password_forgot_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/password/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Set a new password with the emailed code */
+        post: operations["password_reset_api_v1_public_password_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The plans on sale, with prices */
+        get: operations["list_plans_api_v1_public_plans_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/signup/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Choose a password; the account is created */
+        post: operations["signup_complete_api_v1_public_signup_complete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/signup/handoff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exchange the one-time signup code for a session */
+        post: operations["signup_handoff_api_v1_public_signup_handoff_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/signup/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send the verification code again */
+        post: operations["signup_resend_api_v1_public_signup_resend_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/signup/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start a signup: email a verification code */
+        post: operations["signup_start_api_v1_public_signup_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/signup/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check the emailed code */
+        post: operations["signup_verify_api_v1_public_signup_verify_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3832,6 +4138,10 @@ export interface paths {
         /**
          * The role's dashboard
          * @description Everything this user is allowed to see, in one round trip (CLAUDE.md §7b).
+         *
+         *     A plan without period reports gets today: that is its default, and asking
+         *     for a longer window is refused rather than quietly shortened, so a number
+         *     is never mislabelled as a month's.
          */
         get: operations["dashboard_api_v1_reports_dashboard_get"];
         put?: never;
@@ -4010,6 +4320,211 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/subscriptions/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Stop at the end of the month */
+        post: operations["cancel_api_v1_subscriptions_cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/change-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Move to a lower plan at the next renewal (or undo that) */
+        post: operations["change_plan_api_v1_subscriptions_change_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The hospital's subscription */
+        get: operations["current_api_v1_subscriptions_current_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/detail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The subscription, for managing it */
+        get: operations["detail_api_v1_subscriptions_detail_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The hospital's payments */
+        get: operations["history_api_v1_subscriptions_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My payments, newest first */
+        get: operations["list_orders_api_v1_subscriptions_orders_get"];
+        put?: never;
+        /** Start paying for a plan (or get the payment already started) */
+        post: operations["create_order_api_v1_subscriptions_orders_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/orders/{order_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One payment, with its QR */
+        get: operations["get_order_api_v1_subscriptions_orders__order_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/orders/{order_id}/proof": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Upload a screenshot of the payment (PNG, JPEG or PDF, up to 5 MB) */
+        put: operations["upload_proof_api_v1_subscriptions_orders__order_id__proof_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/orders/{order_id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send the UTR for checking */
+        post: operations["submit_payment_api_v1_subscriptions_orders__order_id__submit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/receipts/{order_id}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download the receipt for an approved payment */
+        get: operations["download_receipt_api_v1_subscriptions_receipts__order_id__pdf_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Undo a cancellation */
+        post: operations["resume_api_v1_subscriptions_resume_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subscriptions/upgrade-quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** What an upgrade would cost now */
+        get: operations["upgrade_quote_api_v1_subscriptions_upgrade_quote_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/users": {
         parameters: {
             query?: never;
@@ -4158,6 +4673,18 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * Accepted
+         * @description The same answer whatever happened, so the answer reveals nothing.
+         */
+        Accepted: {
+            /**
+             * Status
+             * @default sent
+             * @constant
+             */
+            status: "sent";
+        };
         /**
          * AccessionRequest
          * @description The lab accepting a doctor's order onto its bench.
@@ -5643,6 +6170,47 @@ export interface components {
          * @enum {string}
          */
         ConsentType: "TREATMENT" | "DATA_PROCESSING" | "DATA_SHARING" | "ABHA_LINKAGE" | "RESEARCH" | "MARKETING";
+        /** ContactCreate */
+        ContactCreate: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Hospital Name */
+            hospital_name?: string | null;
+            /** Message */
+            message: string;
+            /** Name */
+            name: string;
+            /** Phone */
+            phone?: string | null;
+            /** Website */
+            website?: string | null;
+        };
+        /** ContactMessageRead */
+        ContactMessageRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Email */
+            email: string;
+            /** Hospital Name */
+            hospital_name: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Message */
+            message: string;
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string | null;
+        };
         /**
          * CostBreakdown
          * @description What a visit has cost so far, grouped. Pending and invoiced charges both
@@ -5706,6 +6274,7 @@ export interface components {
             created_at: string;
             /** Email */
             email: string;
+            entitlements?: components["schemas"]["EntitlementsRead"] | null;
             /** Full Name */
             full_name: string;
             /** Hospital Id */
@@ -6360,6 +6929,13 @@ export interface components {
             /** Score */
             score: number;
         };
+        /** EmailOutcome */
+        EmailOutcome: {
+            /** Error */
+            error: string | null;
+            /** Status */
+            status: string;
+        };
         /**
          * EmergencyRegister
          * @description One tap at the casualty door (UX-01): a patient nobody can name.
@@ -6632,6 +7208,28 @@ export interface components {
             triage_note?: string | null;
         };
         /**
+         * EntitlementsRead
+         * @description A hospital's plan and what it unlocks, as the app needs it.
+         *
+         *     Like `permissions` on `/auth/me`, this decides what to *render*. The API
+         *     re-checks the subscription and the feature on every request.
+         */
+        EntitlementsRead: {
+            /** Complimentary */
+            complimentary: boolean;
+            /** Days Left */
+            days_left: number | null;
+            /** Features */
+            features: string[];
+            /** Period End */
+            period_end: string | null;
+            /** Plan Code */
+            plan_code: string;
+            /** Plan Name */
+            plan_name: string;
+            status: components["schemas"]["SubscriptionStatus"];
+        };
+        /**
          * FollowUpCompliance
          * @description CLAUDE.md §13 step 10: follow-up compliance.
          *
@@ -6717,6 +7315,18 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** HandoffExchange */
+        HandoffExchange: {
+            /** Code */
+            code: string;
+        };
+        /** HandoffIssued */
+        HandoffIssued: {
+            /** Expires In */
+            expires_in: number;
+            /** Handoff Code */
+            handoff_code: string;
         };
         /** HospitalAdminInviteCreate */
         HospitalAdminInviteCreate: {
@@ -8225,6 +8835,25 @@ export interface components {
              */
             total: number;
         };
+        /** Page[ContactMessageRead] */
+        Page_ContactMessageRead_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["ContactMessageRead"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
         /** Page[DepartmentRead] */
         Page_DepartmentRead_: {
             /**
@@ -8567,6 +9196,25 @@ export interface components {
              */
             total: number;
         };
+        /** Page[PaymentOrderRead] */
+        Page_PaymentOrderRead_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["PaymentOrderRead"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
         /** Page[PaymentRead] */
         Page_PaymentRead_: {
             /**
@@ -8633,6 +9281,44 @@ export interface components {
             readonly has_more: boolean;
             /** Items */
             items: components["schemas"]["PlatformHospitalRow"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
+        /** Page[PlatformPaymentRow] */
+        Page_PlatformPaymentRow_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["PlatformPaymentRow"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
+        /** Page[PlatformSubscriptionRow] */
+        Page_PlatformSubscriptionRow_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["PlatformSubscriptionRow"][];
             /** Limit */
             limit: number;
             /** Offset */
@@ -8851,6 +9537,29 @@ export interface components {
              * @description Total rows matching the filter, ignoring paging.
              */
             total: number;
+        };
+        /** PasswordForgot */
+        PasswordForgot: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+        };
+        /** PasswordReset */
+        PasswordReset: {
+            /**
+             * Code
+             * @description The six digits from the email.
+             */
+            code: string;
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Password */
+            password: string;
         };
         /** PatientAlertRead */
         PatientAlertRead: {
@@ -9355,6 +10064,111 @@ export interface components {
          * @enum {string}
          */
         PaymentMethod: "UPI" | "CARD" | "CASH" | "NETBANKING" | "WALLET" | "CHEQUE" | "INSURANCE" | "SCHEME" | "ADJUSTMENT";
+        /**
+         * PaymentOrderCreate
+         * @description What the payer chooses. The amount is never theirs to say.
+         */
+        PaymentOrderCreate: {
+            /** Plan Code */
+            plan_code?: string | null;
+            /** @default NEW */
+            purpose: components["schemas"]["PaymentOrderPurpose"];
+        };
+        /**
+         * PaymentOrderDetail
+         * @description One order, with what the payment screen needs to show.
+         */
+        PaymentOrderDetail: {
+            /** Amount Inr */
+            amount_inr: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** Has Proof */
+            has_proof: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Payee Name */
+            payee_name: string;
+            /** Plan Code */
+            plan_code: string;
+            /** Plan Name */
+            plan_name: string;
+            purpose: components["schemas"]["PaymentOrderPurpose"];
+            /** Qr Svg */
+            qr_svg: string;
+            /** Receipt Number */
+            receipt_number?: string | null;
+            /** Reference Code */
+            reference_code: string;
+            /** Rejection Reason */
+            rejection_reason: string | null;
+            /** Review Hours */
+            review_hours: number;
+            status: components["schemas"]["PaymentOrderStatus"];
+            /** Submitted At */
+            submitted_at: string | null;
+            /** Upi Uri */
+            upi_uri: string;
+            /** Upi Vpa */
+            upi_vpa: string;
+            /** Utr */
+            utr: string | null;
+        };
+        /**
+         * PaymentOrderPurpose
+         * @enum {string}
+         */
+        PaymentOrderPurpose: "NEW" | "RENEWAL" | "UPGRADE";
+        /** PaymentOrderRead */
+        PaymentOrderRead: {
+            /** Amount Inr */
+            amount_inr: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Plan Code */
+            plan_code: string;
+            /** Plan Name */
+            plan_name: string;
+            purpose: components["schemas"]["PaymentOrderPurpose"];
+            /** Reference Code */
+            reference_code: string;
+            /** Rejection Reason */
+            rejection_reason: string | null;
+            status: components["schemas"]["PaymentOrderStatus"];
+            /** Submitted At */
+            submitted_at: string | null;
+            /** Utr */
+            utr: string | null;
+        };
+        /**
+         * PaymentOrderStatus
+         * @enum {string}
+         */
+        PaymentOrderStatus: "AWAITING_PAYMENT" | "SUBMITTED" | "APPROVED" | "REJECTED" | "EXPIRED";
         /** PaymentRead */
         PaymentRead: {
             /** Amount */
@@ -9393,6 +10207,14 @@ export interface components {
             /** Reversed At */
             reversed_at: string | null;
             status: components["schemas"]["PaymentStatus"];
+        };
+        /** PaymentReject */
+        PaymentReject: {
+            /**
+             * Reason
+             * @description Shown to the payer, in an email.
+             */
+            reason: string;
         };
         /** PaymentRequest */
         PaymentRequest: {
@@ -9455,6 +10277,16 @@ export interface components {
          * @enum {string}
          */
         PaymentStatus: "RECORDED" | "REVERSED";
+        /** PaymentSubmit */
+        PaymentSubmit: {
+            /** Payer Upi Id */
+            payer_upi_id?: string | null;
+            /**
+             * Utr
+             * @description The 12-digit UTR (UPI reference number) from the payer's UPI app.
+             */
+            utr: string;
+        };
         /**
          * PendingItems
          * @description Why a visit will not close yet — in words reception can act on.
@@ -9485,6 +10317,24 @@ export interface components {
             /** Module */
             module: string;
         };
+        /** PlanChange */
+        PlanChange: {
+            /** Plan Code */
+            plan_code: string;
+        };
+        /** PlanRead */
+        PlanRead: {
+            /** Code */
+            code: string;
+            /** Features */
+            features: string[];
+            /** Interval Days */
+            interval_days: number;
+            /** Name */
+            name: string;
+            /** Price Inr */
+            price_inr: number;
+        };
         /** PlatformAdminRow */
         PlatformAdminRow: {
             /**
@@ -9514,7 +10364,7 @@ export interface components {
          * PlatformEmailKind
          * @enum {string}
          */
-        PlatformEmailKind: "INVITE" | "INVITE_RESEND";
+        PlatformEmailKind: "INVITE" | "INVITE_RESEND" | "OTP" | "SIGNUP_EXISTS" | "PASSWORD_RESET" | "PAYMENT_SUBMITTED" | "PAYMENT_ALERT" | "PAYMENT_APPROVED" | "PAYMENT_REJECTED" | "CONTACT_ALERT" | "SUBSCRIPTION_REMINDER" | "SUBSCRIPTION_GRACE" | "SUBSCRIPTION_EXPIRED";
         /** PlatformEmailRead */
         PlatformEmailRead: {
             /** Body Text */
@@ -9609,6 +10459,8 @@ export interface components {
             attention: components["schemas"]["AttentionItemRead"][];
             /** Emails Failed 7D */
             emails_failed_7d: number;
+            /** Payments Awaiting Review */
+            payments_awaiting_review: number;
             /** Pending Invites */
             pending_invites: number;
             /** Recent Activity */
@@ -9617,6 +10469,92 @@ export interface components {
             staff_accounts: number;
             /** Suspended Hospitals */
             suspended_hospitals: number;
+        };
+        /**
+         * PlatformPaymentRow
+         * @description A payment as the platform owner reviews it.
+         */
+        PlatformPaymentRow: {
+            /** Amount Inr */
+            amount_inr: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** Has Proof */
+            has_proof: boolean;
+            /** Hospital Id */
+            hospital_id: string | null;
+            /** Hospital Name */
+            hospital_name: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Payer Email */
+            payer_email: string | null;
+            /** Payer Name */
+            payer_name: string | null;
+            /** Payer Upi Id */
+            payer_upi_id: string | null;
+            /** Plan Code */
+            plan_code: string;
+            /** Plan Name */
+            plan_name: string;
+            purpose: components["schemas"]["PaymentOrderPurpose"];
+            /** Receipt Number */
+            receipt_number: string | null;
+            /** Reference Code */
+            reference_code: string;
+            /** Rejection Reason */
+            rejection_reason: string | null;
+            /** Reviewed At */
+            reviewed_at: string | null;
+            status: components["schemas"]["PaymentOrderStatus"];
+            /** Submitted At */
+            submitted_at: string | null;
+            /** Utr */
+            utr: string | null;
+        };
+        /** PlatformSubscriptionRow */
+        PlatformSubscriptionRow: {
+            /** Cancel At Period End */
+            cancel_at_period_end: boolean;
+            /** Complimentary */
+            complimentary: boolean;
+            /** Current Period End */
+            current_period_end: string | null;
+            /**
+             * Current Period Start
+             * Format: date-time
+             */
+            current_period_start: string;
+            /**
+             * Hospital Id
+             * Format: uuid
+             */
+            hospital_id: string;
+            /** Hospital Name */
+            hospital_name: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Pending Plan Code */
+            pending_plan_code: string | null;
+            /** Plan Code */
+            plan_code: string;
+            /** Plan Name */
+            plan_name: string;
+            status: components["schemas"]["SubscriptionStatus"];
         };
         /** PlatformTeamRow */
         PlatformTeamRow: {
@@ -10823,6 +11761,57 @@ export interface components {
             /** Registration Number */
             registration_number?: string | null;
         };
+        /** SignupComplete */
+        SignupComplete: {
+            /** Password */
+            password: string;
+            /** Signup Token */
+            signup_token: string;
+        };
+        /** SignupResend */
+        SignupResend: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+        };
+        /** SignupStart */
+        SignupStart: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Full Name */
+            full_name: string;
+            /** Hospital Name */
+            hospital_name: string;
+            /** Phone */
+            phone?: string | null;
+            /** Plan Code */
+            plan_code: string;
+        };
+        /** SignupToken */
+        SignupToken: {
+            /** Expires In */
+            expires_in: number;
+            /** Signup Token */
+            signup_token: string;
+        };
+        /** SignupVerify */
+        SignupVerify: {
+            /**
+             * Code
+             * @description The six digits from the email.
+             */
+            code: string;
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+        };
         /** SkipRequest */
         SkipRequest: {
             /** Reason */
@@ -10922,6 +11911,42 @@ export interface components {
             /** Ward Bed */
             ward_bed: string | null;
         };
+        /**
+         * SubscriptionDetail
+         * @description A hospital's subscription as its administrator manages it.
+         */
+        SubscriptionDetail: {
+            /** Cancel At Period End */
+            cancel_at_period_end: boolean;
+            /** Complimentary */
+            complimentary: boolean;
+            /** Current Period End */
+            current_period_end: string | null;
+            /**
+             * Current Period Start
+             * Format: date-time
+             */
+            current_period_start: string;
+            /** Pending Plan Code */
+            pending_plan_code: string | null;
+            /** Plan Code */
+            plan_code: string;
+            /** Plan Name */
+            plan_name: string;
+            status: components["schemas"]["SubscriptionStatus"];
+        };
+        /** SubscriptionExtend */
+        SubscriptionExtend: {
+            /** Days */
+            days: number;
+            /** Reason */
+            reason: string;
+        };
+        /**
+         * SubscriptionStatus
+         * @enum {string}
+         */
+        SubscriptionStatus: "ACTIVE" | "GRACE" | "EXPIRED" | "CANCELLED";
         /** SummaryRead */
         SummaryRead: {
             /**
@@ -11107,7 +12132,7 @@ export interface components {
          * SuppressionReason
          * @enum {string}
          */
-        SuppressionReason: "DECEASED" | "OPTED_OUT" | "INVALID_CONTACT" | "STAFF_BLOCK" | "UNIDENTIFIED" | "DISABLED";
+        SuppressionReason: "DECEASED" | "OPTED_OUT" | "INVALID_CONTACT" | "STAFF_BLOCK" | "UNIDENTIFIED" | "DISABLED" | "NOT_IN_PLAN";
         /** TeamInviteCreate */
         TeamInviteCreate: {
             /**
@@ -11263,6 +12288,18 @@ export interface components {
              * @default false
              */
             remember_device: boolean;
+        };
+        /** UpgradeQuote */
+        UpgradeQuote: {
+            /** Amount Inr */
+            amount_inr: number;
+            /**
+             * Period End
+             * Format: date-time
+             */
+            period_end: string;
+            /** Plan Code */
+            plan_code: string;
         };
         /** UserCreate */
         UserCreate: {
@@ -19047,6 +20084,38 @@ export interface operations {
             };
         };
     };
+    list_contact_messages_api_v1_platform_contact_messages_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_ContactMessageRead_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_emails_api_v1_platform_emails_get: {
         parameters: {
             query?: {
@@ -19332,6 +20401,267 @@ export interface operations {
             };
         };
     };
+    list_payments_api_v1_platform_payments_get: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["PaymentOrderStatus"] | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PlatformPaymentRow_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_payment_api_v1_platform_payments__order_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformPaymentRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approve_payment_api_v1_platform_payments__order_id__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformPaymentRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_proof_api_v1_platform_payments__order_id__proof_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": unknown;
+                    "image/jpeg": unknown;
+                    "image/png": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_payment_api_v1_platform_payments__order_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentReject"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformPaymentRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resend_receipt_api_v1_platform_payments__order_id__resend_receipt_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailOutcome"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_subscriptions_api_v1_platform_subscriptions_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PlatformSubscriptionRow_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    extend_subscription_api_v1_platform_subscriptions__subscription_id__extend_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                subscription_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubscriptionExtend"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformSubscriptionRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_team_api_v1_platform_team_get: {
         parameters: {
             query?: {
@@ -19415,6 +20745,288 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlatformTeamRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    contact_api_v1_public_contact_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContactCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Accepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    password_forgot_api_v1_public_password_forgot_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordForgot"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Accepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    password_reset_api_v1_public_password_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordReset"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_plans_api_v1_public_plans_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanRead"][];
+                };
+            };
+        };
+    };
+    signup_complete_api_v1_public_signup_complete_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupComplete"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HandoffIssued"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    signup_handoff_api_v1_public_signup_handoff_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HandoffExchange"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenPair"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    signup_resend_api_v1_public_signup_resend_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupResend"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Accepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    signup_start_api_v1_public_signup_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupStart"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Accepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    signup_verify_api_v1_public_signup_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupVerify"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupToken"];
                 };
             };
             /** @description Validation Error */
@@ -19873,7 +21485,7 @@ export interface operations {
     dashboard_api_v1_reports_dashboard_get: {
         parameters: {
             query?: {
-                trailing_days?: number;
+                trailing_days?: number | null;
             };
             header?: never;
             path?: never;
@@ -20188,6 +21800,373 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResults"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_api_v1_subscriptions_cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubscriptionDetail"];
+                };
+            };
+        };
+    };
+    change_plan_api_v1_subscriptions_change_plan_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanChange"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubscriptionDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    current_api_v1_subscriptions_current_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntitlementsRead"];
+                };
+            };
+        };
+    };
+    detail_api_v1_subscriptions_detail_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubscriptionDetail"];
+                };
+            };
+        };
+    };
+    history_api_v1_subscriptions_history_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PaymentOrderRead_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_orders_api_v1_subscriptions_orders_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PaymentOrderRead_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_order_api_v1_subscriptions_orders_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentOrderCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentOrderRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_order_api_v1_subscriptions_orders__order_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentOrderDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_proof_api_v1_subscriptions_orders__order_id__proof_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_payment_api_v1_subscriptions_orders__order_id__submit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentSubmit"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentOrderRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_receipt_api_v1_subscriptions_receipts__order_id__pdf_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resume_api_v1_subscriptions_resume_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubscriptionDetail"];
+                };
+            };
+        };
+    };
+    upgrade_quote_api_v1_subscriptions_upgrade_quote_get: {
+        parameters: {
+            query: {
+                plan_code: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpgradeQuote"];
                 };
             };
             /** @description Validation Error */

@@ -1,6 +1,19 @@
 {
   "components": {
     "schemas": {
+      "Accepted": {
+        "description": "The same answer whatever happened, so the answer reveals nothing.",
+        "properties": {
+          "status": {
+            "const": "sent",
+            "default": "sent",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "Accepted",
+        "type": "object"
+      },
       "AccessionRequest": {
         "description": "The lab accepting a doctor's order onto its bench.\n\n`catalogue_item_id` may be left out when the order already carries a\ncatalogue code — the test is named, and picking it again is an extra step\nand a chance to pick the wrong price. A free-text order (\"Complete Blood\nCount\", no code) still needs the lab to say which test it means, and is\nrefused (`needs_mapping`) until it does; the lab can correct a typo without\nbouncing the order back to the consulting room.",
         "properties": {
@@ -4546,6 +4559,129 @@
         "title": "ConsentType",
         "type": "string"
       },
+      "ContactCreate": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "hospital_name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Name"
+          },
+          "message": {
+            "maxLength": 4000,
+            "minLength": 10,
+            "title": "Message",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "message"
+        ],
+        "title": "ContactCreate",
+        "type": "object"
+      },
+      "ContactMessageRead": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "hospital_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Name"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "phone",
+          "hospital_name",
+          "message",
+          "created_at"
+        ],
+        "title": "ContactMessageRead",
+        "type": "object"
+      },
       "CostBreakdown": {
         "description": "What a visit has cost so far, grouped. Pending and invoiced charges both\ncount; cancelled and waived ones do not.",
         "properties": {
@@ -4660,6 +4796,16 @@
           "email": {
             "title": "Email",
             "type": "string"
+          },
+          "entitlements": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EntitlementsRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "full_name": {
             "title": "Full Name",
@@ -6372,6 +6518,31 @@
         "title": "DuplicateCandidate",
         "type": "object"
       },
+      "EmailOutcome": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "error"
+        ],
+        "title": "EmailOutcome",
+        "type": "object"
+      },
       "EmergencyRegister": {
         "description": "One tap at the casualty door (UX-01): a patient nobody can name.\n\nNo name and no mobile — the patient is registered as `Unknown Male\nEM-0034` and identified later. Gender is the one thing staff can always\nsee (or say they cannot: `UNKNOWN`); an age is a guess and may be left out.",
         "properties": {
@@ -7241,6 +7412,67 @@
         "title": "EncounterUpdate",
         "type": "object"
       },
+      "EntitlementsRead": {
+        "description": "A hospital's plan and what it unlocks, as the app needs it.\n\nLike `permissions` on `/auth/me`, this decides what to *render*. The API\nre-checks the subscription and the feature on every request.",
+        "properties": {
+          "complimentary": {
+            "title": "Complimentary",
+            "type": "boolean"
+          },
+          "days_left": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Days Left"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period End"
+          },
+          "plan_code": {
+            "title": "Plan Code",
+            "type": "string"
+          },
+          "plan_name": {
+            "title": "Plan Name",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SubscriptionStatus"
+          }
+        },
+        "required": [
+          "plan_code",
+          "plan_name",
+          "status",
+          "period_end",
+          "days_left",
+          "complimentary",
+          "features"
+        ],
+        "title": "EntitlementsRead",
+        "type": "object"
+      },
       "FollowUpCompliance": {
         "description": "CLAUDE.md §13 step 10: follow-up compliance.\n\n\"Advised\" counts visits where a doctor set a follow-up date. \"Honoured\"\ncounts those where the patient actually came back on or after it.\n\nPending visits — the date has not arrived yet — are excluded from the rate\nrather than counted as failures. Including them would make the number depend\non when the report is run, which is how a compliance metric becomes\nsomething nobody trusts.",
         "properties": {
@@ -7366,6 +7598,39 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HandoffExchange": {
+        "properties": {
+          "code": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "title": "HandoffExchange",
+        "type": "object"
+      },
+      "HandoffIssued": {
+        "properties": {
+          "expires_in": {
+            "title": "Expires In",
+            "type": "integer"
+          },
+          "handoff_code": {
+            "title": "Handoff Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "handoff_code",
+          "expires_in"
+        ],
+        "title": "HandoffIssued",
         "type": "object"
       },
       "HospitalAdminInviteCreate": {
@@ -11686,6 +11951,45 @@
         "title": "Page[ClaimRead]",
         "type": "object"
       },
+      "Page_ContactMessageRead_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ContactMessageRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[ContactMessageRead]",
+        "type": "object"
+      },
       "Page_DepartmentRead_": {
         "properties": {
           "has_more": {
@@ -12388,6 +12692,45 @@
         "title": "Page[PatientVisit]",
         "type": "object"
       },
+      "Page_PaymentOrderRead_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PaymentOrderRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[PaymentOrderRead]",
+        "type": "object"
+      },
       "Page_PaymentRead_": {
         "properties": {
           "has_more": {
@@ -12542,6 +12885,84 @@
           "has_more"
         ],
         "title": "Page[PlatformHospitalRow]",
+        "type": "object"
+      },
+      "Page_PlatformPaymentRow_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformPaymentRow"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[PlatformPaymentRow]",
+        "type": "object"
+      },
+      "Page_PlatformSubscriptionRow_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformSubscriptionRow"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[PlatformSubscriptionRow]",
         "type": "object"
       },
       "Page_PlatformTeamRow_": {
@@ -12971,6 +13392,48 @@
           "has_more"
         ],
         "title": "Page[WorklistEntry]",
+        "type": "object"
+      },
+      "PasswordForgot": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "PasswordForgot",
+        "type": "object"
+      },
+      "PasswordReset": {
+        "properties": {
+          "code": {
+            "description": "The six digits from the email.",
+            "pattern": "^\\s*\\d{6}\\s*$",
+            "title": "Code",
+            "type": "string"
+          },
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "code",
+          "password"
+        ],
+        "title": "PasswordReset",
         "type": "object"
       },
       "PatientAlertRead": {
@@ -14698,6 +15161,273 @@
         "title": "PaymentMethod",
         "type": "string"
       },
+      "PaymentOrderCreate": {
+        "description": "What the payer chooses. The amount is never theirs to say.",
+        "properties": {
+          "plan_code": {
+            "anyOf": [
+              {
+                "maxLength": 32,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plan Code"
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/PaymentOrderPurpose",
+            "default": "NEW"
+          }
+        },
+        "title": "PaymentOrderCreate",
+        "type": "object"
+      },
+      "PaymentOrderDetail": {
+        "description": "One order, with what the payment screen needs to show.",
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "has_proof": {
+            "title": "Has Proof",
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "payee_name": {
+            "title": "Payee Name",
+            "type": "string"
+          },
+          "plan_code": {
+            "title": "Plan Code",
+            "type": "string"
+          },
+          "plan_name": {
+            "title": "Plan Name",
+            "type": "string"
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/PaymentOrderPurpose"
+          },
+          "qr_svg": {
+            "title": "Qr Svg",
+            "type": "string"
+          },
+          "receipt_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Receipt Number"
+          },
+          "reference_code": {
+            "title": "Reference Code",
+            "type": "string"
+          },
+          "rejection_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejection Reason"
+          },
+          "review_hours": {
+            "title": "Review Hours",
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentOrderStatus"
+          },
+          "submitted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted At"
+          },
+          "upi_uri": {
+            "title": "Upi Uri",
+            "type": "string"
+          },
+          "upi_vpa": {
+            "title": "Upi Vpa",
+            "type": "string"
+          },
+          "utr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utr"
+          }
+        },
+        "required": [
+          "id",
+          "reference_code",
+          "purpose",
+          "plan_code",
+          "plan_name",
+          "amount_inr",
+          "status",
+          "utr",
+          "submitted_at",
+          "rejection_reason",
+          "expires_at",
+          "created_at",
+          "upi_uri",
+          "upi_vpa",
+          "payee_name",
+          "qr_svg",
+          "review_hours",
+          "has_proof"
+        ],
+        "title": "PaymentOrderDetail",
+        "type": "object"
+      },
+      "PaymentOrderPurpose": {
+        "enum": [
+          "NEW",
+          "RENEWAL",
+          "UPGRADE"
+        ],
+        "title": "PaymentOrderPurpose",
+        "type": "string"
+      },
+      "PaymentOrderRead": {
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "plan_code": {
+            "title": "Plan Code",
+            "type": "string"
+          },
+          "plan_name": {
+            "title": "Plan Name",
+            "type": "string"
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/PaymentOrderPurpose"
+          },
+          "reference_code": {
+            "title": "Reference Code",
+            "type": "string"
+          },
+          "rejection_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejection Reason"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentOrderStatus"
+          },
+          "submitted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted At"
+          },
+          "utr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utr"
+          }
+        },
+        "required": [
+          "id",
+          "reference_code",
+          "purpose",
+          "plan_code",
+          "plan_name",
+          "amount_inr",
+          "status",
+          "utr",
+          "submitted_at",
+          "rejection_reason",
+          "expires_at",
+          "created_at"
+        ],
+        "title": "PaymentOrderRead",
+        "type": "object"
+      },
+      "PaymentOrderStatus": {
+        "enum": [
+          "AWAITING_PAYMENT",
+          "SUBMITTED",
+          "APPROVED",
+          "REJECTED",
+          "EXPIRED"
+        ],
+        "title": "PaymentOrderStatus",
+        "type": "string"
+      },
       "PaymentRead": {
         "properties": {
           "amount": {
@@ -14809,6 +15539,22 @@
           "reversal_reason"
         ],
         "title": "PaymentRead",
+        "type": "object"
+      },
+      "PaymentReject": {
+        "properties": {
+          "reason": {
+            "description": "Shown to the payer, in an email.",
+            "maxLength": 500,
+            "minLength": 5,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "title": "PaymentReject",
         "type": "object"
       },
       "PaymentRequest": {
@@ -15013,6 +15759,33 @@
         "title": "PaymentStatus",
         "type": "string"
       },
+      "PaymentSubmit": {
+        "properties": {
+          "payer_upi_id": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payer Upi Id"
+          },
+          "utr": {
+            "description": "The 12-digit UTR (UPI reference number) from the payer's UPI app.",
+            "pattern": "^\\d{12}$",
+            "title": "Utr",
+            "type": "string"
+          }
+        },
+        "required": [
+          "utr"
+        ],
+        "title": "PaymentSubmit",
+        "type": "object"
+      },
       "PendingItems": {
         "description": "Why a visit will not close yet — in words reception can act on.",
         "properties": {
@@ -15075,6 +15848,57 @@
           "description"
         ],
         "title": "PermissionRead",
+        "type": "object"
+      },
+      "PlanChange": {
+        "properties": {
+          "plan_code": {
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Plan Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_code"
+        ],
+        "title": "PlanChange",
+        "type": "object"
+      },
+      "PlanRead": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "interval_days": {
+            "title": "Interval Days",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "price_inr": {
+            "title": "Price Inr",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "price_inr",
+          "interval_days",
+          "features"
+        ],
+        "title": "PlanRead",
         "type": "object"
       },
       "PlatformAdminRow": {
@@ -15145,7 +15969,18 @@
       "PlatformEmailKind": {
         "enum": [
           "INVITE",
-          "INVITE_RESEND"
+          "INVITE_RESEND",
+          "OTP",
+          "SIGNUP_EXISTS",
+          "PASSWORD_RESET",
+          "PAYMENT_SUBMITTED",
+          "PAYMENT_ALERT",
+          "PAYMENT_APPROVED",
+          "PAYMENT_REJECTED",
+          "CONTACT_ALERT",
+          "SUBSCRIPTION_REMINDER",
+          "SUBSCRIPTION_GRACE",
+          "SUBSCRIPTION_EXPIRED"
         ],
         "title": "PlatformEmailKind",
         "type": "string"
@@ -15426,6 +16261,10 @@
             "title": "Emails Failed 7D",
             "type": "integer"
           },
+          "payments_awaiting_review": {
+            "title": "Payments Awaiting Review",
+            "type": "integer"
+          },
           "pending_invites": {
             "title": "Pending Invites",
             "type": "integer"
@@ -15452,10 +16291,281 @@
           "pending_invites",
           "staff_accounts",
           "emails_failed_7d",
+          "payments_awaiting_review",
           "attention",
           "recent_activity"
         ],
         "title": "PlatformOverviewRead",
+        "type": "object"
+      },
+      "PlatformPaymentRow": {
+        "description": "A payment as the platform owner reviews it.",
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "has_proof": {
+            "title": "Has Proof",
+            "type": "boolean"
+          },
+          "hospital_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Id"
+          },
+          "hospital_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Name"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "payer_email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payer Email"
+          },
+          "payer_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payer Name"
+          },
+          "payer_upi_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payer Upi Id"
+          },
+          "plan_code": {
+            "title": "Plan Code",
+            "type": "string"
+          },
+          "plan_name": {
+            "title": "Plan Name",
+            "type": "string"
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/PaymentOrderPurpose"
+          },
+          "receipt_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Receipt Number"
+          },
+          "reference_code": {
+            "title": "Reference Code",
+            "type": "string"
+          },
+          "rejection_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejection Reason"
+          },
+          "reviewed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewed At"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentOrderStatus"
+          },
+          "submitted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted At"
+          },
+          "utr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utr"
+          }
+        },
+        "required": [
+          "id",
+          "reference_code",
+          "purpose",
+          "plan_code",
+          "plan_name",
+          "amount_inr",
+          "status",
+          "utr",
+          "submitted_at",
+          "rejection_reason",
+          "expires_at",
+          "created_at",
+          "payer_name",
+          "payer_email",
+          "payer_upi_id",
+          "hospital_name",
+          "hospital_id",
+          "reviewed_at",
+          "has_proof",
+          "receipt_number"
+        ],
+        "title": "PlatformPaymentRow",
+        "type": "object"
+      },
+      "PlatformSubscriptionRow": {
+        "properties": {
+          "cancel_at_period_end": {
+            "title": "Cancel At Period End",
+            "type": "boolean"
+          },
+          "complimentary": {
+            "title": "Complimentary",
+            "type": "boolean"
+          },
+          "current_period_end": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Period End"
+          },
+          "current_period_start": {
+            "format": "date-time",
+            "title": "Current Period Start",
+            "type": "string"
+          },
+          "hospital_id": {
+            "format": "uuid",
+            "title": "Hospital Id",
+            "type": "string"
+          },
+          "hospital_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hospital Name"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "pending_plan_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pending Plan Code"
+          },
+          "plan_code": {
+            "title": "Plan Code",
+            "type": "string"
+          },
+          "plan_name": {
+            "title": "Plan Name",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SubscriptionStatus"
+          }
+        },
+        "required": [
+          "plan_code",
+          "plan_name",
+          "status",
+          "current_period_start",
+          "current_period_end",
+          "pending_plan_code",
+          "cancel_at_period_end",
+          "complimentary",
+          "id",
+          "hospital_id",
+          "hospital_name"
+        ],
+        "title": "PlatformSubscriptionRow",
         "type": "object"
       },
       "PlatformTeamRow": {
@@ -18942,6 +20052,128 @@
         "title": "SignSummary",
         "type": "object"
       },
+      "SignupComplete": {
+        "properties": {
+          "password": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          },
+          "signup_token": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Signup Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "signup_token",
+          "password"
+        ],
+        "title": "SignupComplete",
+        "type": "object"
+      },
+      "SignupResend": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "SignupResend",
+        "type": "object"
+      },
+      "SignupStart": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "full_name": {
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Full Name",
+            "type": "string"
+          },
+          "hospital_name": {
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Hospital Name",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "plan_code": {
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Plan Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "full_name",
+          "email",
+          "hospital_name",
+          "plan_code"
+        ],
+        "title": "SignupStart",
+        "type": "object"
+      },
+      "SignupToken": {
+        "properties": {
+          "expires_in": {
+            "title": "Expires In",
+            "type": "integer"
+          },
+          "signup_token": {
+            "title": "Signup Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "signup_token",
+          "expires_in"
+        ],
+        "title": "SignupToken",
+        "type": "object"
+      },
+      "SignupVerify": {
+        "properties": {
+          "code": {
+            "description": "The six digits from the email.",
+            "pattern": "^\\s*\\d{6}\\s*$",
+            "title": "Code",
+            "type": "string"
+          },
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "code"
+        ],
+        "title": "SignupVerify",
+        "type": "object"
+      },
       "SkipRequest": {
         "properties": {
           "reason": {
@@ -19231,6 +20463,102 @@
         ],
         "title": "StayRead",
         "type": "object"
+      },
+      "SubscriptionDetail": {
+        "description": "A hospital's subscription as its administrator manages it.",
+        "properties": {
+          "cancel_at_period_end": {
+            "title": "Cancel At Period End",
+            "type": "boolean"
+          },
+          "complimentary": {
+            "title": "Complimentary",
+            "type": "boolean"
+          },
+          "current_period_end": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Period End"
+          },
+          "current_period_start": {
+            "format": "date-time",
+            "title": "Current Period Start",
+            "type": "string"
+          },
+          "pending_plan_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pending Plan Code"
+          },
+          "plan_code": {
+            "title": "Plan Code",
+            "type": "string"
+          },
+          "plan_name": {
+            "title": "Plan Name",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SubscriptionStatus"
+          }
+        },
+        "required": [
+          "plan_code",
+          "plan_name",
+          "status",
+          "current_period_start",
+          "current_period_end",
+          "pending_plan_code",
+          "cancel_at_period_end",
+          "complimentary"
+        ],
+        "title": "SubscriptionDetail",
+        "type": "object"
+      },
+      "SubscriptionExtend": {
+        "properties": {
+          "days": {
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Days",
+            "type": "integer"
+          },
+          "reason": {
+            "maxLength": 300,
+            "minLength": 3,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "days",
+          "reason"
+        ],
+        "title": "SubscriptionExtend",
+        "type": "object"
+      },
+      "SubscriptionStatus": {
+        "enum": [
+          "ACTIVE",
+          "GRACE",
+          "EXPIRED",
+          "CANCELLED"
+        ],
+        "title": "SubscriptionStatus",
+        "type": "string"
       },
       "SummaryRead": {
         "properties": {
@@ -19910,7 +21238,8 @@
           "INVALID_CONTACT",
           "STAFF_BLOCK",
           "UNIDENTIFIED",
-          "DISABLED"
+          "DISABLED",
+          "NOT_IN_PLAN"
         ],
         "title": "SuppressionReason",
         "type": "string"
@@ -20227,6 +21556,30 @@
           "code"
         ],
         "title": "TwoFactorVerify",
+        "type": "object"
+      },
+      "UpgradeQuote": {
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "integer"
+          },
+          "period_end": {
+            "format": "date-time",
+            "title": "Period End",
+            "type": "string"
+          },
+          "plan_code": {
+            "title": "Plan Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_code",
+          "amount_inr",
+          "period_end"
+        ],
+        "title": "UpgradeQuote",
         "type": "object"
       },
       "UserCreate": {
@@ -35227,6 +36580,67 @@
         ]
       }
     },
+    "/api/v1/platform/contact-messages": {
+      "get": {
+        "operationId": "list_contact_messages_api_v1_platform_contact_messages_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ContactMessageRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Messages from the website's contact form",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
     "/api/v1/platform/emails": {
       "get": {
         "operationId": "list_emails_api_v1_platform_emails_get",
@@ -35819,6 +37233,450 @@
         ]
       }
     },
+    "/api/v1/platform/payments": {
+      "get": {
+        "operationId": "list_payments_api_v1_platform_payments_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PaymentOrderStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PlatformPaymentRow_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Payments, newest first",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/payments/{order_id}": {
+      "get": {
+        "operationId": "get_payment_api_v1_platform_payments__order_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformPaymentRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "One payment",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/payments/{order_id}/approve": {
+      "post": {
+        "operationId": "approve_payment_api_v1_platform_payments__order_id__approve_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformPaymentRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Approve: create the hospital, its admin, subscription and receipt",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/payments/{order_id}/proof": {
+      "get": {
+        "operationId": "get_proof_api_v1_platform_payments__order_id__proof_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/pdf": {},
+              "image/jpeg": {},
+              "image/png": {}
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "The payer's screenshot",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/payments/{order_id}/reject": {
+      "post": {
+        "operationId": "reject_payment_api_v1_platform_payments__order_id__reject_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentReject"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformPaymentRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Reject with a reason the payer will read",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/payments/{order_id}/resend-receipt": {
+      "post": {
+        "operationId": "resend_receipt_api_v1_platform_payments__order_id__resend_receipt_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailOutcome"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Email the approval and receipt again",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/subscriptions": {
+      "get": {
+        "operationId": "list_subscriptions_api_v1_platform_subscriptions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PlatformSubscriptionRow_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Every hospital's subscription, the soonest to end first",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/subscriptions/{subscription_id}/extend": {
+      "post": {
+        "operationId": "extend_subscription_api_v1_platform_subscriptions__subscription_id__extend_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscription_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Subscription Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionExtend"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformSubscriptionRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Add days to a hospital's paid period",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
     "/api/v1/platform/team": {
       "get": {
         "operationId": "list_team_api_v1_platform_team_get",
@@ -35971,6 +37829,352 @@
         "summary": "Remove someone from the platform team",
         "tags": [
           "platform"
+        ]
+      }
+    },
+    "/api/v1/public/contact": {
+      "post": {
+        "operationId": "contact_api_v1_public_contact_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send a message from the website's contact form",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/password/forgot": {
+      "post": {
+        "operationId": "password_forgot_api_v1_public_password_forgot_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordForgot"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Email a password reset code",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/password/reset": {
+      "post": {
+        "operationId": "password_reset_api_v1_public_password_reset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordReset"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set a new password with the emailed code",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/plans": {
+      "get": {
+        "operationId": "list_plans_api_v1_public_plans_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlanRead"
+                  },
+                  "title": "Response List Plans Api V1 Public Plans Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "The plans on sale, with prices",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/signup/complete": {
+      "post": {
+        "operationId": "signup_complete_api_v1_public_signup_complete_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupComplete"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HandoffIssued"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Choose a password; the account is created",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/signup/handoff": {
+      "post": {
+        "operationId": "signup_handoff_api_v1_public_signup_handoff_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HandoffExchange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Exchange the one-time signup code for a session",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/signup/resend": {
+      "post": {
+        "operationId": "signup_resend_api_v1_public_signup_resend_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupResend"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send the verification code again",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/signup/start": {
+      "post": {
+        "operationId": "signup_start_api_v1_public_signup_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupStart"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start a signup: email a verification code",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/signup/verify": {
+      "post": {
+        "operationId": "signup_verify_api_v1_public_signup_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupVerify"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupToken"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Check the emailed code",
+        "tags": [
+          "public"
         ]
       }
     },
@@ -36744,7 +38948,7 @@
     },
     "/api/v1/reports/dashboard": {
       "get": {
-        "description": "Everything this user is allowed to see, in one round trip (CLAUDE.md §7b).",
+        "description": "Everything this user is allowed to see, in one round trip (CLAUDE.md §7b).\n\nA plan without period reports gets today: that is its default, and asking\nfor a longer window is refused rather than quietly shortened, so a number\nis never mislabelled as a month's.",
         "operationId": "dashboard_api_v1_reports_dashboard_get",
         "parameters": [
           {
@@ -36752,11 +38956,17 @@
             "name": "trailing_days",
             "required": false,
             "schema": {
-              "default": 30,
-              "maximum": 90,
-              "minimum": 1,
-              "title": "Trailing Days",
-              "type": "integer"
+              "anyOf": [
+                {
+                  "maximum": 90,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Trailing Days"
             }
           }
         ],
@@ -37412,6 +39622,560 @@
         "summary": "One box for any identifier",
         "tags": [
           "search"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/cancel": {
+      "post": {
+        "operationId": "cancel_api_v1_subscriptions_cancel_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Stop at the end of the month",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/change-plan": {
+      "post": {
+        "operationId": "change_plan_api_v1_subscriptions_change_plan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Move to a lower plan at the next renewal (or undo that)",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/current": {
+      "get": {
+        "operationId": "current_api_v1_subscriptions_current_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntitlementsRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "The hospital's subscription",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/detail": {
+      "get": {
+        "operationId": "detail_api_v1_subscriptions_detail_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "The subscription, for managing it",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/history": {
+      "get": {
+        "operationId": "history_api_v1_subscriptions_history_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PaymentOrderRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "The hospital's payments",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/orders": {
+      "get": {
+        "operationId": "list_orders_api_v1_subscriptions_orders_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PaymentOrderRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "My payments, newest first",
+        "tags": [
+          "subscriptions"
+        ]
+      },
+      "post": {
+        "operationId": "create_order_api_v1_subscriptions_orders_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentOrderCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentOrderRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Start paying for a plan (or get the payment already started)",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/orders/{order_id}": {
+      "get": {
+        "operationId": "get_order_api_v1_subscriptions_orders__order_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentOrderDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "One payment, with its QR",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/orders/{order_id}/proof": {
+      "put": {
+        "operationId": "upload_proof_api_v1_subscriptions_orders__order_id__proof_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Upload a screenshot of the payment (PNG, JPEG or PDF, up to 5 MB)",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/orders/{order_id}/submit": {
+      "post": {
+        "operationId": "submit_payment_api_v1_subscriptions_orders__order_id__submit_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentSubmit"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentOrderRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Send the UTR for checking",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/receipts/{order_id}/pdf": {
+      "get": {
+        "operationId": "download_receipt_api_v1_subscriptions_receipts__order_id__pdf_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/pdf": {}
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Download the receipt for an approved payment",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/resume": {
+      "post": {
+        "operationId": "resume_api_v1_subscriptions_resume_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Undo a cancellation",
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/upgrade-quote": {
+      "get": {
+        "operationId": "upgrade_quote_api_v1_subscriptions_upgrade_quote_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "plan_code",
+            "required": true,
+            "schema": {
+              "title": "Plan Code",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpgradeQuote"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "What an upgrade would cost now",
+        "tags": [
+          "subscriptions"
         ]
       }
     },

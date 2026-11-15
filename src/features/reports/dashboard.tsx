@@ -73,11 +73,15 @@ const FootfallChart = dynamic(
 export function ReportsDashboard({
   initial,
   initialPeriod,
+  todayOnly = false,
 }: {
   initial: Dashboard;
   initialPeriod: Period;
+  /** The plan has no period reports: no picker, and a line saying why. */
+  todayOnly?: boolean;
 }) {
   const t = useTranslations("reports");
+  const tSubscription = useTranslations("subscription");
   const [period, setPeriod] = useState<Period>(initialPeriod);
 
   const dashboard = useQuery({
@@ -137,7 +141,13 @@ export function ReportsDashboard({
             </p>
           ) : null}
         </div>
-        <PeriodPicker value={period} onChange={choose} busy={dashboard.isFetching} />
+        {todayOnly ? (
+          <p className="text-muted-foreground max-w-sm text-sm" data-testid="today-only">
+            {tSubscription("todayOnly")}
+          </p>
+        ) : (
+          <PeriodPicker value={period} onChange={choose} busy={dashboard.isFetching} />
+        )}
       </header>
 
       <RevenueSection report={data?.revenue} />

@@ -56,6 +56,9 @@ export function homePathFor(user: CurrentUser | null): string {
   // home is the console.
   if (can(user, "platform:console")) return "/platform";
 
+  // Signed up but not yet paid: no hospital, no role. Paying is all there is.
+  if (!user.hospital_id) return "/get-started";
+
   // Doctors see OPD patients in person, on paper, and do no data entry there
   // — reception marks them seen. Their screen is the queue (who is waiting),
   // with the wards a click away for the inpatients they still chart.

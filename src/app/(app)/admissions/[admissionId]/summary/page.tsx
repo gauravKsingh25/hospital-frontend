@@ -27,14 +27,14 @@ export default async function SummaryPage({
   const { admissionId } = await params;
   const user = await getCurrentUser();
 
-  if (!can(user, "summary:read")) return <NoPermission />;
+  if (!can(user, "summary:read")) return <NoPermission feature="ipd" />;
 
   let admission: Admission;
   try {
     admission = await serverFetch<Admission>(`/ipd/admissions/${admissionId}`);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) notFound();
-    if (error instanceof ApiError && error.isForbidden) return <NoPermission />;
+    if (error instanceof ApiError && error.isForbidden) return <NoPermission feature="ipd" />;
     throw error;
   }
 

@@ -13,7 +13,7 @@ export async function generateMetadata() {
 
 export default async function WardsAdminPage() {
   const user = await getCurrentUser();
-  if (!can(user, "ward:read")) return <NoPermission />;
+  if (!can(user, "ward:read")) return <NoPermission feature="ipd" />;
 
   const departments = await serverFetchOptional<Page<Department>>("/departments?limit=100");
 

@@ -3,7 +3,12 @@
 import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
-import type { InviteStatus, PlatformEmailStatus, PlatformHospitalStatus } from "@/types/api";
+import type {
+  InviteStatus,
+  PaymentOrderStatus,
+  PlatformEmailStatus,
+  PlatformHospitalStatus,
+} from "@/types/api";
 
 /**
  * Status chips for the console, in the same tones as the app's other chips
@@ -61,6 +66,23 @@ export function EmailStatusChip({ status }: { status: PlatformEmailStatus }) {
   return (
     <span className={cn(BASE, EMAIL_TONES[status])} data-status={status}>
       {t(`emailStatus_${status}`)}
+    </span>
+  );
+}
+
+const PAYMENT_TONES: Record<PaymentOrderStatus, string> = {
+  AWAITING_PAYMENT: OVER,
+  SUBMITTED: WAITING,
+  APPROVED: GOOD,
+  REJECTED: BAD,
+  EXPIRED: OVER,
+};
+
+export function PaymentStatusChip({ status }: { status: PaymentOrderStatus }) {
+  const t = useTranslations("platform");
+  return (
+    <span className={cn(BASE, PAYMENT_TONES[status])} data-status={status}>
+      {t(`paymentStatus_${status}`)}
     </span>
   );
 }

@@ -22,7 +22,7 @@ export default async function AdmissionDeskPage() {
   const t = await getTranslations("admissions");
   const user = await getCurrentUser();
 
-  if (!can(user, "admission:desk")) return <NoPermission />;
+  if (!can(user, "admission:desk")) return <NoPermission feature="ipd" />;
 
   return (
     <div className="space-y-6">

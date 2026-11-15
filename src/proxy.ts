@@ -34,9 +34,14 @@ import { isExpiring, parseSession, SESSION_COOKIE_NAME } from "@/lib/session-coo
 // no session at all, which is the point of a lock.
 // `/invite`: the link in an invitation email, opened before the person has an
 // account — the token in the path is the credential.
+// `/forgot-password`: resetting a password happens signed out, by definition.
+// `/auth/handoff`: the website's signup ends here with a one-time code, before
+// this app has a session to check.
 const PUBLIC_PATHS = [
   "/login",
   "/invite",
+  "/forgot-password",
+  "/auth/handoff",
   "/auth/refresh",
   "/auth/lock",
   "/auth/unlock",

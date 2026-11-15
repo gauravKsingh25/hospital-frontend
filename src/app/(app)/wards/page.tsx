@@ -23,7 +23,7 @@ export default async function WardsPage() {
   const t = await getTranslations("wards");
   const user = await getCurrentUser();
 
-  if (!can(user, "bed:read")) return <NoPermission />;
+  if (!can(user, "bed:read")) return <NoPermission feature="ipd" />;
 
   const [board, occupancy] = await Promise.all([
     serverFetch<BoardWard[]>("/ipd/wards/board"),

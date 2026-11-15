@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
@@ -8,6 +8,7 @@ import { z } from "zod";
 import { ApiError } from "@/lib/api/error";
 import { callApi } from "@/lib/api/fetch";
 import { serverFetch } from "@/lib/api/server";
+import { forwardedFor } from "@/lib/forwarded-for";
 import { readTwoFactorChallenge } from "@/lib/two-factor";
 import {
   DEVICE_COOKIE_NAME,
@@ -202,6 +203,23 @@ export async function acceptInvite(
 }
 
 export async function signOut(): Promise<never> {
+  await endSession();
+  redirect("/login");
+}
+
+/**
+ * After a signup payment is approved: sign in again to enter the hospital.
+ *
+ * The approval ended this account's sessions (its new administrator role may
+ * need two-step sign-in, which only sign-in enforces), so the way in is the
+ * login screen, which then continues to the hospital's profile.
+ */
+export async function signInToNewHospital(): Promise<never> {
+  await endSession();
+  redirect(`/login?next=${encodeURIComponent("/admin/hospital")}`);
+}
+
+async function endSession(): Promise<void> {
   const session = await readSession();
   const store = await cookies();
 
@@ -223,8 +241,6 @@ export async function signOut(): Promise<never> {
       // expires on its own; a failed revocation is not worth blocking on.
     }
   }
-
-  redirect("/login");
 }
 
 const passwordChange = z
@@ -355,4 +371,78 @@ export async function confirmTwoFactorEnrolment(
   formData: FormData,
 ): Promise<TwoFactorFormState> {
   return finishTwoFactor("/auth/2fa/enrol/confirm", formData);
+}
+
+// ---------------------------------------------------------------------------
+// Forgotten password (a code by email)
+// ---------------------------------------------------------------------------
+export type ResetFormState = {
+  sent?: boolean;
+  email?: string;
+  error?: string;
+  fieldErrors?: Partial<Record<"email" | "code" | "password" | "confirmPassword", string>>;
+};
+
+/** Step one. Always "sent": the answer must not say whether an account exists. */
+export async function requestPasswordReset(
+  _previous: ResetFormState,
+  formData: FormData,
+): Promise<ResetFormState> {
+  const t = await getTranslations("forgotPassword");
+  const auth = await getTranslations("auth");
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!z.email().safeParse(email).success) {
+    return { fieldErrors: { email: auth("emailInvalid") } };
+  }
+  try {
+    await callApi("/public/password/forgot", {
+      method: "POST",
+      body: { email },
+      headers: forwardedFor(await headers()),
+    });
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 429) return { error: t("tooMany") };
+    throw error;
+  }
+  return { sent: true, email };
+}
+
+/** Step two: the code and the new password. Signs out every other session. */
+export async function resetPassword(
+  _previous: ResetFormState,
+  formData: FormData,
+): Promise<ResetFormState> {
+  const t = await getTranslations("forgotPassword");
+  const auth = await getTranslations("auth");
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const code = String(formData.get("code") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const confirm = String(formData.get("confirmPassword") ?? "");
+
+  if (!/^\d{6}$/.test(code)) return { sent: true, email, fieldErrors: { code: t("codeFormat") } };
+  if (password.length < 12) {
+    return { sent: true, email, fieldErrors: { password: auth("passwordTooShort", { min: 12 }) } };
+  }
+  if (password !== confirm) {
+    return { sent: true, email, fieldErrors: { confirmPassword: auth("passwordsDoNotMatch") } };
+  }
+
+  try {
+    await callApi("/public/password/reset", {
+      method: "POST",
+      body: { email, code, password },
+      headers: forwardedFor(await headers()),
+    });
+  } catch (error) {
+    if (error instanceof ApiError) {
+      if (error.code === "otp_invalid") return { sent: true, email, error: t("codeInvalid") };
+      if (error.status === 429) return { sent: true, email, error: t("tooMany") };
+      if (error.code === "weak_password" || error.status === 422) {
+        return { sent: true, email, fieldErrors: { password: error.message } };
+      }
+      return { sent: true, email, error: error.message };
+    }
+    throw error;
+  }
+  redirect("/login?reset=done");
 }

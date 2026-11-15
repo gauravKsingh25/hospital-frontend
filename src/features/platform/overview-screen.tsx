@@ -40,7 +40,14 @@ export function OverviewScreen() {
         <p className="text-muted-foreground mt-1 text-sm">{t("overviewDescription")}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+        {/* First: a payer is waiting on this one, with a 12-hour promise. */}
+        <Tile
+          label={t("paymentsAwaitingReview")}
+          value={data?.payments_awaiting_review}
+          href="/platform/payments"
+          alarming={(data?.payments_awaiting_review ?? 0) > 0}
+        />
         <Tile
           label={t("activeHospitals")}
           value={data?.active_hospitals}

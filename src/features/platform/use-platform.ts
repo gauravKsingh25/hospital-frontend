@@ -21,6 +21,9 @@ export const platformKeys = {
   hospital: (id: string) => [...PLATFORM_KEY, "hospital", id] as const,
   invites: [...PLATFORM_KEY, "invites"] as const,
   emails: [...PLATFORM_KEY, "emails"] as const,
+  payments: [...PLATFORM_KEY, "payments"] as const,
+  subscriptions: [...PLATFORM_KEY, "subscriptions"] as const,
+  contactMessages: [...PLATFORM_KEY, "contact-messages"] as const,
   team: [...PLATFORM_KEY, "team"] as const,
   audit: [...PLATFORM_KEY, "audit"] as const,
 };

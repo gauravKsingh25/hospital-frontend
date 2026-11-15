@@ -25,7 +25,7 @@ export default async function BlockedPage() {
   const t = await getTranslations("messages");
   const user = await getCurrentUser();
 
-  if (!can(user, "suppression:read")) return <NoPermission />;
+  if (!can(user, "suppression:read")) return <NoPermission feature="messaging" />;
 
   const suppressions = await serverFetch<Page<Suppression>>(
     `/notifications/suppressions?limit=${BOARD_PAGE_SIZE}`,
