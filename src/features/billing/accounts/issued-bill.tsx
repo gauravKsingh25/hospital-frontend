@@ -23,6 +23,7 @@ import { formatMoney } from "@/features/billing/money";
 import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import type { InvoiceSummary, PrintableBill } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * One issued bill, as a locked form: its lines, receipts and balance.
@@ -77,7 +78,7 @@ export function IssuedBill({
     );
 
   return (
-    <div className="rounded-lg border" data-testid="issued-bill">
+    <Panel data-testid="issued-bill">
       <div className="flex flex-wrap items-center justify-between gap-2 p-3">
         <button
           type="button"
@@ -191,6 +192,6 @@ export function IssuedBill({
         pending={correct.isPending}
         onConfirm={issue}
       />
-    </div>
+    </Panel>
   );
 }

@@ -53,7 +53,7 @@ export function TokenSlip({
   return (
     <div className="mx-auto max-w-md space-y-6">
       <div
-        className="bg-card rounded-xl border p-6 text-center shadow-sm print:border-0 print:shadow-none"
+        className="bg-card shadow-panel rounded-xl border p-6 text-center print:border-0 print:shadow-none" // restyle: inline — the printed token slip
         data-testid="token-slip"
       >
         <h2 ref={headingRef} tabIndex={-1} className="text-muted-foreground text-sm font-medium">

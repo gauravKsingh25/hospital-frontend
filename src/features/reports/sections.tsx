@@ -76,7 +76,7 @@ export function TodaySection({ queue }: { queue: QueueSnapshot | null | undefine
 
       {late.length > 0 ? (
         <div
-          className="border-caution/50 bg-caution/10 space-y-1 rounded-lg border p-4"
+          className="border-caution/50 bg-caution/10 space-y-1 rounded-md border p-4" // restyle: inline — alert notice
           data-testid="running-late"
         >
           <p className="text-sm font-medium">
@@ -256,7 +256,7 @@ export function AutoClosedNote({ report }: { report: FootfallReport }) {
 
   return (
     <p
-      className="border-caution/50 bg-caution/10 rounded-lg border px-3 py-2 text-sm"
+      className="border-caution/50 bg-caution/10 rounded-md border px-3 py-2 text-sm" // restyle: inline — alert notice
       data-testid="auto-closed"
     >
       {t("autoClosed", { count: report.auto_closed })}
@@ -443,7 +443,7 @@ export function RevenueSection({ report }: { report: RevenueReport | null | unde
 
       {report.unpriced_charges > 0 ? (
         <p
-          className="border-caution/50 bg-caution/10 rounded-lg border px-3 py-2 text-sm"
+          className="border-caution/50 bg-caution/10 rounded-md border px-3 py-2 text-sm" // restyle: inline — alert notice
           data-testid="unpriced-charges"
         >
           {t("unpricedCharges", { count: report.unpriced_charges })}

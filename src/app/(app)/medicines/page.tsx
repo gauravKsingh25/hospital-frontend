@@ -4,6 +4,7 @@ import { NoPermission } from "@/components/no-permission";
 import { MedicinesScreen } from "@/features/medicines/medicines-screen";
 import { getCurrentUser } from "@/lib/api/server";
 import { can } from "@/lib/permissions";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("medicines");
@@ -27,7 +28,7 @@ export default async function MedicinesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <PageTitle>{t("title")}</PageTitle>
         <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
       </div>
       <MedicinesScreen canManage={can(user, "medicine:manage")} />

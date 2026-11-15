@@ -97,7 +97,7 @@ export function SuppressionList({
       </div>
 
       {rows.length === 0 ? (
-        <p className="text-muted-foreground rounded-lg border border-dashed py-12 text-center text-sm">
+        <p className="text-muted-foreground rounded-xl border border-dashed bg-card py-12 text-center text-sm">{/* restyle: inline — empty state */}
           {t("noSuppressions")}
         </p>
       ) : (
@@ -149,7 +149,7 @@ function SuppressionRow({
   return (
     <li
       className={cn(
-        "flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border p-3",
+        "bg-card flex flex-wrap items-center gap-x-4 gap-y-2 rounded-md border p-3", // restyle: inline — a suppression row in a list
         isDeath && "border-foreground/40 bg-foreground/5",
         lifted && "opacity-60",
       )}

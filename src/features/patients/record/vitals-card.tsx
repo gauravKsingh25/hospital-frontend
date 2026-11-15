@@ -2,6 +2,7 @@ import { Activity } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 
 import type { Vitals } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * The most recent set of vitals the hospital took, from any visit.
@@ -43,11 +44,11 @@ export function VitalsCard({ vitals }: { vitals: Vitals | null | undefined }) {
     : [];
 
   return (
-    <section className="bg-card rounded-xl border" data-testid="latest-vitals">
-      <div className="flex items-start gap-3 border-b px-4 py-3">
+    <Panel data-testid="latest-vitals">
+      <div className="bg-band flex items-start gap-3 border-b px-4 py-3">
         <Activity aria-hidden className="text-primary mt-0.5 size-5 shrink-0" />
         <div className="min-w-0 flex-1">
-          <h2 className="text-base font-semibold">{t("latestVitals")}</h2>
+          <h2 className="text-base font-medium">{t("latestVitals")}</h2>
           {vitals ? (
             <p className="text-muted-foreground text-xs">
               {t("recordedOn", {
@@ -80,6 +81,6 @@ export function VitalsCard({ vitals }: { vitals: Vitals | null | undefined }) {
           ))}
         </dl>
       )}
-    </section>
+    </Panel>
   );
 }

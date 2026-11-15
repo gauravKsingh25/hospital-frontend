@@ -21,7 +21,7 @@ export async function FeatureLocked({ feature }: { feature: Feature }) {
         <Lock aria-hidden className="size-6" />
       </div>
       <div>
-        <h1 className="text-lg font-semibold">{t("lockedTitle")}</h1>
+        <h1 className="text-xl font-medium tracking-tight">{t("lockedTitle")}</h1>{/* restyle: inline — centred state page, not a screen header */}
         <p className="text-muted-foreground mt-1 text-sm">
           {t("lockedBody", { feature: t(`features.${feature}`) })}
         </p>

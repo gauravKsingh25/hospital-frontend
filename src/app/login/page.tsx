@@ -4,6 +4,7 @@ import { Activity } from "lucide-react";
 
 import { LoginForm } from "@/features/auth/login-form";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { Panel } from "@/components/panel";
 
 export async function generateMetadata() {
   const t = await getTranslations("auth");
@@ -31,7 +32,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           <div className="bg-primary text-primary-foreground flex size-12 items-center justify-center rounded-xl">
             <Activity aria-hidden className="size-6" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">{app("name")}</h1>
+          <h1 className="text-2xl font-medium tracking-tight">{app("name")}</h1>{/* restyle: inline — centred sign-in screen, not a screen header */}
           <div>
             <p className="text-base font-medium">{t("welcome")}</p>
             <p className="text-muted-foreground mt-1 text-sm text-balance">{t("subtitle")}</p>
@@ -39,19 +40,19 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
         </div>
 
         {reset === "done" ? (
-          <p role="status" className="bg-success/10 text-success mb-4 rounded-lg border border-success/25 p-3 text-sm">
+          <p role="status" className="bg-success/10 text-success mb-4 rounded-md border border-success/25 p-3 text-sm"> {/* restyle: inline — notice */}
             {forgot("done")}
           </p>
         ) : null}
         {handoff === "failed" ? (
-          <p role="status" className="bg-caution/15 mb-4 rounded-lg border border-caution/40 p-3 text-sm">
+          <p role="status" className="bg-caution/15 text-caution-foreground mb-4 rounded-md border border-caution/40 p-3 text-sm"> {/* restyle: inline — notice */}
             {handoffT("failed")}
           </p>
         ) : null}
 
-        <div className="bg-card rounded-xl border p-6 shadow-sm">
+        <Panel className="p-6">
           <LoginForm next={typeof next === "string" ? next : "/"} />
-        </div>
+        </Panel>
 
         <div className="mt-4 flex justify-center">
           <Link

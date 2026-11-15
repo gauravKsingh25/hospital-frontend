@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Inter, Noto_Sans_Devanagari } from "next/font/google";
+import { DM_Mono, Instrument_Sans, Noto_Sans_Devanagari } from "next/font/google";
 
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -16,15 +16,25 @@ import "./globals.css";
  * request leaves for a third party carrying a hospital's referrer, and a
  * hospital network that blocks Google still renders correctly.
  *
- * Two families, because Inter has no Devanagari coverage. They are stacked in
+ * Instrument Sans for text and DM Mono for numbers (Frost and slate). Instrument
+ * Sans has no Devanagari coverage, so Noto Sans Devanagari is stacked in
  * `--font-sans` rather than swapped by locale: a Hindi screen still shows
  * English drug names and UHIDs, and picking a font per page would render
  * those in whatever the browser fell back to. Stacking lets each glyph come
  * from the family that actually has it, in the same line of text.
  */
-const inter = Inter({
+const instrument = Instrument_Sans({
   subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600"],
   variable: "--font-latin",
+  display: "swap",
+});
+
+// latin-ext carries the rupee sign (U+20B9), which `.tabular` money shows.
+const mono = DM_Mono({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500"],
+  variable: "--font-dm-mono",
   display: "swap",
 });
 
@@ -52,8 +62,8 @@ export const viewport: Viewport = {
   // dressed up as polish.
   maximumScale: 5,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f8f9" },
-    { media: "(prefers-color-scheme: dark)", color: "#1c1f24" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f9fa" },
+    { media: "(prefers-color-scheme: dark)", color: "#141d22" },
   ],
 };
 
@@ -63,7 +73,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${devanagari.variable} h-full`}
+      className={`${instrument.variable} ${devanagari.variable} ${mono.variable} h-full`}
       suppressHydrationWarning
     >
       <body className="bg-background text-foreground flex min-h-full flex-col antialiased">

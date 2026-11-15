@@ -14,6 +14,8 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { Analyte, DiagnosticReport, ResultValue } from "@/types/api";
+import { Panel } from "@/components/panel";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * Entering and signing one report.
@@ -120,8 +122,8 @@ export function ReportScreen({
       <ReportHeader report={report} />
 
       {isRadiology ? (
-        <section className="space-y-3 rounded-lg border p-4" aria-labelledby="narrative-heading">
-          <h2 id="narrative-heading" className="text-sm font-semibold">
+        <Panel className="space-y-3 p-4" aria-labelledby="narrative-heading">
+          <h2 id="narrative-heading" className="text-sm font-medium">
             {t("narrative")}
           </h2>
 
@@ -156,10 +158,10 @@ export function ReportScreen({
               {common("save")}
             </Button>
           ) : null}
-        </section>
+        </Panel>
       ) : (
-        <section className="space-y-3 rounded-lg border p-4" aria-labelledby="results-heading">
-          <h2 id="results-heading" className="text-sm font-semibold">
+        <Panel className="space-y-3 p-4" aria-labelledby="results-heading">
+          <h2 id="results-heading" className="text-sm font-medium">
             {t("results")}
           </h2>
 
@@ -211,12 +213,12 @@ export function ReportScreen({
               {t("saveResults")}
             </Button>
           ) : null}
-        </section>
+        </Panel>
       )}
 
       {canVerify && report.status !== "FINAL" && report.status !== "AMENDED" ? (
-        <section className="space-y-3 rounded-lg border p-4" aria-labelledby="verify-heading">
-          <h2 id="verify-heading" className="text-sm font-semibold">
+        <Panel className="space-y-3 p-4" aria-labelledby="verify-heading">
+          <h2 id="verify-heading" className="text-sm font-medium">
             {t("verifyTitle")}
           </h2>
           <p className="text-muted-foreground text-sm">{t("verifyHint")}</p>
@@ -227,7 +229,7 @@ export function ReportScreen({
           >
             {t("verify")}
           </Button>
-        </section>
+        </Panel>
       ) : null}
     </div>
   );
@@ -246,15 +248,15 @@ function ReportHeader({ report }: { report: DiagnosticReport }) {
   return (
     <header
       className={cn(
-        "rounded-lg border p-4",
-        report.patient_is_deceased ? "border-foreground/40 bg-foreground/5" : "bg-muted/30",
+        "shadow-panel rounded-xl border p-4", // restyle: inline — the patient identity header
+        report.patient_is_deceased ? "border-foreground/40 bg-foreground/5" : "bg-card",
       )}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">
+          <PageTitle>
             {report.patient_name ?? common("notRecorded")}
-          </h1>
+          </PageTitle>
           <p className="text-muted-foreground tabular text-sm">
             {report.patient_uhid}
             {report.patient_age_years !== null && report.patient_age_years !== undefined

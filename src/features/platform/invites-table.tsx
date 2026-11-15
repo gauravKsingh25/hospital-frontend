@@ -25,6 +25,7 @@ import {
 import { EmailStatusChip, InviteStatusChip } from "@/features/platform/platform-status";
 import { useInviteActions } from "@/features/platform/use-platform";
 import type { Invite } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * Invites, with what happened to each one's email on the same row.
@@ -57,7 +58,7 @@ export function InvitesTable({
 
   return (
     <>
-      <div className="overflow-x-auto rounded-lg border">
+      <Panel className="overflow-x-auto">
         <Table>
           <TableCaption className="sr-only">{t("invitesTitle")}</TableCaption>
           <TableHeader>
@@ -162,7 +163,7 @@ export function InvitesTable({
             })}
           </TableBody>
         </Table>
-      </div>
+      </Panel>
 
       <Dialog open={revoking !== null} onOpenChange={(next) => (next ? null : setRevoking(null))}>
         <DialogContent className="sm:max-w-md">

@@ -15,6 +15,8 @@ import type { EncounterStatus, Invoice, InvoiceSummary, VisitAccount } from "@/t
 
 import { formatMoney, isPositive } from "@/features/billing/money";
 import { PaymentDialog } from "@/features/billing/payment-dialog";
+import { Panel } from "@/components/panel";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * One visit's account: what is owed, what has been invoiced, what was paid.
@@ -96,13 +98,13 @@ export function VisitAccountScreen({
     <div className="space-y-6">
       <header
         className={cn(
-          "rounded-lg border p-4",
-          deceased ? "border-foreground/40 bg-foreground/5" : "bg-muted/30",
+          "shadow-panel rounded-xl border p-4", // restyle: inline — the patient identity header
+          deceased ? "border-foreground/40 bg-foreground/5" : "bg-card",
         )}
       >
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">{data.patient_name}</h1>
+            <PageTitle>{data.patient_name}</PageTitle>
             <p className="text-muted-foreground tabular text-sm">
               {data.uhid} · {data.encounter_number}
             </p>
@@ -135,8 +137,8 @@ export function VisitAccountScreen({
         ) : null}
       </header>
 
-      <section className="space-y-3 rounded-lg border p-4" aria-labelledby="charges-heading">
-        <h2 id="charges-heading" className="text-sm font-semibold">
+      <Panel className="space-y-3 p-4" aria-labelledby="charges-heading">
+        <h2 id="charges-heading" className="text-sm font-medium">
           {t("pendingCharges")}
         </h2>
 
@@ -215,10 +217,10 @@ export function VisitAccountScreen({
             ) : null}
           </>
         )}
-      </section>
+      </Panel>
 
-      <section className="space-y-3 rounded-lg border p-4" aria-labelledby="invoices-heading">
-        <h2 id="invoices-heading" className="text-sm font-semibold">
+      <Panel className="space-y-3 p-4" aria-labelledby="invoices-heading">
+        <h2 id="invoices-heading" className="text-sm font-medium">
           {t("invoices")}
         </h2>
 
@@ -277,7 +279,7 @@ export function VisitAccountScreen({
         {drafts.length > 0 && payable.length === 0 && !canIssueInvoice ? (
           <p className="text-muted-foreground text-sm">{t("needsIssuing")}</p>
         ) : null}
-      </section>
+      </Panel>
 
       {paying ? (
         <PaymentDialog

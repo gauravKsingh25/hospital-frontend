@@ -8,6 +8,8 @@ import { getCurrentUser, serverFetch } from "@/lib/api/server";
 import { BOARD_PAGE_SIZE } from "@/lib/pagination";
 import { can } from "@/lib/permissions";
 import type { MessageSummary, Page } from "@/types/api";
+import { PageTitle } from "@/components/page-header";
+import { ComingSoonBadge } from "@/components/coming-soon-badge";
 
 export async function generateMetadata() {
   const t = await getTranslations("messages");
@@ -42,7 +44,10 @@ export default async function MessagesPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="max-w-2xl">
-          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <PageTitle>{t("title")}</PageTitle>
+            <ComingSoonBadge />
+          </div>
           <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
         </div>
 

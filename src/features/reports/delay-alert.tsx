@@ -36,7 +36,7 @@ export function DelayAlert() {
       // `polite`, not `assertive`: a receptionist mid-registration should not
       // have a screen reader interrupt them for a clinic running behind.
       aria-live="polite"
-      className="border-caution/50 bg-caution/10 flex flex-wrap items-start gap-3 rounded-lg border p-3"
+      className="border-caution/50 bg-caution/10 flex flex-wrap items-start gap-3 rounded-md border p-3" // restyle: inline — alert notice
       data-testid="delay-alert"
     >
       <TriangleAlert aria-hidden className="text-caution-foreground mt-0.5 size-4 shrink-0" />

@@ -5884,6 +5884,21 @@
         "title": "DoctorCreate",
         "type": "object"
       },
+      "DoctorInvolvementUpdate": {
+        "additionalProperties": false,
+        "description": "Turn a doctor's own data entry on or off (\"Doctors involvement\").",
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "title": "DoctorInvolvementUpdate",
+        "type": "object"
+      },
       "DoctorLoad": {
         "properties": {
           "average_consultation_minutes": {
@@ -5997,6 +6012,11 @@
             "title": "In Consultation",
             "type": "integer"
           },
+          "involvement_enabled": {
+            "default": true,
+            "title": "Involvement Enabled",
+            "type": "boolean"
+          },
           "is_accepting_appointments": {
             "default": true,
             "title": "Is Accepting Appointments",
@@ -6071,6 +6091,10 @@
             "title": "Id",
             "type": "string"
           },
+          "involvement_enabled": {
+            "title": "Involvement Enabled",
+            "type": "boolean"
+          },
           "is_accepting_appointments": {
             "title": "Is Accepting Appointments",
             "type": "boolean"
@@ -6128,7 +6152,8 @@
           "registration_number",
           "default_slot_minutes",
           "is_accepting_appointments",
-          "is_active"
+          "is_active",
+          "involvement_enabled"
         ],
         "title": "DoctorRead",
         "type": "object"
@@ -6221,6 +6246,47 @@
           }
         },
         "title": "DoctorUpdate",
+        "type": "object"
+      },
+      "DoctorVisitRead": {
+        "description": "One row of a doctor's \"patients seen\" (the doctor page).",
+        "properties": {
+          "encounter_id": {
+            "format": "uuid",
+            "title": "Encounter Id",
+            "type": "string"
+          },
+          "patient_id": {
+            "format": "uuid",
+            "title": "Patient Id",
+            "type": "string"
+          },
+          "patient_name": {
+            "title": "Patient Name",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EncounterStatus"
+          },
+          "uhid": {
+            "title": "Uhid",
+            "type": "string"
+          },
+          "visit_at": {
+            "format": "date-time",
+            "title": "Visit At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "encounter_id",
+          "patient_id",
+          "patient_name",
+          "uhid",
+          "status",
+          "visit_at"
+        ],
+        "title": "DoctorVisitRead",
         "type": "object"
       },
       "DoseRead": {
@@ -12066,6 +12132,45 @@
           "has_more"
         ],
         "title": "Page[DoctorRead]",
+        "type": "object"
+      },
+      "Page_DoctorVisitRead_": {
+        "properties": {
+          "has_more": {
+            "description": "True when another page follows this one.",
+            "readOnly": true,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DoctorVisitRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total rows matching the filter, ignoring paging.",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "Page[DoctorVisitRead]",
         "type": "object"
       },
       "Page_DoseRead_": {
@@ -29285,7 +29390,125 @@
         ]
       }
     },
+    "/api/v1/doctors/{doctor_id}/availability/{availability_id}": {
+      "delete": {
+        "operationId": "remove_availability_api_v1_doctors__doctor_id__availability__availability_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doctor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Doctor Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "availability_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Availability Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Remove a weekly clinic session",
+        "tags": [
+          "scheduling"
+        ]
+      }
+    },
     "/api/v1/doctors/{doctor_id}/exceptions": {
+      "get": {
+        "operationId": "list_exceptions_api_v1_doctors__doctor_id__exceptions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doctor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Doctor Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AvailabilityExceptionRead"
+                  },
+                  "title": "Response List Exceptions Api V1 Doctors  Doctor Id  Exceptions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Days off and extra clinics from a date on",
+        "tags": [
+          "scheduling"
+        ]
+      },
       "post": {
         "operationId": "add_exception_api_v1_doctors__doctor_id__exceptions_post",
         "parameters": [
@@ -29338,6 +29561,116 @@
           }
         ],
         "summary": "Record leave or an extra clinic",
+        "tags": [
+          "scheduling"
+        ]
+      }
+    },
+    "/api/v1/doctors/{doctor_id}/exceptions/{exception_id}": {
+      "delete": {
+        "operationId": "remove_exception_api_v1_doctors__doctor_id__exceptions__exception_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doctor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Doctor Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "exception_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Exception Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Remove a day off or extra clinic",
+        "tags": [
+          "scheduling"
+        ]
+      }
+    },
+    "/api/v1/doctors/{doctor_id}/involvement": {
+      "put": {
+        "description": "\"Doctors involvement\", per doctor.\n\nOff, reception and nurses mark this doctor's patients seen and the doctor\ncan only look; on, the doctor records and closes their own visits. Audited\nwith before and after, because it changes who may close a clinical visit.",
+        "operationId": "set_doctor_involvement_api_v1_doctors__doctor_id__involvement_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doctor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Doctor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoctorInvolvementUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Turn a doctor's own data entry on or off",
         "tags": [
           "scheduling"
         ]
@@ -29583,6 +29916,112 @@
           }
         ],
         "summary": "Open a visit",
+        "tags": [
+          "clinical"
+        ]
+      }
+    },
+    "/api/v1/encounters/by-doctor/{doctor_id}": {
+      "get": {
+        "description": "The doctor page's history. Only the admin and that doctor read it.\n\nReception reads encounters all day, but a doctor's whole patient list is\nnot something the front desk needs, so this asks for more than\n`encounter:read`: the admin's `doctor:involvement:manage`, or being the\ndoctor.",
+        "operationId": "list_doctor_visits_api_v1_encounters_by_doctor__doctor_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "doctor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Doctor Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date_from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date_to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_DoctorVisitRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "A doctor's patients seen",
         "tags": [
           "clinical"
         ]

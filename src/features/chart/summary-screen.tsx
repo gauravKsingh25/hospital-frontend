@@ -15,6 +15,8 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { Admission, DischargeSummary } from "@/types/api";
+import { Panel } from "@/components/panel";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * The discharge summary.
@@ -88,7 +90,7 @@ export function SummaryScreen({
     return (
       <div className="space-y-6">
         <SummaryHeader admission={admission} status={null} />
-        <div className="text-muted-foreground flex flex-col items-center gap-3 rounded-lg border border-dashed py-16 text-center">
+        <div className="text-muted-foreground flex flex-col items-center gap-3 rounded-xl border border-dashed bg-card py-16 text-center">{/* restyle: inline — empty state */}
           <p className="text-foreground text-sm font-medium">{t("notCompiled")}</p>
           <p className="max-w-md text-sm">{t("notCompiledHint")}</p>
           {canWrite ? (
@@ -134,12 +136,12 @@ function SummaryHeader({
   const common = useTranslations("common");
 
   return (
-    <header className="bg-muted/30 rounded-lg border p-4">
+    <header className="bg-card shadow-panel rounded-xl border p-4">{/* restyle: inline — the patient identity header */}
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">
+          <PageTitle>
             {admission.patient_name ?? common("notRecorded")}
-          </h1>
+          </PageTitle>
           <p className="text-muted-foreground tabular text-sm">
             {admission.uhid} · {admission.admission_number}
           </p>
@@ -270,7 +272,7 @@ function SummaryEditor({
         </p>
       </div>
 
-      <div className="space-y-4 rounded-lg border p-4">
+      <Panel className="space-y-4 p-4">
         {SECTIONS.map((section) => (
           <div key={section.key} className="space-y-1.5">
             <Label htmlFor={`summary-${section.key}`}>
@@ -287,7 +289,7 @@ function SummaryEditor({
             />
           </div>
         ))}
-      </div>
+      </Panel>
 
       {editable ? (
         <div className="flex flex-wrap items-end gap-3">

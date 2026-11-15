@@ -24,7 +24,7 @@ export async function SubscriptionEnded({
         <CircleAlert aria-hidden className="size-6" />
       </div>
       <div>
-        <h1 className="text-lg font-semibold">{t("endedTitle")}</h1>
+        <h1 className="text-xl font-medium tracking-tight">{t("endedTitle")}</h1>{/* restyle: inline — centred state page, not a screen header */}
         <p className="text-muted-foreground mt-1 text-sm">
           {canManage ? t("endedAdmin") : t("endedStaff")}
         </p>

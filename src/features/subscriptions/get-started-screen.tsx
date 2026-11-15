@@ -20,6 +20,7 @@ import { ProofForm } from "@/features/subscriptions/proof-form";
 import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import type { OrderDetail } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const POLL_MS = 20_000;
 
@@ -159,9 +160,9 @@ function Payment({
         </Alert>
       ) : null}
 
-      <section className="bg-card rounded-xl border p-5 shadow-sm sm:p-6">
+      <Panel className="p-5 sm:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-lg font-medium">
             {t("planLine", { plan: order.plan_name })}
           </h2>
           <p
@@ -198,7 +199,7 @@ function Payment({
               })}
               width={220}
               height={220}
-              className="rounded-lg border bg-white p-2"
+              className="rounded-md border bg-white p-2" // restyle: inline — a QR code needs a white ground to scan
             />
             <a
               href={order.upi_uri}
@@ -262,15 +263,15 @@ function Payment({
             </ol>
           </div>
         </div>
-      </section>
+      </Panel>
 
-      <section className="bg-card rounded-xl border p-5 shadow-sm sm:p-6">
-        <h2 className="text-lg font-semibold">{t("proofTitle")}</h2>
+      <Panel className="p-5 sm:p-6">
+        <h2 className="text-lg font-medium">{t("proofTitle")}</h2>
         <p className="text-muted-foreground mt-1 mb-4 text-sm">
           {t("proofHint", { hours: order.review_hours })}
         </p>
         <ProofForm orderId={order.id} onSubmitted={onSubmitted} />
-      </section>
+      </Panel>
     </div>
   );
 }
@@ -278,12 +279,12 @@ function Payment({
 function UnderReview({ order }: { order: OrderDetail }) {
   const t = useTranslations("getStarted");
   return (
-    <section
-      className="bg-card rounded-xl border p-6 text-center shadow-sm"
+    <Panel
+      className="p-6 text-center"
       data-testid="under-review"
     >
       <Clock aria-hidden className="text-primary mx-auto size-10" />
-      <h2 className="mt-3 text-xl font-semibold">{t("reviewTitle")}</h2>
+      <h2 className="mt-3 text-xl font-medium">{t("reviewTitle")}</h2>
       <p className="text-muted-foreground mx-auto mt-2 max-w-md text-sm text-balance">
         {t("reviewBody", { hours: order.review_hours })}
       </p>
@@ -298,19 +299,19 @@ function UnderReview({ order }: { order: OrderDetail }) {
         <dd className="font-mono">{order.utr}</dd>
       </dl>
       <p className="text-muted-foreground mt-5 text-xs">{t("reviewPolling")}</p>
-    </section>
+    </Panel>
   );
 }
 
 function Approved({ order }: { order: OrderDetail }) {
   const t = useTranslations("getStarted");
   return (
-    <section
-      className="bg-card rounded-xl border p-6 text-center shadow-sm"
+    <Panel
+      className="p-6 text-center"
       data-testid="approved"
     >
       <CheckCircle2 aria-hidden className="text-success mx-auto size-10" />
-      <h2 className="mt-3 text-xl font-semibold">{t("approvedTitle")}</h2>
+      <h2 className="mt-3 text-xl font-medium">{t("approvedTitle")}</h2>
       <p className="text-muted-foreground mx-auto mt-2 max-w-md text-sm text-balance">
         {t("approvedBody", { plan: order.plan_name })}
       </p>
@@ -326,14 +327,14 @@ function Approved({ order }: { order: OrderDetail }) {
           <a
             href={`/bff/subscriptions/receipts/${order.id}/pdf`}
             download
-            className="hover:bg-muted inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-4 font-medium"
+            className="hover:bg-accent bg-card inline-flex min-h-11 items-center gap-1.5 rounded-md border px-4 font-medium" // restyle: inline — a link styled as a button
           >
             <Download aria-hidden className="size-4" />
             {t("downloadReceipt", { number: order.receipt_number })}
           </a>
         ) : null}
       </div>
-    </section>
+    </Panel>
   );
 }
 
@@ -347,12 +348,12 @@ function ChangeApproved({
 }) {
   const t = useTranslations("getStarted");
   return (
-    <section
-      className="bg-card rounded-xl border p-6 text-center shadow-sm"
+    <Panel
+      className="p-6 text-center"
       data-testid="approved"
     >
       <CheckCircle2 aria-hidden className="text-success mx-auto size-10" />
-      <h2 className="mt-3 text-xl font-semibold">{t("changeApprovedTitle")}</h2>
+      <h2 className="mt-3 text-xl font-medium">{t("changeApprovedTitle")}</h2>
       <p className="text-muted-foreground mx-auto mt-2 max-w-md text-sm text-balance">
         {t(
           order.purpose === "UPGRADE"
@@ -374,22 +375,22 @@ function ChangeApproved({
           <a
             href={`/bff/subscriptions/receipts/${order.id}/pdf`}
             download
-            className="hover:bg-muted inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-4 font-medium"
+            className="hover:bg-accent bg-card inline-flex min-h-11 items-center gap-1.5 rounded-md border px-4 font-medium" // restyle: inline — a link styled as a button
           >
             <Download aria-hidden className="size-4" />
             {t("downloadReceipt", { number: order.receipt_number })}
           </a>
         ) : null}
       </div>
-    </section>
+    </Panel>
   );
 }
 
 function Expired({ onDone }: { onDone?: () => void }) {
   const t = useTranslations("getStarted");
   return (
-    <section className="bg-card rounded-xl border p-6 text-center shadow-sm">
-      <h2 className="text-xl font-semibold">{t("expiredTitle")}</h2>
+    <Panel className="p-6 text-center">
+      <h2 className="text-xl font-medium">{t("expiredTitle")}</h2>
       <p className="text-muted-foreground mt-2 text-sm">{t("expiredBody")}</p>
       <Button
         className="h-tap mt-4"
@@ -397,6 +398,6 @@ function Expired({ onDone }: { onDone?: () => void }) {
       >
         {t("startAgain")}
       </Button>
-    </section>
+    </Panel>
   );
 }

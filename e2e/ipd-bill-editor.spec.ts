@@ -146,6 +146,11 @@ test("a background reload cannot slip a stale save through, and refused changes 
   await expect(page.getByText(/Someone else changed this bill/)).toBeVisible();
   await expect(page.getByTestId("unsaved-count")).toHaveText("1 unsaved change");
 
+  // Close the conflict toast first, as a person would: at bottom-centre it can
+  // sit over the Save button, and it stays while the pointer is on it.
+  await page.getByRole("button", { name: /close toast/i }).first().click();
+  await expect(page.getByText(/Someone else changed this bill/)).toHaveCount(0);
+
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByText("Bill saved.")).toBeVisible();
   await expect(page.getByTestId("ipd-line").filter({ hasText: "Dressing kit" })).toBeVisible();

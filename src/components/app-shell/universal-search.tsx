@@ -134,7 +134,7 @@ export function UniversalSearch() {
       >
         <Search aria-hidden className="size-4 shrink-0" />
         <span className="truncate">{t("placeholder")}</span>
-        <kbd className="bg-muted text-muted-foreground ml-auto hidden rounded border px-1.5 py-0.5 text-xs font-medium lg:inline-block">
+        <kbd className="bg-card text-muted-foreground tabular ml-auto hidden rounded-md border px-1.5 py-0.5 text-xs lg:inline-block">
           F3
         </kbd>
       </Button>

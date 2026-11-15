@@ -4,6 +4,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { LinkButton } from "@/components/ui/link-button";
 import { cn } from "@/lib/utils";
 import type { Patient } from "@/types/api";
+import { PageTitle } from "@/components/page-header";
 
 function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -29,12 +30,12 @@ export function RecordHeader({ patient }: { patient: Patient }) {
   const format = useFormatter();
 
   return (
-    <header className="bg-card flex flex-wrap items-start gap-4 rounded-xl border p-5 shadow-sm">
+    <header className="bg-card shadow-panel flex flex-wrap items-start gap-4 rounded-xl border p-5"> {/* restyle: inline — the patient identity header */}
       <div
         aria-hidden
         className={cn(
           "flex size-14 shrink-0 items-center justify-center rounded-full text-lg font-semibold",
-          patient.is_deceased ? "bg-foreground/85 text-background" : "bg-primary/10 text-primary",
+          patient.is_deceased ? "bg-foreground/85 text-background" : "bg-accent text-accent-foreground",
         )}
       >
         {initials(patient.full_name)}
@@ -44,9 +45,9 @@ export function RecordHeader({ patient }: { patient: Patient }) {
           squeezing the name into a column. */}
       <div className="min-w-0 flex-1 basis-56 space-y-1.5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight" data-testid="record-name">
+          <PageTitle className="text-2xl" data-testid="record-name">
             {patient.full_name}
-          </h1>
+          </PageTitle>
           {patient.is_deceased ? (
             <span className="bg-foreground/85 text-background rounded px-2 py-0.5 text-xs font-medium">
               {t("deceased")}

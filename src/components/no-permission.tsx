@@ -34,7 +34,7 @@ export async function NoPermission({ feature }: { feature?: Feature } = {}) {
         <ShieldOff aria-hidden className="size-6" />
       </div>
       <div>
-        <h1 className="text-lg font-semibold">{t("forbidden")}</h1>
+        <h1 className="text-xl font-medium tracking-tight">{t("forbidden")}</h1>{/* restyle: inline — centred state page, not a screen header */}
         <p className="text-muted-foreground mt-1 text-sm">{t("forbiddenHint")}</p>
       </div>
       <LinkButton variant="outline" className="h-tap" href="/">

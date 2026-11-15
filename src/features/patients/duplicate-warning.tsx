@@ -51,7 +51,7 @@ export function DuplicateWarning({
   return (
     <section
       role="alert"
-      className="border-caution/50 bg-caution/10 space-y-3 rounded-lg border p-4"
+      className="border-caution/50 bg-caution/10 space-y-3 rounded-md border p-4" // restyle: inline — alert notice
       data-testid="duplicate-warning"
       data-blocking={blocking}
     >

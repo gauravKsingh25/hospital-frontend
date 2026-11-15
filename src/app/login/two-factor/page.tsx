@@ -5,6 +5,7 @@ import { Smartphone } from "lucide-react";
 import { verifyTwoFactor } from "@/features/auth/actions";
 import { TwoFactorForm } from "@/features/auth/two-factor-form";
 import { readTwoFactorChallenge } from "@/lib/two-factor";
+import { Panel } from "@/components/panel";
 
 export async function generateMetadata() {
   const t = await getTranslations("auth");
@@ -23,12 +24,12 @@ export default async function TwoFactorPage() {
       <div className="w-full max-w-sm space-y-6">
         <div className="flex flex-col items-center gap-3 text-center">
           <Smartphone aria-hidden className="text-primary size-8" />
-          <h1 className="text-2xl font-semibold tracking-tight">{t("twoFactorTitle")}</h1>
+          <h1 className="text-2xl font-medium tracking-tight">{t("twoFactorTitle")}</h1>{/* restyle: inline — centred sign-in screen, not a screen header */}
           <p className="text-muted-foreground text-sm">{t("twoFactorHint")}</p>
         </div>
-        <div className="bg-card rounded-xl border p-6 shadow-sm">
+        <Panel className="p-6">
           <TwoFactorForm action={verifyTwoFactor} submitLabel={t("verifyCode")} />
-        </div>
+        </Panel>
       </div>
     </main>
   );

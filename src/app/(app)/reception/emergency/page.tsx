@@ -4,6 +4,7 @@ import { NoPermission } from "@/components/no-permission";
 import { EmergencyForm } from "@/features/emergency/emergency-form";
 import { getCurrentUser } from "@/lib/api/server";
 import { can, canAll } from "@/lib/permissions";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("emergency");
@@ -20,7 +21,7 @@ export default async function EmergencyPage() {
   return (
     <div className="space-y-6">
       <header className="mx-auto max-w-2xl no-print">
-        <h1 className="text-destructive text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <PageTitle className="text-destructive">{t("title")}</PageTitle>
         <p className="text-muted-foreground mt-1 text-sm">{t("subtitle")}</p>
       </header>
 

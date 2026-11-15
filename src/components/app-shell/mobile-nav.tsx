@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { ComingSoonBadge } from "@/components/coming-soon-badge";
 
 /**
  * Navigation on a tablet or phone, where the sidebar is hidden.
@@ -63,12 +64,17 @@ export function MobileNav({ permissions }: { permissions: readonly string[] }) {
                     onClick={() => setOpen(false)}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "flex min-h-tap items-center gap-3 rounded-lg px-3 text-sm font-medium",
-                      active ? "bg-accent text-accent-foreground" : "hover:bg-accent/50",
+                      "flex min-h-tap items-center gap-3 rounded-md px-3 text-sm",
+                      active
+                        ? "bg-accent text-accent-foreground font-medium shadow-[inset_2px_0_0_var(--primary)]"
+                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
                     )}
                   >
                     <item.icon aria-hidden className="size-4.5 shrink-0" />
-                    {t(item.labelKey)}
+                    <span className="flex min-w-0 flex-col items-start py-1">
+                      <span>{t(item.labelKey)}</span>
+                      {item.comingSoon ? <ComingSoonBadge className="mt-0.5" /> : null}
+                    </span>
                   </Link>
                 </li>
               );

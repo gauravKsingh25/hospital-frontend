@@ -35,6 +35,7 @@ import { AdminEmpty, AdminShell } from "@/features/admin/admin-shell";
 import { useAdminList, useAdminMutation } from "@/features/admin/use-admin-resource";
 import { api } from "@/lib/api/client";
 import type { Department, DepartmentType } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const DEPARTMENTS_KEY = ["admin", "departments"] as const;
 
@@ -74,7 +75,7 @@ export function DepartmentsScreen({ canManage }: { canManage: boolean }) {
       {rows.length === 0 ? (
         <AdminEmpty message={t("departmentsEmpty")} hint={t("departmentsEmptyHint")} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border">
+        <Panel className="overflow-x-auto">
           <Table>
             <TableCaption className="sr-only">{t("departmentsTitle")}</TableCaption>
             <TableHeader>
@@ -100,7 +101,7 @@ export function DepartmentsScreen({ canManage }: { canManage: boolean }) {
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Panel>
       )}
 
       <DepartmentDialog open={creating} onOpenChange={setCreating} />

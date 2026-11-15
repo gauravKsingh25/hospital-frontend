@@ -31,6 +31,7 @@ import { PLATFORM_KEY, platformKeys, usePlatformList } from "@/features/platform
 import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import type { PlatformTeamMember } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * The people who run the platform: the owner, and support staff who can see
@@ -74,7 +75,7 @@ export function TeamScreen({ canManage, selfId }: { canManage: boolean; selfId: 
       ) : team.isPending ? (
         <Skeleton className="h-40 w-full" />
       ) : (
-        <div className="overflow-x-auto rounded-lg border">
+        <Panel className="overflow-x-auto">
           <Table>
             <TableCaption className="sr-only">{t("teamTitle")}</TableCaption>
             <TableHeader>
@@ -145,7 +146,7 @@ export function TeamScreen({ canManage, selfId }: { canManage: boolean; selfId: 
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Panel>
       )}
 
       <InviteDialog open={inviting} onOpenChange={setInviting} />

@@ -45,6 +45,7 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { DrugSchedule, MedicationRoute, MedicineForm, MedicineItem } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const ROUTES: MedicationRoute[] = [
   "IV",
@@ -140,7 +141,7 @@ export function MedicinesScreen({ canManage }: { canManage: boolean }) {
           ))}
         </div>
       ) : rows.length === 0 ? (
-        <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-14 text-center">
+        <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-14 text-center">{/* restyle: inline — empty state */}
           <PillBottle aria-hidden className="size-6" />
           <p className="text-foreground text-sm font-medium">
             {search.trim()
@@ -154,7 +155,7 @@ export function MedicinesScreen({ canManage }: { canManage: boolean }) {
           ) : null}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border">
+        <Panel className="overflow-x-auto">
           <Table>
             <TableCaption className="sr-only">{t("title")}</TableCaption>
             <TableHeader>
@@ -216,7 +217,7 @@ export function MedicinesScreen({ canManage }: { canManage: boolean }) {
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Panel>
       )}
 
       {total > rows.length ? (

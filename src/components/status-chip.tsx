@@ -19,39 +19,41 @@ import type { EncounterStatus, InvoiceStatus, QueueStatus, WorklistStage } from 
 
 /** Every status the backend can produce, mapped once. */
 const ENCOUNTER_TONES: Record<EncounterStatus, string> = {
-  // Waiting states — cool, calm, no action implied yet.
-  REGISTERED: "bg-info/10 text-info border-info/25",
-  IN_CONSULTATION: "bg-primary/10 text-primary border-primary/25",
+  // One tint per place the patient is (Frost and slate): waiting, with the
+  // doctor, at the lab, at the counter. The tints match the reception board.
+  REGISTERED: "bg-s-wait-bg text-s-wait",
+  IN_CONSULTATION: "bg-s-doc-bg text-s-doc",
 
-  // Someone is being kept waiting. Amber, because these are the states a
-  // charge nurse should be able to spot from across the room.
-  AWAITING_RESULTS: "bg-caution/15 text-caution-foreground border-caution/40",
-  PENDING_CLEARANCE: "bg-caution/15 text-caution-foreground border-caution/40",
+  // Someone is being kept waiting on the lab or the counter: two distinct
+  // tints, so a charge nurse sees which from across the room.
+  AWAITING_RESULTS: "bg-s-lab-bg text-s-lab",
+  PENDING_CLEARANCE: "bg-s-bill-bg text-s-bill",
 
-  ADMITTED: "bg-info/15 text-info border-info/30",
+  // A solid fill: the visit has become a stay, which outranks every OPD state.
+  ADMITTED: "bg-primary text-primary-foreground",
 
   // Closed cleanly.
-  COMPLETED: "bg-success/10 text-success border-success/25",
+  COMPLETED: "bg-success/10 text-success",
 
   // Nothing went wrong clinically; the visit simply did not happen.
-  CANCELLED: "bg-muted text-muted-foreground border-border",
-  NO_SHOW: "bg-muted text-muted-foreground border-border",
+  CANCELLED: "bg-muted text-muted-foreground",
+  NO_SHOW: "bg-muted text-muted-foreground",
 
   // The three edge-case terminals from CLAUDE.md §6. Deliberately distinct
   // from both "closed" and "cancelled": these are the ones that matter in an
   // audit, and they must never be mistaken for a routine ending at a glance.
-  REFERRED_OUT: "bg-info/15 text-info border-info/40",
-  LAMA: "bg-critical/10 text-critical border-critical/30",
-  DECEASED: "bg-foreground/85 text-background border-foreground",
+  REFERRED_OUT: "bg-card text-info ring-1 ring-inset ring-info/50",
+  LAMA: "bg-critical/10 text-critical ring-1 ring-inset ring-critical/40",
+  DECEASED: "bg-foreground text-background",
 };
 
 const QUEUE_TONES: Record<QueueStatus, string> = {
-  WAITING: "bg-info/10 text-info border-info/25",
-  CALLED: "bg-caution/15 text-caution-foreground border-caution/40",
-  IN_CONSULTATION: "bg-primary/10 text-primary border-primary/25",
-  COMPLETED: "bg-success/10 text-success border-success/25",
-  SKIPPED: "bg-muted text-muted-foreground border-border",
-  LEFT_WITHOUT_BEING_SEEN: "bg-critical/10 text-critical border-critical/30",
+  WAITING: "bg-s-wait-bg text-s-wait",
+  CALLED: "bg-caution/25 text-caution-foreground",
+  IN_CONSULTATION: "bg-s-doc-bg text-s-doc",
+  COMPLETED: "bg-success/10 text-success",
+  SKIPPED: "bg-muted text-muted-foreground",
+  LEFT_WITHOUT_BEING_SEEN: "bg-critical/10 text-critical",
 };
 
 /**
@@ -65,26 +67,32 @@ const QUEUE_TONES: Record<QueueStatus, string> = {
  */
 const STAGE_TONES: Record<WorklistStage, string> = {
   // The lab has to decide something before anything else can happen.
-  NEEDS_MAPPING: "bg-caution/15 text-caution-foreground border-caution/40",
-  AWAITING_ACCESSION: "bg-critical/10 text-critical border-critical/30",
-  AWAITING_COLLECTION: "bg-caution/15 text-caution-foreground border-caution/40",
-  AWAITING_RECEIPT: "bg-info/10 text-info border-info/25",
-  AWAITING_RESULTS: "bg-primary/10 text-primary border-primary/25",
-  AWAITING_VERIFICATION: "bg-caution/15 text-caution-foreground border-caution/40",
+  NEEDS_MAPPING: "bg-caution/25 text-caution-foreground",
+  AWAITING_ACCESSION: "bg-critical/10 text-critical",
+  AWAITING_COLLECTION: "bg-s-wait-bg text-s-wait",
+  AWAITING_RECEIPT: "bg-s-lab-bg text-s-lab",
+  AWAITING_RESULTS: "bg-s-doc-bg text-s-doc",
+  AWAITING_VERIFICATION: "bg-s-bill-bg text-s-bill",
 };
 
 const INVOICE_TONES: Record<InvoiceStatus, string> = {
-  DRAFT: "bg-muted text-muted-foreground border-border",
-  ISSUED: "bg-info/10 text-info border-info/25",
-  PARTIALLY_PAID: "bg-caution/15 text-caution-foreground border-caution/40",
-  PAID: "bg-success/10 text-success border-success/25",
-  CANCELLED: "bg-muted text-muted-foreground border-border",
-  WRITTEN_OFF: "bg-critical/10 text-critical border-critical/30",
+  DRAFT: "bg-muted text-muted-foreground",
+  ISSUED: "bg-s-lab-bg text-s-lab",
+  PARTIALLY_PAID: "bg-s-bill-bg text-s-bill",
+  PAID: "bg-success/10 text-success",
+  CANCELLED: "bg-muted text-muted-foreground",
+  WRITTEN_OFF: "bg-critical/10 text-critical",
 };
 
 const BASE =
-  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 " +
+  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 " +
   "text-xs font-medium whitespace-nowrap";
+
+/** The small dot that leads every chip (Frost and slate). Decorative only:
+ *  the label beside it carries the meaning. */
+function Dot() {
+  return <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-current" />;
+}
 
 export function EncounterStatusChip({
   status,
@@ -96,6 +104,7 @@ export function EncounterStatusChip({
   const t = useTranslations("status");
   return (
     <span className={cn(BASE, ENCOUNTER_TONES[status], className)} data-status={status}>
+      <Dot />
       {t(status)}
     </span>
   );
@@ -111,6 +120,7 @@ export function QueueStatusChip({
   const t = useTranslations("queueStatus");
   return (
     <span className={cn(BASE, QUEUE_TONES[status], className)} data-status={status}>
+      <Dot />
       {t(status)}
     </span>
   );
@@ -126,6 +136,7 @@ export function WorklistStageChip({
   const t = useTranslations("lab");
   return (
     <span className={cn(BASE, STAGE_TONES[stage], className)} data-status={stage}>
+      <Dot />
       {t(`stage${stage}` as "stageAWAITING_ACCESSION")}
     </span>
   );
@@ -141,6 +152,7 @@ export function InvoiceStatusChip({
   const t = useTranslations("billing");
   return (
     <span className={cn(BASE, INVOICE_TONES[status], className)} data-status={status}>
+      <Dot />
       {t(`invoiceStatus${status}` as "invoiceStatusDRAFT")}
     </span>
   );

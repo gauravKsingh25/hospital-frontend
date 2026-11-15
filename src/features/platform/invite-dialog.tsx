@@ -136,7 +136,7 @@ export function InviteDialog({
                   <label
                     key={code}
                     className={cn(
-                      "flex min-h-tap cursor-pointer items-start gap-3 rounded-lg border p-3",
+                      "flex min-h-tap cursor-pointer items-start gap-3 rounded-md border p-3", // restyle: inline — clickable option tile
                       role === code && "border-primary bg-primary/5",
                     )}
                   >

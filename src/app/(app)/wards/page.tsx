@@ -5,6 +5,7 @@ import { BedBoard } from "@/features/wards/bed-board";
 import { getCurrentUser, serverFetch, serverFetchOptional } from "@/lib/api/server";
 import { can } from "@/lib/permissions";
 import type { BoardWard, Occupancy } from "@/types/api";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("wards");
@@ -35,7 +36,7 @@ export default async function WardsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <PageTitle>{t("title")}</PageTitle>
         <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
       </div>
 

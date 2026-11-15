@@ -43,7 +43,7 @@ export function UserMenu({ user }: { user: CurrentUser }) {
       <DropdownMenuTrigger
         render={
           <Button variant="ghost" className="h-tap gap-2 px-2" aria-label={user.full_name}>
-            <span className="bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+            <span className="bg-accent text-accent-foreground flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
               {initials || <User aria-hidden className="size-4" />}
             </span>
             <span className="hidden max-w-32 truncate text-sm font-medium lg:inline">

@@ -3,13 +3,14 @@ import type { ReactNode } from "react";
 
 import { EncounterStatusChip } from "@/components/status-chip";
 import type { PatientClinicalSummary } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 function Stat({ label, children, testId }: { label: string; children: ReactNode; testId?: string }) {
   return (
-    <div className="bg-card rounded-xl border px-4 py-3" data-testid={testId}>
+    <Panel className="px-4 py-3" data-testid={testId}>
       <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">{label}</p>
       <div className="mt-1">{children}</div>
-    </div>
+    </Panel>
   );
 }
 

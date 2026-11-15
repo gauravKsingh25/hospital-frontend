@@ -89,7 +89,7 @@ export function DoseRow({
   return (
     <li
       className={cn(
-        "flex flex-wrap items-center gap-3 rounded-lg border p-3",
+        "bg-card flex flex-wrap items-center gap-3 rounded-md border p-3", // restyle: inline — a dose row in a list
         overdue && "border-caution/50 bg-caution/10",
         clash && dose.status === "DUE" && "border-critical/50 bg-critical/5",
         dose.status === "GIVEN" && "opacity-60",

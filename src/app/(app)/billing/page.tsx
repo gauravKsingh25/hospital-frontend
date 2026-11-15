@@ -9,6 +9,7 @@ import { BOARD_PAGE_SIZE } from "@/lib/pagination";
 import { can } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
 import type { AccountBoardEntry, Hospital, Page } from "@/types/api";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("billing");
@@ -50,7 +51,7 @@ export default async function BillingPage({
       <div className="space-y-6">
         {canAccounts ? <BillingTabs current="counter" /> : null}
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{t("boardTitle")}</h1>
+          <PageTitle>{t("boardTitle")}</PageTitle>
           <p className="text-muted-foreground text-sm">{t("boardSubtitle")}</p>
         </div>
         <AccountsBoard initial={board} />
@@ -69,12 +70,12 @@ export default async function BillingPage({
     <div className="space-y-6">
       {canCounter ? <BillingTabs current="accounts" /> : null}
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{accounts("title")}</h1>
+        <PageTitle>{accounts("title")}</PageTitle>
         <p className="text-muted-foreground text-sm">{accounts("subtitle")}</p>
       </div>
       {incomplete ? (
         <div
-          className="bg-caution/10 border-caution/40 flex flex-wrap items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm"
+          className="bg-caution/10 border-caution/40 flex flex-wrap items-center justify-between gap-3 rounded-md border px-4 py-3 text-sm" // restyle: inline — alert notice
           data-testid="profile-banner"
           role="status"
         >
@@ -109,7 +110,7 @@ async function BillingTabs({ current }: { current: "accounts" | "counter" }) {
             className={cn(
               "h-tap inline-flex items-center rounded-md px-4 text-sm font-medium",
               current === tab.key
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-background text-foreground shadow-panel"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >

@@ -91,7 +91,7 @@ export async function PrintedBill({
       </header>
 
       <div className="text-center">
-        <h1 className="text-lg font-bold tracking-wide">{bill.title}</h1>
+        <h1 className="text-lg font-bold tracking-wide">{bill.title}</h1>{/* restyle: inline — printed document title */}
         {bill.status === "CANCELLED" ? <p className="font-bold">{t("cancelled")}</p> : null}
       </div>
 
@@ -154,7 +154,7 @@ export async function PrintedBill({
             {lines.map((line) => {
               const waived = line.status === "WAIVED";
               return (
-                <tr key={line.id} className="border-b border-gray-300 align-top">
+                <tr key={line.id} className="border-b border-black/30 align-top">
                   <td className="py-1 pr-2">
                     {line.description}
                     {waived ? <span className="font-medium"> — {t("waived")}</span> : null}
@@ -215,7 +215,7 @@ export async function PrintedBill({
           <table className="w-full text-[12px]">
             <tbody>
               {bill.payments.map((payment) => (
-                <tr key={payment.id} className="border-b border-gray-300">
+                <tr key={payment.id} className="border-b border-black/30">
                   <td className="py-0.5 pr-2">{moment(payment.received_at)}</td>
                   <td className="py-0.5 pr-2">{payment.receipt_number}</td>
                   <td className="py-0.5 pr-2">{t(`method${payment.method}` as "methodCASH")}</td>
@@ -245,7 +245,7 @@ export async function PrintedBill({
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex gap-2">
-      <dt className="w-28 shrink-0 text-gray-600">{label}</dt>
+      <dt className="w-28 shrink-0 text-black/70">{label}</dt>
       <dd className="font-medium">{value}</dd>
     </div>
   );

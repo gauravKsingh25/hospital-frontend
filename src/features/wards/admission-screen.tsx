@@ -40,6 +40,7 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { Admission, BoardWard, DischargeType } from "@/types/api";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * One inpatient stay.
@@ -144,7 +145,7 @@ export function AdmissionScreen({
           and every act on the stay — never a scroll away. */}
       <header
         className={cn(
-          "bg-background/95 supports-[backdrop-filter]:bg-background/85 sticky top-16 z-20 space-y-3 rounded-lg border p-4 shadow-sm backdrop-blur",
+          "bg-background/95 supports-[backdrop-filter]:bg-background/85 sticky top-16 z-20 space-y-3 rounded-xl border p-4 shadow-panel backdrop-blur", // restyle: inline — the sticky patient identity header
           data.patient_is_deceased && "border-foreground/40",
         )}
         data-testid="stay-header"
@@ -154,9 +155,9 @@ export function AdmissionScreen({
             {banner ? (
               <PatientIdentityStrip banner={banner} as="h1" />
             ) : (
-              <h1 className="text-xl font-semibold tracking-tight">
+              <PageTitle>
                 {data.patient_name ?? common("notRecorded")}
-              </h1>
+              </PageTitle>
             )}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
               <span

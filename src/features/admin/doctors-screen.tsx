@@ -35,6 +35,8 @@ import { AdminEmpty, AdminShell } from "@/features/admin/admin-shell";
 import { useAdminList, useAdminMutation } from "@/features/admin/use-admin-resource";
 import { api } from "@/lib/api/client";
 import type { Department, Doctor, User } from "@/types/api";
+import { Panel } from "@/components/panel";
+import Link from "next/link";
 
 const DOCTORS_KEY = ["admin", "doctors"] as const;
 
@@ -96,7 +98,7 @@ export function DoctorsScreen({
       {rows.length === 0 ? (
         <AdminEmpty message={t("doctorsEmpty")} hint={t("doctorsEmptyHint")} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border">
+        <Panel className="overflow-x-auto">
           <Table>
             <TableCaption className="sr-only">{t("doctorsTitle")}</TableCaption>
             <TableHeader>
@@ -111,7 +113,14 @@ export function DoctorsScreen({
             <TableBody>
               {rows.map((doctor) => (
                 <TableRow key={doctor.id} data-testid="doctor-row">
-                  <TableCell className="font-medium">{doctor.display_name}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link
+                      href={`/doctors/${doctor.id}`}
+                      className="text-primary underline-offset-4 hover:underline"
+                    >
+                      {doctor.display_name}
+                    </Link>
+                  </TableCell>
                   <TableCell className="text-muted-foreground">
                     {doctor.specialty ?? "—"}
                   </TableCell>
@@ -119,11 +128,9 @@ export function DoctorsScreen({
                     {departmentName(doctor.department_id)}
                   </TableCell>
                   <TableCell className="text-muted-foreground tabular">
-                    {/* Absent is worth flagging, not blanking: a report cannot
-                        be signed without one (see the diagnostics module). */}
-                    {doctor.registration_number ?? (
-                      <span className="text-caution-foreground">{t("missing")}</span>
-                    )}
+                    {/* Optional: needed only on lab reports this doctor
+                        signs, so an empty one is a dash, not a warning. */}
+                    {doctor.registration_number ?? "—"}
                   </TableCell>
                   <TableCell className="text-right">
                     {doctor.is_accepting_appointments ? t("yes") : t("no")}
@@ -132,7 +139,7 @@ export function DoctorsScreen({
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Panel>
       )}
 
       <DoctorDialog

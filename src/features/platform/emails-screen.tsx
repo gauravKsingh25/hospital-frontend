@@ -29,6 +29,7 @@ import { EmailStatusChip } from "@/features/platform/platform-status";
 import { platformKeys, usePlatformList } from "@/features/platform/use-platform";
 import { useDebounced } from "@/lib/hooks/use-debounced";
 import type { PlatformEmail, PlatformEmailStatus } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const PAGE_SIZE = 25;
 type Filter = "all" | PlatformEmailStatus;
@@ -93,7 +94,7 @@ export function EmailsScreen() {
         <AdminEmpty message={t("emailsEmpty")} />
       ) : (
         <>
-          <div className="overflow-x-auto rounded-lg border">
+          <Panel className="overflow-x-auto">
             <Table>
               <TableCaption className="sr-only">{t("emailsTitle")}</TableCaption>
               <TableHeader>
@@ -149,7 +150,7 @@ export function EmailsScreen() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </Panel>
           <Pager
             page={emails.data}
             offset={offset}

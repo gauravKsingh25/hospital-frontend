@@ -28,6 +28,7 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { Doctor, Encounter, Page } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * Death, referral out, and leaving against medical advice.
@@ -447,16 +448,16 @@ export function OutcomeSummary({ encounter }: { encounter: Encounter }) {
   if (rows.length === 0) return null;
 
   return (
-    <section
+    <Panel
       className={cn(
-        "space-y-2 rounded-lg border p-4",
+        "space-y-2 p-4",
         encounter.status === "DECEASED" && "border-foreground/40 bg-foreground/5",
         encounter.status === "LAMA" && "border-caution/50 bg-caution/10",
       )}
       data-testid="outcome-summary"
       data-status={encounter.status}
     >
-      <h2 className="text-sm font-semibold">{t(`heading${encounter.status}` as "headingLAMA")}</h2>
+      <h2 className="text-sm font-medium">{t(`heading${encounter.status}` as "headingLAMA")}</h2>
       <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
         {rows.map((row) => (
           <div key={row.label}>
@@ -465,7 +466,7 @@ export function OutcomeSummary({ encounter }: { encounter: Encounter }) {
           </div>
         ))}
       </dl>
-    </section>
+    </Panel>
   );
 }
 

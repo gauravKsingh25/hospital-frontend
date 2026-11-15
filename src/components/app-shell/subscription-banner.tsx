@@ -22,7 +22,7 @@ export async function SubscriptionBanner({
   return (
     <div
       role="status"
-      className="no-print flex items-start gap-2 border-b border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950 sm:px-5 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100"
+      className="no-print flex items-start gap-2 border-b border-caution/50 bg-caution/15 px-3 py-2 text-sm text-caution-foreground sm:px-5"
     >
       <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
       <p>

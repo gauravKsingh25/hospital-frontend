@@ -4,6 +4,7 @@ import { NoPermission } from "@/components/no-permission";
 import { RegistrationForm } from "@/features/patients/registration-form";
 import { getCurrentUser } from "@/lib/api/server";
 import { can } from "@/lib/permissions";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("registration");
@@ -25,7 +26,7 @@ export default async function RegisterPatientPage() {
           artifact a patient carries away should not be headed "Register a
           patient — 4 fields. Everything else can be added later." */}
       <header className="mx-auto max-w-2xl no-print">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <PageTitle>{t("title")}</PageTitle>
         <p className="text-muted-foreground mt-1 text-sm">{t("subtitle")}</p>
       </header>
 

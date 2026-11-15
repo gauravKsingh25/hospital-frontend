@@ -7,6 +7,7 @@ import { VisitOutcomeAction } from "@/features/outcomes/visit-outcome-action";
 import { AddDiagnosis } from "@/features/patients/record/add-diagnosis";
 import { cn } from "@/lib/utils";
 import type { Encounter, OrderType, PatientVisit } from "@/types/api";
+import { DoctorEntryGate } from "@/features/doctors/doctor-entry-notice";
 
 /** Visits whose ending can no longer change. */
 export const CLOSED_VISITS = new Set([
@@ -97,14 +98,14 @@ function VisitCard({
   return (
     <li
       className={cn(
-        "bg-card rounded-xl border",
+        "bg-card shadow-panel rounded-xl border", // restyle: inline — a visit card in a list, styled as a panel
         open && "border-primary/40 ring-primary/10 ring-2",
         !attended && "opacity-70",
       )}
       data-testid="visit-card"
       data-status={visit.status}
     >
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-4 py-2.5">
+      <div className="bg-band flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-4 py-2.5">
         <span
           className={cn(
             "tabular rounded-md px-2 py-0.5 text-xs font-semibold",
@@ -162,7 +163,9 @@ function VisitCard({
               ))
             )}
             {open && permissions.canRecordDiagnosis ? (
-              <AddDiagnosis encounterId={visit.id} patientName={patientName} />
+              <DoctorEntryGate doctorId={visit.status === "ADMITTED" ? null : visit.doctor_id}>
+                <AddDiagnosis encounterId={visit.id} patientName={patientName} />
+              </DoctorEntryGate>
             ) : null}
           </div>
         ) : null}

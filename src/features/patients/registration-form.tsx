@@ -43,6 +43,7 @@ import type {
   QuickOpdResult,
   RegistrationResult,
 } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * Rapid registration (CLAUDE.md §7b) — the whole form.
@@ -297,7 +298,7 @@ export function RegistrationForm() {
               <label
                 key={value}
                 className={cn(
-                  "min-h-tap flex flex-1 cursor-pointer items-center justify-center rounded-lg border px-4 text-sm font-medium transition-colors",
+                  "min-h-tap flex flex-1 cursor-pointer items-center justify-center rounded-md border px-4 text-sm font-medium transition-colors", // restyle: inline — clickable option tile
                   "has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:text-primary",
                   "has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2",
                 )}
@@ -328,7 +329,7 @@ export function RegistrationForm() {
       ) : null}
 
       {/* Progressive disclosure: the fields that do not gate the queue. */}
-      <div className="rounded-lg border">
+      <Panel>
         <button
           type="button"
           onClick={() => setShowMore((previous) => !previous)}
@@ -354,7 +355,7 @@ export function RegistrationForm() {
             <OptionalField id="pincode" label={t("pincode")} form={form} />
           </div>
         ) : null}
-      </div>
+      </Panel>
 
       <div className="space-y-2">
         <Label htmlFor="doctor">{tOpd("selectDoctor")}</Label>
@@ -391,7 +392,7 @@ export function RegistrationForm() {
       {doctorId ? (
         <label
           className={cn(
-            "min-h-tap flex cursor-pointer items-center gap-3 rounded-lg border px-4 text-sm font-medium",
+            "min-h-tap flex cursor-pointer items-center gap-3 rounded-md border px-4 text-sm font-medium", // restyle: inline — clickable option tile
             emergency && "border-destructive bg-destructive/10 text-destructive",
           )}
         >

@@ -9,6 +9,7 @@ import { PrintActions } from "@/features/billing/accounts/bill-actions";
 import { formatMoney } from "@/features/billing/money";
 import { cn } from "@/lib/utils";
 import type { BillRow, PatientRow, PaymentRow } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * The dashboard's tables. Nothing here changes a figure: Open takes the
@@ -25,12 +26,12 @@ export const patientHref = (patientId: string, invoiceId?: string) =>
 
 function Frame({ caption, children }: { caption: string; children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto rounded-lg border">
+    <Panel className="overflow-x-auto">
       <table className="w-full min-w-3xl text-sm">
         <caption className="sr-only">{caption}</caption>
         {children}
       </table>
-    </div>
+    </Panel>
   );
 }
 

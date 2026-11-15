@@ -4,16 +4,17 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 import type { Patient } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 function Card({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
   return (
-    <section className="bg-card rounded-xl border">
-      <h2 className="flex items-center gap-2 border-b px-4 py-3 text-base font-semibold">
+    <Panel>
+      <h2 className="bg-band flex items-center gap-2 border-b px-4 py-3 text-base font-medium">
         <span className="text-primary">{icon}</span>
         {title}
       </h2>
       <div className="px-4 py-3">{children}</div>
-    </section>
+    </Panel>
   );
 }
 

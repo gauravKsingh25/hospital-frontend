@@ -8,6 +8,7 @@ import { TwoFactorForm } from "@/features/auth/two-factor-form";
 import { ApiError } from "@/lib/api/error";
 import { callApi } from "@/lib/api/fetch";
 import { readTwoFactorChallenge } from "@/lib/two-factor";
+import { Panel } from "@/components/panel";
 
 export async function generateMetadata() {
   const t = await getTranslations("auth");
@@ -44,10 +45,10 @@ export default async function TwoFactorSetupPage() {
       <div className="w-full max-w-sm space-y-6">
         <div className="flex flex-col items-center gap-3 text-center">
           <ShieldCheck aria-hidden className="text-primary size-8" />
-          <h1 className="text-2xl font-semibold tracking-tight">{t("twoFactorSetupTitle")}</h1>
+          <h1 className="text-2xl font-medium tracking-tight">{t("twoFactorSetupTitle")}</h1>{/* restyle: inline — centred sign-in screen, not a screen header */}
           <p className="text-muted-foreground text-sm">{t("twoFactorSetupHint")}</p>
         </div>
-        <div className="bg-card space-y-5 rounded-xl border p-6 shadow-sm">
+        <Panel className="space-y-5 p-6">
           <div className="flex justify-center rounded-lg bg-white p-2">
             <QrSvg value={enrolment.otpauth_uri} size="12rem" label={t("twoFactorQr")} />
           </div>
@@ -58,7 +59,7 @@ export default async function TwoFactorSetupPage() {
             </p>
           </div>
           <TwoFactorForm action={confirmTwoFactorEnrolment} submitLabel={t("turnOnAndSignIn")} />
-        </div>
+        </Panel>
       </div>
     </main>
   );

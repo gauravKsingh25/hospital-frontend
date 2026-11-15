@@ -16,6 +16,7 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { Admission, Doctor, Dose, Page } from "@/types/api";
+import { Panel as PanelBox } from "@/components/panel";
 
 /**
  * The panels of the stay screen (layout B): what is due now, the clinical
@@ -64,13 +65,13 @@ export function Panel({
   testId?: string;
 }) {
   return (
-    <section className="space-y-3 rounded-lg border p-4" data-testid={testId}>
+    <PanelBox className="space-y-3 p-4" data-testid={testId}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold">{title}</h2>
+        <h2 className="text-sm font-medium">{title}</h2>
         {action}
       </div>
       {children}
-    </section>
+    </PanelBox>
   );
 }
 

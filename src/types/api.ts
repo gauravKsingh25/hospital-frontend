@@ -73,6 +73,9 @@ export type PatientIdentifyRequest = Schemas["PatientIdentify"];
 
 // --- Scheduling ------------------------------------------------------------
 export type Doctor = Schemas["DoctorRead"];
+export type DoctorAvailability = Schemas["DoctorAvailabilityRead"];
+export type AvailabilityException = Schemas["AvailabilityExceptionRead"];
+export type DoctorVisit = Schemas["DoctorVisitRead"];
 export type QueueEntry = Schemas["QueueEntryRead"];
 /** A queue row with the patient identity a worklist needs to be readable. */
 export type QueueBoardEntry = Schemas["QueueBoardEntry"];

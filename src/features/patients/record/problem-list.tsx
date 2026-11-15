@@ -3,6 +3,7 @@ import { useFormatter, useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import type { ProblemEntry } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * "What has this patient been treated for?" — one line per condition, across
@@ -20,11 +21,11 @@ export function ProblemList({ problems }: { problems: ProblemEntry[] | null | un
   const date = (value: string) => format.dateTime(new Date(value), { dateStyle: "medium" });
 
   return (
-    <section className="bg-card rounded-xl border" data-testid="problem-list">
-      <div className="flex items-start gap-3 border-b px-4 py-3">
+    <Panel data-testid="problem-list">
+      <div className="bg-band flex items-start gap-3 border-b px-4 py-3">
         <Stethoscope aria-hidden className="text-primary mt-0.5 size-5 shrink-0" />
         <div>
-          <h2 className="text-base font-semibold">{t("treatedFor")}</h2>
+          <h2 className="text-base font-medium">{t("treatedFor")}</h2>
           <p className="text-muted-foreground text-xs">{t("treatedForHint")}</p>
         </div>
       </div>
@@ -72,6 +73,6 @@ export function ProblemList({ problems }: { problems: ProblemEntry[] | null | un
           ))}
         </ul>
       )}
-    </section>
+    </Panel>
   );
 }

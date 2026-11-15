@@ -17,6 +17,7 @@ import { useWaitFormatter } from "@/lib/hooks/use-wait";
 import type { AccountBoardEntry, EncounterStatus, Page } from "@/types/api";
 
 import { formatMoney } from "@/features/billing/money";
+import { Panel } from "@/components/panel";
 
 /**
  * The cash counter's board: every visit that still owes something.
@@ -63,7 +64,7 @@ export function AccountsBoard({ initial }: { initial: Page<AccountBoardEntry> })
 
   if (entries.length === 0) {
     return (
-      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-16 text-center">
+      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-16 text-center">{/* restyle: inline — empty state */}
         <IndianRupee aria-hidden className="size-6" />
         <p className="text-foreground text-sm font-medium">{t("boardEmpty")}</p>
         <p className="text-sm">{t("boardEmptyHint")}</p>
@@ -73,7 +74,7 @@ export function AccountsBoard({ initial }: { initial: Page<AccountBoardEntry> })
 
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border">
+      <Panel className="overflow-x-auto">
       <table className="w-full min-w-2xl text-sm">
         <caption className="sr-only">{t("boardTitle")}</caption>
         <thead className="bg-muted/50 text-muted-foreground">
@@ -98,7 +99,7 @@ export function AccountsBoard({ initial }: { initial: Page<AccountBoardEntry> })
           ))}
         </tbody>
       </table>
-      </div>
+      </Panel>
 
       <Pager page={board.data} offset={offset} pageSize={BOARD_PAGE_SIZE} onOffsetChange={setOffset} />
     </div>

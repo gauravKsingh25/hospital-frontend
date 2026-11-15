@@ -8,6 +8,7 @@ import { ApiError } from "@/lib/api/error";
 import { getCurrentUser, serverFetch } from "@/lib/api/server";
 import { can } from "@/lib/permissions";
 import type { Patient } from "@/types/api";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("card");
@@ -55,7 +56,7 @@ export default async function PatientCardPage({
   return (
     <div className="mx-auto max-w-md space-y-6">
       <div className="flex items-center justify-between gap-3 no-print">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <PageTitle>{t("title")}</PageTitle>
         <PrintCardButton />
       </div>
 
@@ -65,7 +66,7 @@ export default async function PatientCardPage({
         matters is the printed one.
       */}
       <div
-        className="bg-card mx-auto flex items-center gap-4 rounded-xl border p-4 shadow-sm print:border print:shadow-none"
+        className="bg-card shadow-panel mx-auto flex items-center gap-4 rounded-xl border p-4 print:border print:shadow-none" // restyle: inline — the printed patient card
         style={{ width: "86mm", minHeight: "54mm" }}
         data-testid="patient-card"
       >

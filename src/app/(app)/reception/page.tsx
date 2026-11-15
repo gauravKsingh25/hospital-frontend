@@ -8,6 +8,7 @@ import { NoPermission } from "@/components/no-permission";
 import { LinkButton } from "@/components/ui/link-button";
 import { getCurrentUser } from "@/lib/api/server";
 import { can, canAll } from "@/lib/permissions";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("nav");
@@ -41,7 +42,7 @@ export default async function ReceptionPage() {
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("reception")}</h1>
+        <PageTitle>{t("reception")}</PageTitle>
 
         <div className="flex flex-wrap items-center gap-2">
           {/* UX-01: the patient nobody can name. Red and first, because it is
@@ -87,7 +88,7 @@ export default async function ReceptionPage() {
           canCollect={canAll(user, "payment:record", "invoice:issue")}
         />
       ) : (
-        <div className="text-muted-foreground flex flex-col items-center gap-3 rounded-lg border border-dashed py-16">
+        <div className="text-muted-foreground flex flex-col items-center gap-3 rounded-xl border border-dashed bg-card py-16">{/* restyle: inline — empty state */}
           <Users aria-hidden className="size-6" />
           <p className="text-sm">{(await getTranslations("common"))("noPermission")}</p>
         </div>

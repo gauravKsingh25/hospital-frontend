@@ -9,7 +9,16 @@ import {
   signOut,
   trackBed,
   uniquePatient,
+  setRaoInvolvement,
 } from "./support";
+
+// Seen is offered only while Dr Rao's own entry is off ("Doctors involvement").
+test.beforeEach(async ({ browser }) => {
+  await setRaoInvolvement(browser, false);
+});
+test.afterEach(async ({ browser }) => {
+  await setRaoInvolvement(browser, true);
+});
 
 /**
  * The OPD → admission desk hand-off, end to end.

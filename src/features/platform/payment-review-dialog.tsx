@@ -170,7 +170,7 @@ export function PaymentReviewDialog({
             ) : null}
 
             {canReview && step === "confirm" ? (
-              <div className="bg-caution/10 border-caution/40 space-y-3 rounded-lg border p-4">
+              <div className="bg-caution/10 border-caution/40 space-y-3 rounded-md border p-4">{/* restyle: inline — alert notice */}
                 <p className="text-sm font-medium">
                   {t("approveConfirm", { amount, reference: payment.reference_code })}
                 </p>

@@ -28,7 +28,7 @@ export function ContactMessages() {
 
   return (
     <section className="space-y-3" aria-labelledby="contact-messages-h">
-      <h2 id="contact-messages-h" className="text-lg font-semibold">
+      <h2 id="contact-messages-h" className="text-lg font-medium">
         {t("contactMessages")}
       </h2>
       {messages.isError ? (
@@ -39,7 +39,7 @@ export function ContactMessages() {
         <p className="text-muted-foreground text-sm">{t("contactMessagesEmpty")}</p>
       ) : (
         <>
-          <ul className="divide-y rounded-lg border">
+          <ul className="divide-border-soft bg-card shadow-panel divide-y rounded-xl border">{/* restyle: inline — a list styled as a panel */}
             {rows.map((row) => (
               <li key={row.id} className="space-y-1 p-4" data-testid="contact-message">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">

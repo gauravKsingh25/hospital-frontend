@@ -26,6 +26,7 @@ import { HospitalStatusChip } from "@/features/platform/platform-status";
 import { platformKeys, usePlatformList } from "@/features/platform/use-platform";
 import { useDebounced } from "@/lib/hooks/use-debounced";
 import type { PlatformHospitalRow, PlatformHospitalStatus } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const PAGE_SIZE = 25;
 type Filter = "all" | PlatformHospitalStatus;
@@ -119,7 +120,7 @@ export function HospitalsScreen({ canCreate }: { canCreate: boolean }) {
         />
       ) : (
         <>
-          <div className="overflow-x-auto rounded-lg border">
+          <Panel className="overflow-x-auto">
             <Table>
               <TableCaption className="sr-only">{t("hospitalsTitle")}</TableCaption>
               <TableHeader>
@@ -171,7 +172,7 @@ export function HospitalsScreen({ canCreate }: { canCreate: boolean }) {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </Panel>
           <Pager
             page={hospitals.data}
             offset={offset}

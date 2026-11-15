@@ -206,7 +206,7 @@ export function IdentifyDialog({
                 <p className="text-muted-foreground text-xs">{t("noneFound")}</p>
               ) : null}
               {candidates.length > 0 ? (
-                <ul className="divide-y rounded-lg border" data-testid="identify-candidates">
+                <ul className="divide-border-soft divide-y rounded-md border" data-testid="identify-candidates">{/* restyle: inline — a pick list inside a dialog */}
                   {candidates.map((row) => (
                     <li key={row.id} className="flex items-center gap-3 px-3 py-2">
                       <div className="min-w-0 flex-1">
@@ -304,7 +304,7 @@ export function IdentifyDialog({
                         aria-pressed={gender === value}
                         onClick={() => setGender(value)}
                         className={cn(
-                          "min-h-tap flex-1 rounded-lg border px-3 text-sm font-medium transition-colors",
+                          "min-h-tap flex-1 rounded-md border px-3 text-sm font-medium transition-colors", // restyle: inline — clickable option tile
                           gender === value
                             ? "border-primary bg-primary/10 text-primary"
                             : "hover:bg-muted",

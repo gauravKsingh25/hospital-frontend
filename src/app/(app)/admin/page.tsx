@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { NoPermission } from "@/components/no-permission";
 import { visibleAdminSections } from "@/features/admin/admin-sections";
 import { getCurrentUser } from "@/lib/api/server";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("admin");
@@ -32,7 +33,7 @@ export default async function AdminPage() {
   return (
     <div className="space-y-6">
       <div className="max-w-2xl">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <PageTitle>{t("title")}</PageTitle>
         <p className="text-muted-foreground mt-1 text-sm">{t("subtitle")}</p>
       </div>
 
@@ -41,7 +42,7 @@ export default async function AdminPage() {
           <li key={section.href}>
             <Link
               href={section.href}
-              className="hover:border-primary/50 hover:bg-accent/50 focus-visible:ring-ring block h-full rounded-lg border p-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              className="hover:border-primary/50 hover:bg-accent/50 focus-visible:ring-ring block h-full rounded-md border p-4 transition-colors focus-visible:ring-2 focus-visible:outline-none" // restyle: inline — clickable option tile
             >
               <section.icon aria-hidden className="text-muted-foreground size-5" />
               <h2 className="mt-3 font-medium">{t(section.titleKey as "staffTitle")}</h2>

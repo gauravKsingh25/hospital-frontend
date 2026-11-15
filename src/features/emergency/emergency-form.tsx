@@ -132,7 +132,7 @@ export function EmergencyForm({ canRequestAdmission }: { canRequestAdmission: bo
     return (
       <div className="space-y-4">
         <p
-          className="border-destructive/40 bg-destructive/10 text-destructive mx-auto max-w-md rounded-lg border px-4 py-3 text-center text-sm font-medium no-print"
+          className="border-destructive/40 bg-destructive/10 text-destructive mx-auto max-w-md rounded-md border px-4 py-3 text-center text-sm font-medium no-print" // restyle: inline — alert notice
           data-testid="emergency-issued"
         >
           {t("issued", { tag: issued.emergency_tag })}
@@ -167,7 +167,7 @@ export function EmergencyForm({ canRequestAdmission }: { canRequestAdmission: bo
               aria-pressed={gender === value}
               onClick={() => setGender(value)}
               className={cn(
-                "min-h-tap rounded-lg border px-3 py-4 text-base font-medium transition-colors",
+                "min-h-tap rounded-md border px-3 py-4 text-base font-medium transition-colors", // restyle: inline — clickable option tile
                 "focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2",
                 gender === value
                   ? "border-destructive bg-destructive/10 text-destructive"
@@ -249,7 +249,7 @@ export function EmergencyForm({ canRequestAdmission }: { canRequestAdmission: bo
       </div>
 
       {canRequestAdmission ? (
-        <label className="min-h-tap flex cursor-pointer items-center gap-3 rounded-lg border px-4 text-sm font-medium">
+        <label className="min-h-tap flex cursor-pointer items-center gap-3 rounded-md border px-4 text-sm font-medium">{/* restyle: inline — clickable option tile */}
           <input
             type="checkbox"
             className="size-5"

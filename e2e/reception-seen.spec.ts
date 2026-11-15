@@ -1,6 +1,22 @@
 import { expect, test, type Page } from "@playwright/test";
 
-import { ACCOUNTS, chooseGender, openLine, signIn, signOut, uniquePatient } from "./support";
+import {
+  ACCOUNTS,
+  chooseGender,
+  openLine,
+  setRaoInvolvement,
+  signIn,
+  signOut,
+  uniquePatient,
+} from "./support";
+
+// Seen is offered only while Dr Rao's own entry is off ("Doctors involvement").
+test.beforeEach(async ({ browser }) => {
+  await setRaoInvolvement(browser, false);
+});
+test.afterEach(async ({ browser }) => {
+  await setRaoInvolvement(browser, true);
+});
 
 /**
  * Reception's "Seen" button (CLAUDE.md §7b).

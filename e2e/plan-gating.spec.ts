@@ -74,8 +74,10 @@ test("a Professional hospital's administrator is unchanged", async ({ page }) =>
   await signIn(page, ACCOUNTS.admin);
 
   const nav = page.getByRole("navigation").first();
+  // Diagnostics and Messages carry a "Coming soon" badge, which is part of
+  // the link's accessible name, so match the label at its start.
   for (const name of ["Wards", "Diagnostics", "Medicine list", "Messages"]) {
-    await expect(nav.getByRole("link", { name, exact: true })).toBeVisible();
+    await expect(nav.getByRole("link", { name: new RegExp(`^${name}`) })).toBeVisible();
   }
   await page.goto("/wards");
   await expect(page.getByRole("heading", { name: "Available on Professional" })).toHaveCount(0);

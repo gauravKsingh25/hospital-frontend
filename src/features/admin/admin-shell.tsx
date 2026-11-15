@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * The frame every administration screen shares.
@@ -26,7 +27,7 @@ export function AdminShell({
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="max-w-2xl">
-          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+          <PageTitle>{title}</PageTitle>
           <p className="text-muted-foreground mt-1 text-sm">{description}</p>
         </div>
         {action}
@@ -39,7 +40,7 @@ export function AdminShell({
 /** An empty state that says what to do, not just that there is nothing. */
 export function AdminEmpty({ message, hint }: { message: string; hint?: string }) {
   return (
-    <div className="text-muted-foreground rounded-lg border border-dashed py-12 text-center">
+    <div className="text-muted-foreground rounded-xl border border-dashed bg-card py-12 text-center">{/* restyle: inline — empty state */}
       <p className="text-foreground text-sm font-medium">{message}</p>
       {hint ? <p className="mt-1 text-sm">{hint}</p> : null}
     </div>

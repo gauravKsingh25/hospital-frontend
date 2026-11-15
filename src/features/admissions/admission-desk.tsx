@@ -59,7 +59,7 @@ export function AdmissionDesk() {
   return (
     <div className="space-y-8">
       <section aria-labelledby="desk-waiting" className="space-y-3">
-        <h2 id="desk-waiting" className="text-lg font-semibold">
+        <h2 id="desk-waiting" className="text-lg font-medium">
           {t("waitingTitle", { count: waiting.length })}
         </h2>
 
@@ -70,13 +70,13 @@ export function AdmissionDesk() {
             ))}
           </div>
         ) : waiting.length === 0 ? (
-          <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-14 text-center">
+          <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-14 text-center">{/* restyle: inline — empty state */}
             <Inbox aria-hidden className="size-6" />
             <p className="text-foreground text-sm font-medium">{t("empty")}</p>
             <p className="text-sm">{t("emptyHint")}</p>
           </div>
         ) : (
-          <ul className="divide-border divide-y rounded-lg border" data-testid="admission-requests">
+          <ul className="divide-border-soft bg-card shadow-panel divide-y rounded-xl border" data-testid="admission-requests">{/* restyle: inline — a list styled as a panel */}
             {waiting.map((request) => (
               <WaitingRow key={request.id} request={request} />
             ))}
@@ -89,7 +89,7 @@ export function AdmissionDesk() {
           <h2 id="desk-handled" className="text-muted-foreground text-sm font-medium uppercase">
             {t("handledTitle", { count: handled.length })}
           </h2>
-          <ul className="divide-border divide-y rounded-lg border" data-testid="handled-requests">
+          <ul className="divide-border-soft bg-card shadow-panel divide-y rounded-xl border" data-testid="handled-requests">{/* restyle: inline — a list styled as a panel */}
             {handled.map((request) => (
               <HandledRow key={request.id} request={request} />
             ))}

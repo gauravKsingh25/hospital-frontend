@@ -26,6 +26,8 @@ import { HospitalStatusChip } from "@/features/platform/platform-status";
 import { PLATFORM_KEY, useHospitalDetail } from "@/features/platform/use-platform";
 import { api } from "@/lib/api/client";
 import type { Hospital, PlatformHospitalDetail } from "@/types/api";
+import { Panel } from "@/components/panel";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * Everything about one customer: who runs it, whether the invite reached
@@ -83,7 +85,7 @@ export function HospitalDetailScreen({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl font-semibold tracking-tight break-words">{hospital.name}</h1>
+              <PageTitle className="break-words">{hospital.name}</PageTitle>
               <HospitalStatusChip status={status} />
             </div>
             <p className="text-muted-foreground mt-1 text-sm">
@@ -187,7 +189,7 @@ export function HospitalDetailScreen({
       </div>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">{t("invitesAndEmails")}</h2>
+        <h2 className="text-lg font-medium">{t("invitesAndEmails")}</h2>
         {invites.length === 0 ? (
           <AdminEmpty message={t("noInvites")} />
         ) : (
@@ -211,10 +213,10 @@ export function HospitalDetailScreen({
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="bg-card rounded-lg border p-4">
+    <Panel className="p-4">
       <p className="text-muted-foreground text-sm">{label}</p>
       <p className="mt-1 text-2xl font-semibold tabular-nums">{value.toLocaleString("en-IN")}</p>
-    </div>
+    </Panel>
   );
 }
 
@@ -228,15 +230,15 @@ function Card({
   children: ReactNode;
 }) {
   return (
-    <section className="bg-card rounded-lg border p-4">
+    <Panel className="p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+        <h2 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
           {title}
         </h2>
         {action}
       </div>
       {children}
-    </section>
+    </Panel>
   );
 }
 

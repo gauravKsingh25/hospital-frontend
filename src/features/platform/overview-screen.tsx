@@ -10,6 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useOverview } from "@/features/platform/use-platform";
 import { cn } from "@/lib/utils";
 import type { AttentionItem } from "@/types/api";
+import { Panel } from "@/components/panel";
+import { PageTitle } from "@/components/page-header";
 
 const ATTENTION_ICONS: Record<AttentionItem["kind"], LucideIcon> = {
   invite_expiring: Clock,
@@ -36,7 +38,7 @@ export function OverviewScreen() {
   return (
     <div className="space-y-6">
       <div className="max-w-2xl">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("overviewTitle")}</h1>
+        <PageTitle>{t("overviewTitle")}</PageTitle>
         <p className="text-muted-foreground mt-1 text-sm">{t("overviewDescription")}</p>
       </div>
 
@@ -64,8 +66,8 @@ export function OverviewScreen() {
       </div>
 
       <div className="grid items-start gap-4 lg:grid-cols-[3fr_2fr]">
-        <section className="bg-card rounded-lg border p-4">
-          <h2 className="text-muted-foreground mb-3 text-xs font-semibold tracking-wide uppercase">
+        <Panel className="p-4">
+          <h2 className="text-muted-foreground mb-3 text-xs font-medium tracking-wide uppercase">
             {t("needsAttention")}
           </h2>
           {!data ? (
@@ -115,10 +117,10 @@ export function OverviewScreen() {
               })}
             </ul>
           )}
-        </section>
+        </Panel>
 
-        <section className="bg-card rounded-lg border p-4">
-          <h2 className="text-muted-foreground mb-3 text-xs font-semibold tracking-wide uppercase">
+        <Panel className="p-4">
+          <h2 className="text-muted-foreground mb-3 text-xs font-medium tracking-wide uppercase">
             {t("recentActivity")}
           </h2>
           {!data ? (
@@ -149,7 +151,7 @@ export function OverviewScreen() {
           >
             {t("seeAllActivity")}
           </Link>
-        </section>
+        </Panel>
       </div>
     </div>
   );
@@ -178,7 +180,7 @@ function Tile({
       )}
     </>
   );
-  const frame = "bg-card block rounded-lg border p-4";
+  const frame = "bg-card shadow-panel block rounded-xl border p-4"; // restyle: inline — a stat card that may be a link
   return href ? (
     <Link
       href={href}

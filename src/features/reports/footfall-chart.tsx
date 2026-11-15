@@ -14,6 +14,7 @@ import {
 
 import { formatAxisDate, formatLocalDate } from "@/features/reports/format";
 import type { DailyCount } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * Footfall by day — the one genuine time series on the dashboard.
@@ -55,7 +56,7 @@ export function FootfallChart({ days }: { days: DailyCount[] }) {
   }));
 
   return (
-    <div className="rounded-lg border p-4">
+    <Panel className="p-4">
       <ResponsiveContainer width="100%" height={240}>
         <BarChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -20 }} accessibilityLayer>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -92,6 +93,6 @@ export function FootfallChart({ days }: { days: DailyCount[] }) {
           <Bar dataKey="lost" name={t("lost")} stackId="a" fill="var(--chart-5)" />
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </Panel>
   );
 }

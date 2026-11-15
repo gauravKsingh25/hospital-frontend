@@ -101,7 +101,7 @@ export function MessageDetail({
             {/* Who it was actually addressed to — snapshotted when it was
                 composed, so it is what was really used rather than whatever the
                 record says today. */}
-            <dl className="grid grid-cols-2 gap-3 rounded-lg border p-3 text-sm">
+            <dl className="bg-card shadow-panel grid grid-cols-2 gap-3 rounded-xl border p-3 text-sm">{/* restyle: inline — a facts strip */}
               <div>
                 <dt className="text-muted-foreground text-xs">{t("recipient")}</dt>
                 <dd className="font-medium">{data.recipient_name ?? common("notRecorded")}</dd>
@@ -116,7 +116,7 @@ export function MessageDetail({
 
             <div className="space-y-1.5">
               <p className="text-muted-foreground text-xs">{t("body")}</p>
-              <p className="bg-muted/40 rounded-lg border p-3 text-sm whitespace-pre-wrap">
+              <p className="bg-band rounded-md border p-3 text-sm whitespace-pre-wrap">{/* restyle: inline — the message text, quoted */}
                 {/* Null for a role that does not contact patients (SEC-03): what
                     was said is for the people who talk to them. */}
                 {data.body ?? (
@@ -186,7 +186,7 @@ function AttemptLadder({ message }: { message: Message }) {
 
   if (attempts.length === 0) {
     return (
-      <p className="text-muted-foreground rounded-lg border border-dashed p-3 text-xs">
+      <p className="text-muted-foreground rounded-xl border border-dashed bg-card p-3 text-xs">{/* restyle: inline — empty state */}
         {/* An empty ladder on a suppressed message is not missing data — it is
             the proof that nothing was tried, which is the point. */}
         {message.status === "SUPPRESSED" ? t("noAttemptsSuppressed") : t("noAttempts")}
@@ -200,7 +200,7 @@ function AttemptLadder({ message }: { message: Message }) {
         <li
           key={attempt.id}
           className={cn(
-            "flex flex-wrap items-baseline gap-x-3 gap-y-0.5 rounded-lg border px-3 py-2 text-sm",
+            "flex flex-wrap items-baseline gap-x-3 gap-y-0.5 rounded-md border px-3 py-2 text-sm", // restyle: inline — a delivery attempt row
             attempt.succeeded
               ? "border-success/25 bg-success/5"
               : "border-destructive/25 bg-destructive/5",

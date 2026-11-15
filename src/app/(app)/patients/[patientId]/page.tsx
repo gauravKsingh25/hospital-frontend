@@ -294,7 +294,7 @@ async function OverviewTab({
       {recent ? (
         <section className="space-y-3">
           <div className="flex items-baseline justify-between gap-3">
-            <h2 className="text-base font-semibold">{recentLabel}</h2>
+            <h2 className="text-base font-medium">{recentLabel}</h2>
             {recent.total > recent.items.length ? (
               <Link
                 href={`/patients/${patient.id}?tab=visits`}
@@ -305,7 +305,7 @@ async function OverviewTab({
             ) : null}
           </div>
           {recent.items.length === 0 ? (
-            <p className="text-muted-foreground rounded-xl border border-dashed px-4 py-8 text-center text-sm">
+            <p className="text-muted-foreground rounded-xl border border-dashed bg-card px-4 py-8 text-center text-sm">{/* restyle: inline — empty state */}
               {noVisits}
             </p>
           ) : (
@@ -347,7 +347,7 @@ async function VisitsTab({
 
   if (visits.total === 0) {
     return (
-      <div className="text-muted-foreground rounded-xl border border-dashed px-4 py-12 text-center">
+      <div className="text-muted-foreground rounded-xl border border-dashed bg-card px-4 py-12 text-center">{/* restyle: inline — empty state */}
         <p className="text-foreground text-sm font-medium">{labels.empty}</p>
         <p className="mt-1 text-sm">{labels.emptyHint}</p>
       </div>

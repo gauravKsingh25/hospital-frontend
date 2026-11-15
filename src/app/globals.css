@@ -51,7 +51,9 @@
      covers it, so a Hindi label containing an English drug name renders in
      one consistent line rather than falling back mid-sentence. */
   --font-sans: var(--font-latin), var(--font-devanagari), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* DM Mono for every number compared down a column: tokens, UHIDs, money,
+     vitals, times. */
+  --font-mono: var(--font-dm-mono), var(--font-devanagari), ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -93,6 +95,20 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
 
+  /* Frost and slate additions: the panel strip, soft row dividers, the one
+     panel shadow and the status-chip tones. */
+  --color-band: var(--band);
+  --color-border-soft: var(--border-soft);
+  --shadow-panel: var(--shadow-panel);
+  --color-s-wait: var(--s-wait);
+  --color-s-wait-bg: var(--s-wait-bg);
+  --color-s-doc: var(--s-doc);
+  --color-s-doc-bg: var(--s-doc-bg);
+  --color-s-lab: var(--s-lab);
+  --color-s-lab-bg: var(--s-lab-bg);
+  --color-s-bill: var(--s-bill);
+  --color-s-bill-bg: var(--s-bill-bg);
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -105,89 +121,124 @@
 }
 
 :root {
-  /* A near-white ground rather than pure white: less glare over an 8-hour
-     shift, with no measurable contrast cost. */
-  --background: oklch(0.985 0.002 250);
-  --foreground: oklch(0.17 0.015 255);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.17 0.015 255);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.17 0.015 255);
+  /* Frost and slate (Docs/superpowers/specs/2026-11-15-app-restyle-frost-and-slate-design.md).
+     Written as hex so src/lib/theme.test.mjs can measure every text pair's
+     contrast. A near-white, slightly cool ground rather than pure white: less
+     glare over an 8-hour shift, with no measurable contrast cost. */
+  --background: #f7f9fa;
+  --foreground: #1f3038;
+  --card: #ffffff;
+  --card-foreground: #1f3038;
+  --popover: #ffffff;
+  --popover-foreground: #1f3038;
 
-  /* Clinical teal. Deliberately not red or amber — those two are reserved
+  /* Clinical teal. Deliberately not red or amber: those two are reserved
      for meaning, and a primary button competing with a critical alert is how
      a critical alert stops being noticed. */
-  --primary: oklch(0.48 0.1 205);
-  --primary-foreground: oklch(0.99 0.005 200);
-  --secondary: oklch(0.955 0.008 250);
-  --secondary-foreground: oklch(0.25 0.02 255);
-  --muted: oklch(0.955 0.008 250);
-  --muted-foreground: oklch(0.47 0.02 255);
-  --accent: oklch(0.94 0.02 205);
-  --accent-foreground: oklch(0.25 0.05 220);
-  --destructive: oklch(0.53 0.22 27);
+  --primary: #0d7480;
+  --primary-foreground: #ffffff;
+  --secondary: #ecf0f2;
+  --secondary-foreground: #1f3038;
+  --muted: #ecf0f2;
+  --muted-foreground: #5b6b72;
+  --accent: #dcefed;
+  --accent-foreground: #0d5a63;
+  --destructive: #b42318;
 
-  --critical: oklch(0.53 0.22 27);
-  --critical-foreground: oklch(0.99 0.01 25);
-  --caution: oklch(0.72 0.16 75);
-  --caution-foreground: oklch(0.24 0.06 70);
-  --success: oklch(0.55 0.14 155);
-  --success-foreground: oklch(0.99 0.01 155);
-  --info: oklch(0.55 0.14 250);
-  --info-foreground: oklch(0.99 0.01 250);
+  --critical: #b42318;
+  --critical-foreground: #ffffff;
+  --caution: #e0a526;
+  --caution-foreground: #3d2c00;
+  /* Darker than the mockup's #1f8a5b, which reads at only 4.3:1 on white. */
+  --success: #1a7a50;
+  --success-foreground: #ffffff;
+  --info: #2f5aa8;
+  --info-foreground: #ffffff;
 
-  --border: oklch(0.89 0.008 250);
-  --input: oklch(0.85 0.01 250);
-  --ring: oklch(0.48 0.1 205);
+  /* The panel header strip and the soft divider between rows inside a panel. */
+  --band: #f4f7f8;
+  --border: #dbe2e5;
+  --border-soft: #e9eef0;
+  /* One step darker than --border, so an empty field never disappears. */
+  --input: #cfd8dc;
+  --ring: #0d7480;
+  /* The only shadow in the app. */
+  --shadow-panel: 0 1px 2px rgb(31 48 56 / 0.05);
 
-  --chart-1: oklch(0.55 0.13 205);
-  --chart-2: oklch(0.62 0.14 155);
-  --chart-3: oklch(0.68 0.15 75);
-  --chart-4: oklch(0.58 0.17 285);
-  --chart-5: oklch(0.6 0.18 27);
+  /* Status chips: waiting, with the doctor, lab or results, billing or
+     clearance. Each is a text colour on its own tint. */
+  --s-wait: #7a5a00;
+  --s-wait-bg: #fbf1d6;
+  --s-doc: #0d6670;
+  --s-doc-bg: #dcefed;
+  --s-lab: #3b5bab;
+  --s-lab-bg: #e3e9f8;
+  --s-bill: #8a4b16;
+  --s-bill-bg: #f8e7d8;
 
-  --radius: 0.5rem;
+  /* Charts: the accent teal first, then calm hues that sit with slate. */
+  --chart-1: #0d7480;
+  --chart-2: #3b5bab;
+  --chart-3: #c08a1e;
+  --chart-4: #6b8a99;
+  --chart-5: #b4532a;
+
+  --radius: 0.75rem;
   --tap-target: 2.75rem;
 
-  --sidebar: oklch(0.975 0.005 250);
-  --sidebar-foreground: oklch(0.17 0.015 255);
-  --sidebar-primary: oklch(0.48 0.1 205);
-  --sidebar-primary-foreground: oklch(0.99 0.005 200);
-  --sidebar-accent: oklch(0.94 0.02 205);
-  --sidebar-accent-foreground: oklch(0.25 0.05 220);
-  --sidebar-border: oklch(0.89 0.008 250);
-  --sidebar-ring: oklch(0.48 0.1 205);
+  --sidebar: #f0f4f5;
+  --sidebar-foreground: #1f3038;
+  --sidebar-primary: #0d7480;
+  --sidebar-primary-foreground: #ffffff;
+  /* The active item is a white surface on the frost sidebar. */
+  --sidebar-accent: #ffffff;
+  --sidebar-accent-foreground: #1f3038;
+  --sidebar-border: #dbe2e5;
+  --sidebar-ring: #0d7480;
 }
 
 .dark {
-  --background: oklch(0.17 0.015 255);
-  --foreground: oklch(0.97 0.005 250);
-  --card: oklch(0.22 0.018 255);
-  --card-foreground: oklch(0.97 0.005 250);
-  --popover: oklch(0.22 0.018 255);
-  --popover-foreground: oklch(0.97 0.005 250);
-  --primary: oklch(0.72 0.12 200);
-  --primary-foreground: oklch(0.17 0.03 220);
-  --secondary: oklch(0.28 0.02 255);
-  --secondary-foreground: oklch(0.97 0.005 250);
-  --muted: oklch(0.28 0.02 255);
-  --muted-foreground: oklch(0.72 0.015 255);
-  --accent: oklch(0.32 0.04 210);
-  --accent-foreground: oklch(0.95 0.02 200);
-  --destructive: oklch(0.68 0.19 25);
+  /* Not switched on anywhere yet; kept in the same hues so it is not stale. */
+  --background: #141d22;
+  --foreground: #e8eef0;
+  --card: #1b262c;
+  --card-foreground: #e8eef0;
+  --popover: #1b262c;
+  --popover-foreground: #e8eef0;
+  --primary: #4fb3bd;
+  --primary-foreground: #0b2a2e;
+  --secondary: #24323a;
+  --secondary-foreground: #e8eef0;
+  --muted: #24323a;
+  --muted-foreground: #9fb0b7;
+  --accent: #1f3d42;
+  --accent-foreground: #cdeae7;
+  --destructive: #f07a6e;
 
-  --critical: oklch(0.68 0.19 25);
-  --critical-foreground: oklch(0.15 0.02 25);
-  --caution: oklch(0.8 0.15 80);
-  --caution-foreground: oklch(0.2 0.05 70);
-  --success: oklch(0.7 0.15 155);
-  --success-foreground: oklch(0.15 0.03 155);
-  --info: oklch(0.7 0.13 250);
-  --info-foreground: oklch(0.15 0.03 250);
+  --critical: #f07a6e;
+  --critical-foreground: #2a0b07;
+  --caution: #e8b84a;
+  --caution-foreground: #2b1f00;
+  --success: #5cc495;
+  --success-foreground: #072a1b;
+  --info: #8fb0ef;
+  --info-foreground: #0d1d3d;
 
-  --border: oklch(1 0 0 / 14%);
-  --input: oklch(1 0 0 / 20%);
-  --ring: oklch(0.72 0.12 200);
+  --band: #1f2b31;
+  --border: #2e3e46;
+  --border-soft: #26343b;
+  --input: #3a4c55;
+  --ring: #4fb3bd;
+  --shadow-panel: 0 1px 2px rgb(0 0 0 / 0.3);
+
+  --s-wait: #f1cf73;
+  --s-wait-bg: #3a2f10;
+  --s-doc: #8fd3d9;
+  --s-doc-bg: #163a3e;
+  --s-lab: #a9bdf0;
+  --s-lab-bg: #1f2c4d;
+  --s-bill: #f0b98a;
+  --s-bill-bg: #45291a;
 
   --chart-1: oklch(0.72 0.12 200);
   --chart-2: oklch(0.72 0.14 155);
@@ -195,14 +246,14 @@
   --chart-4: oklch(0.68 0.16 285);
   --chart-5: oklch(0.7 0.17 27);
 
-  --sidebar: oklch(0.2 0.018 255);
-  --sidebar-foreground: oklch(0.97 0.005 250);
-  --sidebar-primary: oklch(0.72 0.12 200);
-  --sidebar-primary-foreground: oklch(0.17 0.03 220);
-  --sidebar-accent: oklch(0.32 0.04 210);
-  --sidebar-accent-foreground: oklch(0.95 0.02 200);
-  --sidebar-border: oklch(1 0 0 / 14%);
-  --sidebar-ring: oklch(0.72 0.12 200);
+  --sidebar: #172126;
+  --sidebar-foreground: #e8eef0;
+  --sidebar-primary: #4fb3bd;
+  --sidebar-primary-foreground: #0b2a2e;
+  --sidebar-accent: #1b262c;
+  --sidebar-accent-foreground: #e8eef0;
+  --sidebar-border: #2e3e46;
+  --sidebar-ring: #4fb3bd;
 }
 
 @layer base {
@@ -224,7 +275,16 @@
      tokens, money, doses. Proportional digits make 11 and 77 different
      widths, which is exactly wrong when scanning a list for an outlier. */
   .tabular {
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+  }
+  /* Headings are set in a medium weight with slightly tightened tracking,
+     not bold: calmer, and the hierarchy still reads from size. */
+  h1,
+  h2,
+  h3 {
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
   /* Focus must be unmissable: this app is meant to be driven from the
      keyboard (§7b), and an invisible focus ring makes that impossible. */

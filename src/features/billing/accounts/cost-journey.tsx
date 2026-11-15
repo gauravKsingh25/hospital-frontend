@@ -11,6 +11,7 @@ import { formatMoney } from "@/features/billing/money";
 import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import type { ChargeCategory, Journey } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * The patient's whole journey, itemised, latest first (spec §5.4): every
@@ -75,12 +76,12 @@ export function CostJourney({ patientId }: { patientId: string }) {
       {journey.isPending ? (
         <Skeleton className="h-40 w-full rounded-lg" />
       ) : journey.data && journey.data.lines.items.length === 0 ? (
-        <p className="text-muted-foreground rounded-lg border border-dashed py-10 text-center text-sm">
+        <p className="text-muted-foreground rounded-xl border border-dashed bg-card py-10 text-center text-sm">{/* restyle: inline — empty state */}
           {t("empty")}
         </p>
       ) : journey.data ? (
         <>
-          <div className="overflow-x-auto rounded-lg border">
+          <Panel className="overflow-x-auto">
             <table className="w-full min-w-2xl text-sm">
               <caption className="sr-only">{t("title")}</caption>
               <thead className="bg-muted/50 text-muted-foreground">
@@ -124,7 +125,7 @@ export function CostJourney({ patientId }: { patientId: string }) {
                 ))}
               </tbody>
             </table>
-          </div>
+          </Panel>
           <Pager page={journey.data.lines} offset={offset} pageSize={PAGE_SIZE} onOffsetChange={setOffset} />
         </>
       ) : null}

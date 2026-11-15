@@ -4,6 +4,7 @@ import { NoPermission } from "@/components/no-permission";
 import { SubscriptionManager } from "@/features/subscriptions/subscription-manager";
 import { getCurrentUser } from "@/lib/api/server";
 import { can } from "@/lib/permissions";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("subscriptionManager");
@@ -17,7 +18,7 @@ export default async function SubscriptionPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <PageTitle>{t("title")}</PageTitle>
         <p className="text-muted-foreground mt-1 text-sm">{t("subtitle")}</p>
       </div>
       <SubscriptionManager canManage={can(user, "subscription:manage")} />

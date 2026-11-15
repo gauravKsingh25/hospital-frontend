@@ -25,6 +25,8 @@ import { api } from "@/lib/api/client";
 import { useDebounced } from "@/lib/hooks/use-debounced";
 import { cn } from "@/lib/utils";
 import type { Gender, Page, PatientListItem, PatientSort, PatientVisitStats } from "@/types/api";
+import { PageTitle } from "@/components/page-header";
+import { Panel } from "@/components/panel";
 
 const PAGE_SIZE = 25;
 const GENDERS: Gender[] = ["FEMALE", "MALE", "OTHER", "UNKNOWN"];
@@ -145,7 +147,7 @@ export function PatientIndex({ canSeeVisits }: { canSeeVisits: boolean }) {
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <PageTitle>{t("title")}</PageTitle>
           <p className="text-muted-foreground mt-1 text-sm">{t("subtitle")}</p>
         </div>
         <Input
@@ -158,7 +160,7 @@ export function PatientIndex({ canSeeVisits }: { canSeeVisits: boolean }) {
       </div>
 
       <fieldset
-        className="bg-card flex flex-wrap items-end gap-3 rounded-xl border p-3"
+        className="bg-card shadow-panel flex flex-wrap items-end gap-3 rounded-xl border p-3" // restyle: inline — filter bar (a fieldset)
         disabled={searching}
         data-testid="directory-filters"
       >
@@ -252,7 +254,7 @@ export function PatientIndex({ canSeeVisits }: { canSeeVisits: boolean }) {
         // A failed *background* refetch keeps the last good page on screen.
         <LoadError onRetry={() => list.refetch()} />
       ) : rows.length === 0 || badRange ? (
-        <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-16 text-center">
+        <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-16 text-center">{/* restyle: inline — empty state */}
           <Users aria-hidden className="size-6" />
           <p className="text-foreground text-sm font-medium">
             {searching
@@ -265,7 +267,7 @@ export function PatientIndex({ canSeeVisits }: { canSeeVisits: boolean }) {
         </div>
       ) : (
         <>
-          <div className="bg-card overflow-x-auto rounded-xl border">
+          <Panel className="overflow-x-auto">
             <Table>
               <TableCaption className="sr-only">{t("title")}</TableCaption>
               <TableHeader>
@@ -353,7 +355,7 @@ export function PatientIndex({ canSeeVisits }: { canSeeVisits: boolean }) {
                 })}
               </TableBody>
             </Table>
-          </div>
+          </Panel>
 
           <div className="flex items-center justify-between gap-3">
             <p className="text-muted-foreground text-sm">

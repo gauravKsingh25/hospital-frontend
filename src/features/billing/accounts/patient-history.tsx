@@ -11,6 +11,8 @@ import { formatMoney } from "@/features/billing/money";
 import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import type { BillHistory, VisitBills } from "@/types/api";
+import { Panel } from "@/components/panel";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * A patient's bills (spec §5.3): identity and lifetime totals on top, every
@@ -56,7 +58,7 @@ export function PatientHistory({
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{patient.name}</h1>
+          <PageTitle>{patient.name}</PageTitle>
           <p className="text-muted-foreground tabular text-sm">
             {[patient.uhid, patient.age_years !== null ? `${patient.age_years} y` : null, patient.gender, patient.phone]
               .filter(Boolean)
@@ -104,7 +106,7 @@ export function PatientHistory({
       {view === "journey" ? (
         <CostJourney patientId={patient.id} />
       ) : data.visits.length === 0 ? (
-        <p className="text-muted-foreground rounded-lg border border-dashed py-12 text-center text-sm">
+        <p className="text-muted-foreground rounded-xl border border-dashed bg-card py-12 text-center text-sm">{/* restyle: inline — empty state */}
           {t("noVisits")}
         </p>
       ) : (
@@ -120,7 +122,7 @@ export function PatientHistory({
               </li>
             ))}
           </ol>
-          <section className="min-w-0 rounded-lg border p-4" data-testid="visit-pane" aria-live="polite">
+          <Panel className="min-w-0 p-4" data-testid="visit-pane" aria-live="polite">
             {visit ? (
               <VisitPane
                 key={`${visit.encounter_id}-${visit.kind}`}
@@ -130,7 +132,7 @@ export function PatientHistory({
                 canFinalise={canFinalise}
               />
             ) : null}
-          </section>
+          </Panel>
         </div>
       )}
     </div>
@@ -165,7 +167,7 @@ function VisitItem({
       aria-current={current ? "true" : undefined}
       data-testid="visit-item"
       className={cn(
-        "w-full rounded-lg border p-3 text-left text-sm",
+        "bg-card w-full rounded-md border p-3 text-left text-sm", // restyle: inline — a selectable visit in a list
         current ? "border-primary bg-primary/5 border-2" : "hover:bg-muted/50",
       )}
     >
@@ -199,7 +201,7 @@ function VisitPane({
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-lg font-medium">
           {visit.kind === "IPD"
             ? `${t("ipdAdmission")} · ${visit.admission_number ?? ""}`
             : t("opdVisit")}

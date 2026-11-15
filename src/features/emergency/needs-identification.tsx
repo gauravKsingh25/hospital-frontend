@@ -39,7 +39,7 @@ export function NeedsIdentification({ canIdentify }: { canIdentify: boolean }) {
 
   return (
     <section
-      className="border-destructive/40 bg-destructive/5 rounded-lg border p-4"
+      className="border-destructive/40 bg-destructive/5 rounded-md border p-4" // restyle: inline — alert notice
       aria-labelledby="needs-identification-title"
       data-testid="needs-identification"
     >

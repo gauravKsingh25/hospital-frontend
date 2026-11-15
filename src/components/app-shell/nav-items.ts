@@ -64,6 +64,11 @@ export type NavItem = {
   prefix?: boolean;
   /** A platform-console screen. See `visibleNavItems`. */
   platform?: boolean;
+  /**
+   * Labelled "Coming soon": the screen works but is not finished as a product
+   * (lab testing; messages, which no real WhatsApp/SMS provider sends yet).
+   */
+  comingSoon?: true;
 };
 
 /**
@@ -179,6 +184,7 @@ export const NAV_ITEMS: NavItem[] = [
     labelKey: "diagnostics",
     icon: FlaskConical,
     permissions: ["report:read"],
+    comingSoon: true,
     // `/lab/reports/…` should keep the parent lit while a technician is
     // entering results.
     prefix: true,
@@ -225,6 +231,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/messages",
     labelKey: "messages",
     icon: MessageSquareText,
+    comingSoon: true,
     // `notification:read`, not `send`: the common case is looking, and the
     // question ("did it go out?") is asked far more often than a message is
     // composed by hand.

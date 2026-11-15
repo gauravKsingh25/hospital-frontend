@@ -161,6 +161,10 @@ export function useMarkSeen() {
             reason: isApiError(error) ? error.message : common("somethingWentWrong"),
           }),
         );
+        // A refusal usually means the board is stale: the doctor's
+        // "Doctors involvement" was switched back on since it loaded.
+        void queryClient.invalidateQueries({ queryKey: ["queue"] });
+        void queryClient.invalidateQueries({ queryKey: ["doctor"] });
       } finally {
         release(entryId);
       }

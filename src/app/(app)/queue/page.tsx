@@ -5,6 +5,7 @@ import { LiveQueue } from "@/features/queue/live-queue";
 import { NoPermission } from "@/components/no-permission";
 import { getCurrentUser } from "@/lib/api/server";
 import { can } from "@/lib/permissions";
+import { PageTitle } from "@/components/page-header";
 
 export async function generateMetadata() {
   const t = await getTranslations("queue");
@@ -31,10 +32,12 @@ export default async function QueuePage() {
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <PageTitle>{t("title")}</PageTitle>
       </header>
       <LiveQueue
         canRecordVitals={can(user, "vitals:record")}
+        canMarkSeen={can(user, "queue:manage")}
+        currentUserId={user.id}
       />
     </div>
   );

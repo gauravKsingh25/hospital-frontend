@@ -48,7 +48,7 @@ export default async function GetStartedPage() {
             <Activity aria-hidden className="size-5" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>
+            <h1 className="text-xl font-medium tracking-tight">{t("title")}</h1>{/* restyle: inline — brand header beside the logo mark */}
             <p className="text-muted-foreground text-sm">{t("subtitle", { name: user.full_name })}</p>
           </div>
         </div>

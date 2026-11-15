@@ -176,7 +176,7 @@ export function AccountsDashboard() {
             ))}
           </div>
         ) : list.data && list.data.items.length === 0 ? (
-          <p className="text-muted-foreground rounded-lg border border-dashed py-12 text-center text-sm">
+          <p className="text-muted-foreground rounded-xl border border-dashed bg-card py-12 text-center text-sm">{/* restyle: inline — empty state */}
             {t(`empty_${tab}` as "empty_bills")}
           </p>
         ) : list.data ? (

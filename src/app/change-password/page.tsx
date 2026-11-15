@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { ChangePasswordForm } from "@/features/auth/change-password-form";
+import { Panel } from "@/components/panel";
 
 export async function generateMetadata() {
   const t = await getTranslations("auth");
@@ -22,15 +23,15 @@ export default async function ChangePasswordPage() {
     <main className="flex min-h-svh flex-col items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">{t("changePassword")}</h1>
+          <h1 className="text-2xl font-medium tracking-tight">{t("changePassword")}</h1>{/* restyle: inline — centred sign-in screen, not a screen header */}
           <p className="text-muted-foreground mt-2 text-sm text-balance">
             {t("changePasswordPrompt")}
           </p>
         </div>
 
-        <div className="bg-card rounded-xl border p-6 shadow-sm">
+        <Panel className="p-6">
           <ChangePasswordForm />
-        </div>
+        </Panel>
       </div>
     </main>
   );

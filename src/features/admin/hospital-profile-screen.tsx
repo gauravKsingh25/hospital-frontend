@@ -13,6 +13,8 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { toFieldErrorMap } from "@/lib/api/field-errors";
 import type { Hospital } from "@/types/api";
+import { Panel } from "@/components/panel";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * Administration → Hospital profile: what every printed bill carries at the
@@ -165,11 +167,11 @@ export function HospitalProfileScreen({ hospital: initial }: { hospital: Hospita
   return (
     <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("hospitalTitle")}</h1>
+        <PageTitle>{t("hospitalTitle")}</PageTitle>
         <p className="text-muted-foreground mt-1 text-sm">{t("hospitalSubtitle")}</p>
       </div>
 
-      <section className="space-y-3 rounded-lg border p-4" aria-labelledby="logo-heading">
+      <Panel className="space-y-3 p-4" aria-labelledby="logo-heading">
         <h2 id="logo-heading" className="font-medium">
           {t("logoSection")}
         </h2>
@@ -211,10 +213,10 @@ export function HospitalProfileScreen({ hospital: initial }: { hospital: Hospita
             </p>
           </div>
         </div>
-      </section>
+      </Panel>
 
       <form onSubmit={submit} className="space-y-6">
-        <section className="space-y-3 rounded-lg border p-4" aria-labelledby="letterhead-heading">
+        <Panel className="space-y-3 p-4" aria-labelledby="letterhead-heading">
           <div>
             <h2 id="letterhead-heading" className="font-medium">
               {t("letterheadSection")}
@@ -224,9 +226,9 @@ export function HospitalProfileScreen({ hospital: initial }: { hospital: Hospita
           <div className="grid gap-3 sm:grid-cols-2">
             {LETTERHEAD.map((item) => field(item.field, item.labelKey, item.hintKey, item.wide))}
           </div>
-        </section>
+        </Panel>
 
-        <section className="space-y-3 rounded-lg border p-4" aria-labelledby="payments-heading">
+        <Panel className="space-y-3 p-4" aria-labelledby="payments-heading">
           <h2 id="payments-heading" className="font-medium">
             {t("paymentsSection")}
           </h2>
@@ -246,7 +248,7 @@ export function HospitalProfileScreen({ hospital: initial }: { hospital: Hospita
               </div>
             </div>
           ) : null}
-        </section>
+        </Panel>
 
         <Button type="submit" className="h-tap" disabled={save.isPending || !changed}>
           {t("saveProfile")}

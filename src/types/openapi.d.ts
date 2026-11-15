@@ -1607,7 +1607,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/doctors/{doctor_id}/exceptions": {
+    "/api/v1/doctors/{doctor_id}/availability/{availability_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1616,8 +1616,67 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        post?: never;
+        /** Remove a weekly clinic session */
+        delete: operations["remove_availability_api_v1_doctors__doctor_id__availability__availability_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/doctors/{doctor_id}/exceptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Days off and extra clinics from a date on */
+        get: operations["list_exceptions_api_v1_doctors__doctor_id__exceptions_get"];
+        put?: never;
         /** Record leave or an extra clinic */
         post: operations["add_exception_api_v1_doctors__doctor_id__exceptions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/doctors/{doctor_id}/exceptions/{exception_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a day off or extra clinic */
+        delete: operations["remove_exception_api_v1_doctors__doctor_id__exceptions__exception_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/doctors/{doctor_id}/involvement": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Turn a doctor's own data entry on or off
+         * @description "Doctors involvement", per doctor.
+         *
+         *     Off, reception and nurses mark this doctor's patients seen and the doctor
+         *     can only look; on, the doctor records and closes their own visits. Audited
+         *     with before and after, because it changes who may close a clinical visit.
+         */
+        put: operations["set_doctor_involvement_api_v1_doctors__doctor_id__involvement_put"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1660,6 +1719,31 @@ export interface paths {
          *     somebody eventually forgets.
          */
         post: operations["open_encounter_api_v1_encounters_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/encounters/by-doctor/{doctor_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * A doctor's patients seen
+         * @description The doctor page's history. Only the admin and that doctor read it.
+         *
+         *     Reception reads encounters all day, but a doctor's whole patient list is
+         *     not something the front desk needs, so this asks for more than
+         *     `encounter:read`: the admin's `doctor:involvement:manage`, or being the
+         *     doctor.
+         */
+        get: operations["list_doctor_visits_api_v1_encounters_by_doctor__doctor_id__get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -6673,6 +6757,14 @@ export interface components {
              */
             user_id: string;
         };
+        /**
+         * DoctorInvolvementUpdate
+         * @description Turn a doctor's own data entry on or off ("Doctors involvement").
+         */
+        DoctorInvolvementUpdate: {
+            /** Enabled */
+            enabled: boolean;
+        };
         /** DoctorLoad */
         DoctorLoad: {
             /** Average Consultation Minutes */
@@ -6729,6 +6821,11 @@ export interface components {
              */
             in_consultation: number;
             /**
+             * Involvement Enabled
+             * @default true
+             */
+            involvement_enabled: boolean;
+            /**
              * Is Accepting Appointments
              * @default true
              */
@@ -6758,6 +6855,8 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Involvement Enabled */
+            involvement_enabled: boolean;
             /** Is Accepting Appointments */
             is_accepting_appointments: boolean;
             /** Is Active */
@@ -6790,6 +6889,32 @@ export interface components {
             registration_number?: string | null;
             /** Specialty */
             specialty?: string | null;
+        };
+        /**
+         * DoctorVisitRead
+         * @description One row of a doctor's "patients seen" (the doctor page).
+         */
+        DoctorVisitRead: {
+            /**
+             * Encounter Id
+             * Format: uuid
+             */
+            encounter_id: string;
+            /**
+             * Patient Id
+             * Format: uuid
+             */
+            patient_id: string;
+            /** Patient Name */
+            patient_name: string;
+            status: components["schemas"]["EncounterStatus"];
+            /** Uhid */
+            uhid: string;
+            /**
+             * Visit At
+             * Format: date-time
+             */
+            visit_at: string;
         };
         /**
          * DoseRead
@@ -8882,6 +9007,25 @@ export interface components {
             readonly has_more: boolean;
             /** Items */
             items: components["schemas"]["DoctorRead"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /**
+             * Total
+             * @description Total rows matching the filter, ignoring paging.
+             */
+            total: number;
+        };
+        /** Page[DoctorVisitRead] */
+        Page_DoctorVisitRead_: {
+            /**
+             * Has More
+             * @description True when another page follows this one.
+             */
+            readonly has_more: boolean;
+            /** Items */
+            items: components["schemas"]["DoctorVisitRead"][];
             /** Limit */
             limit: number;
             /** Offset */
@@ -16148,6 +16292,69 @@ export interface operations {
             };
         };
     };
+    remove_availability_api_v1_doctors__doctor_id__availability__availability_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                doctor_id: string;
+                availability_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_exceptions_api_v1_doctors__doctor_id__exceptions_get: {
+        parameters: {
+            query?: {
+                from_date?: string | null;
+            };
+            header?: never;
+            path: {
+                doctor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AvailabilityExceptionRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     add_exception_api_v1_doctors__doctor_id__exceptions_post: {
         parameters: {
             query?: never;
@@ -16170,6 +16377,71 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AvailabilityExceptionRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_exception_api_v1_doctors__doctor_id__exceptions__exception_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                doctor_id: string;
+                exception_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_doctor_involvement_api_v1_doctors__doctor_id__involvement_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                doctor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DoctorInvolvementUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DoctorRead"];
                 };
             };
             /** @description Validation Error */
@@ -16273,6 +16545,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EncounterRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_doctor_visits_api_v1_encounters_by_doctor__doctor_id__get: {
+        parameters: {
+            query?: {
+                date_from?: string | null;
+                date_to?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                doctor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_DoctorVisitRead_"];
                 };
             };
             /** @description Validation Error */

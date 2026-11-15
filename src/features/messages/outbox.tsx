@@ -108,7 +108,7 @@ export function Outbox({
       ) : outbox.isError && !outbox.data ? (
         <LoadError onRetry={() => outbox.refetch()} />
       ) : rows.length === 0 ? (
-        <p className="text-muted-foreground rounded-lg border border-dashed py-12 text-center text-sm">
+        <p className="text-muted-foreground rounded-xl border border-dashed bg-card py-12 text-center text-sm">{/* restyle: inline — empty state */}
           {t("empty")}
         </p>
       ) : (
@@ -119,7 +119,7 @@ export function Outbox({
                 type="button"
                 className={cn(
                   "hover:border-primary/50 hover:bg-accent/40 focus-visible:ring-ring w-full",
-                  "rounded-lg border p-3 text-left transition-colors focus-visible:ring-2",
+                  "rounded-md border p-3 text-left transition-colors focus-visible:ring-2", // restyle: inline — clickable option tile
                   "focus-visible:outline-none",
                 )}
                 onClick={() => setOpen(row.id)}

@@ -9,6 +9,7 @@ import { AcceptInviteForm } from "@/features/auth/accept-invite-form";
 import { ApiError } from "@/lib/api/error";
 import { callApi } from "@/lib/api/fetch";
 import type { InvitePreview } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 export async function generateMetadata() {
   const t = await getTranslations("invite");
@@ -48,10 +49,10 @@ export default async function InvitePage({ params }: PageProps<"/invite/[token]"
           <div className="bg-primary text-primary-foreground flex size-12 items-center justify-center rounded-xl">
             <Activity aria-hidden className="size-6" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">{app("name")}</h1>
+          <h1 className="text-2xl font-medium tracking-tight">{app("name")}</h1>{/* restyle: inline — centred sign-in screen, not a screen header */}
         </div>
 
-        <div className="bg-card rounded-xl border p-6 shadow-sm">
+        <Panel className="p-6">
           {preview && usable ? (
             <>
               <div className="mb-5 space-y-1">
@@ -79,7 +80,7 @@ export default async function InvitePage({ params }: PageProps<"/invite/[token]"
               })}
             </Invalid>
           )}
-        </div>
+        </Panel>
 
         <div className="mt-6 flex justify-center">
           <LocaleSwitcher />

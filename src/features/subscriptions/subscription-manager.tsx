@@ -12,6 +12,7 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { OrderRead, Page, SubscriptionDetail, UpgradeQuote } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const KEY = ["subscriptions", "manager"] as const;
 const LIVE = new Set(["AWAITING_PAYMENT", "SUBMITTED", "REJECTED"]);
@@ -83,11 +84,11 @@ export function SubscriptionManager({ canManage }: { canManage: boolean }) {
 
   return (
     <div className="space-y-6">
-      <section className="bg-card rounded-xl border p-5 shadow-sm sm:p-6">
+      <Panel className="p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-muted-foreground text-sm">{t("plan")}</p>
-            <h2 className="text-2xl font-semibold" data-testid="plan-name">
+            <h2 className="text-2xl font-medium" data-testid="plan-name">
               {sub.plan_name}
             </h2>
           </div>
@@ -224,7 +225,7 @@ export function SubscriptionManager({ canManage }: { canManage: boolean }) {
 
         {quote ? (
           <div
-            className="bg-muted/50 mt-4 space-y-3 rounded-lg border p-4"
+            className="bg-band mt-4 space-y-3 rounded-md border p-4" // restyle: inline — a quote inside a panel
             data-testid="upgrade-quote"
           >
             <p className="text-sm">
@@ -259,11 +260,11 @@ export function SubscriptionManager({ canManage }: { canManage: boolean }) {
             </div>
           </div>
         ) : null}
-      </section>
+      </Panel>
 
       {live ? (
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-lg font-medium">
             {t(live.purpose === "UPGRADE" ? "upgradePayment" : "renewalPayment")}
           </h2>
           <OrderPanel orderId={live.id} onDone={() => window.location.reload()} />
@@ -272,8 +273,8 @@ export function SubscriptionManager({ canManage }: { canManage: boolean }) {
 
       {history.data && history.data.items.length > 0 ? (
         <section className="space-y-2">
-          <h2 className="text-lg font-semibold">{t("history")}</h2>
-          <ul className="divide-y rounded-lg border text-sm">
+          <h2 className="text-lg font-medium">{t("history")}</h2>
+          <ul className="divide-border-soft divide-y rounded-md border text-sm">{/* restyle: inline — a short list inside a panel */}
             {history.data.items.map((order) => (
               <li key={order.id} className="flex flex-wrap items-center justify-between gap-2 p-3">
                 <div>

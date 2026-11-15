@@ -33,7 +33,7 @@ export function FilterTabs<T extends string>({
             "min-h-tap rounded-md px-3 text-sm font-medium transition-colors",
             "focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none",
             value === option.value
-              ? "bg-background text-foreground shadow-sm"
+              ? "bg-background text-foreground shadow-panel"
               : "text-muted-foreground hover:text-foreground",
           )}
         >

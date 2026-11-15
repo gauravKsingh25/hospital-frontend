@@ -37,6 +37,7 @@ import { useAdminList, useAdminMutation } from "@/features/admin/use-admin-resou
 import { formatMoney } from "@/features/billing/money";
 import { api } from "@/lib/api/client";
 import type { ChargeCategory, RateCard, ServiceItem, ServicePrice } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const SERVICES_KEY = ["admin", "services"] as const;
 const PRICES_KEY = ["admin", "prices"] as const;
@@ -168,7 +169,7 @@ export function ServicesScreen({ canManage }: { canManage: boolean }) {
       {rows.length === 0 ? (
         <AdminEmpty message={t("servicesEmpty")} hint={t("servicesEmptyHint")} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border">
+        <Panel className="overflow-x-auto">
           <Table>
             <TableCaption className="sr-only">{t("servicesTitle")}</TableCaption>
             <TableHeader>
@@ -218,7 +219,7 @@ export function ServicesScreen({ canManage }: { canManage: boolean }) {
               })}
             </TableBody>
           </Table>
-        </div>
+        </Panel>
       )}
 
       <ServiceDialog open={creatingService} onOpenChange={setCreatingService} />

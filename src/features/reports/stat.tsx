@@ -35,7 +35,7 @@ export function Section({
     <section aria-labelledby={id} className="space-y-3" data-testid="report-section" data-section={id}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <div>
-          <h2 id={id} className="font-semibold">
+          <h2 id={id} className="font-medium">
             {title}
           </h2>
           {hint ? <p className="text-muted-foreground text-sm">{hint}</p> : null}
@@ -90,7 +90,7 @@ export function StatGrid({ children, columns = 4 }: { children: React.ReactNode;
   return (
     <dl
       className={cn(
-        "grid grid-cols-2 gap-4 rounded-lg border p-4",
+        "bg-card shadow-panel grid grid-cols-2 gap-4 rounded-xl border p-4", // restyle: inline — a stat strip (a <dl>)
         columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-4",
       )}
     >
@@ -102,7 +102,7 @@ export function StatGrid({ children, columns = 4 }: { children: React.ReactNode;
 /** The empty state a section shows when the window genuinely held nothing. */
 export function NothingYet({ message }: { message: string }) {
   return (
-    <p className="text-muted-foreground rounded-lg border border-dashed px-4 py-8 text-center text-sm">
+    <p className="text-muted-foreground rounded-xl border border-dashed bg-card px-4 py-8 text-center text-sm">{/* restyle: inline — empty state */}
       {message}
     </p>
   );

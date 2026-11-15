@@ -83,7 +83,7 @@ export function BedBoard({
 
   if (wards.length === 0) {
     return (
-      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-16 text-center">
+      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-16 text-center">{/* restyle: inline — empty state */}
         <BedIcon aria-hidden className="size-6" />
         <p className="text-foreground text-sm font-medium">{t("noWards")}</p>
         <p className="text-sm">{t("noWardsHint")}</p>
@@ -98,7 +98,7 @@ export function BedBoard({
       {wards.map((ward) => (
         <section key={ward.id} aria-labelledby={`ward-${ward.id}`} className="space-y-3">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <h2 id={`ward-${ward.id}`} className="font-semibold">
+            <h2 id={`ward-${ward.id}`} className="font-medium">
               {ward.name}
               <span className="text-muted-foreground ml-2 text-sm font-normal">
                 {ward.code} · {ward.bed_class}
@@ -160,7 +160,7 @@ function OccupancyStrip({ stats }: { stats: Occupancy }) {
   ];
 
   return (
-    <dl className="grid grid-cols-3 gap-3 rounded-lg border p-4 sm:grid-cols-6">
+    <dl className="bg-card shadow-panel grid grid-cols-3 gap-3 rounded-xl border p-4 sm:grid-cols-6">{/* restyle: inline — occupancy summary strip */}
       {cells.map((cell) => (
         <div key={cell.key}>
           <dt className="text-muted-foreground text-xs">{t(cell.key as "occupied")}</dt>
@@ -213,7 +213,7 @@ function BedTile({
 
   return (
     <li
-      className={cn("rounded-lg border p-2.5", tone)}
+      className={cn("rounded-md border p-2.5", tone)} // restyle: inline — a bed tile
       data-testid="bed-tile"
       data-status={bed.status}
       data-code={bed.code}

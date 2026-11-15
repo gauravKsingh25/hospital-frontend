@@ -30,6 +30,7 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { ChargeCategory, CostLine, MedicineIssue, MedicineItem } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * Medicines and supplies used on this stay, outside the chart.
@@ -59,10 +60,10 @@ export function ItemsUsedPanel({
   const rows = issues.data?.items ?? [];
 
   return (
-    <section className="space-y-3 rounded-lg border p-4" aria-labelledby="items-used-heading">
+    <Panel className="space-y-3 p-4" aria-labelledby="items-used-heading">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 id="items-used-heading" className="text-sm font-semibold">
+          <h2 id="items-used-heading" className="text-sm font-medium">
             {t("itemsUsed")}
           </h2>
           <p className="text-muted-foreground text-xs">{t("itemsUsedHint")}</p>
@@ -159,7 +160,7 @@ export function ItemsUsedPanel({
           }}
         />
       ) : null}
-    </section>
+    </Panel>
   );
 }
 
@@ -401,9 +402,9 @@ export function StayCostPanel({ encounterId }: { encounterId: string }) {
   })).filter((group) => group.lines.length > 0);
 
   return (
-    <section className="space-y-3 rounded-lg border p-4" aria-labelledby="stay-cost-heading">
+    <Panel className="space-y-3 p-4" aria-labelledby="stay-cost-heading">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="stay-cost-heading" className="text-sm font-semibold">
+        <h2 id="stay-cost-heading" className="text-sm font-medium">
           {t("costSoFar")}
         </h2>
         {data ? (
@@ -440,7 +441,7 @@ export function StayCostPanel({ encounterId }: { encounterId: string }) {
           ))}
         </div>
       )}
-    </section>
+    </Panel>
   );
 }
 

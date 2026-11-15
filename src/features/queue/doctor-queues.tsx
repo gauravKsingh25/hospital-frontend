@@ -45,6 +45,8 @@ import { useElapsed } from "@/lib/hooks/use-elapsed";
 import { useWaitFormatter } from "@/lib/hooks/use-wait";
 import { cn } from "@/lib/utils";
 import type { AdmissionRequest, DoctorQueue, QueueBoardEntry } from "@/types/api";
+import { Panel } from "@/components/panel";
+import Link from "next/link";
 
 /**
  * Reception's queue: two doctors side by side, every doctor one tap away.
@@ -137,7 +139,7 @@ export function DoctorQueues({
 
   if (columns.length === 0) {
     return (
-      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-16 text-center">
+      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-16 text-center">{/* restyle: inline — empty state */}
         <Users aria-hidden className="size-6" />
         <p className="text-foreground text-sm font-medium">{t("noDoctors")}</p>
         <p className="text-sm">{t("noDoctorsHint")}</p>
@@ -464,9 +466,9 @@ function DoctorColumn({
   const behind = (column.longest_wait_minutes ?? 0) >= 30;
 
   return (
-    <section
+    <Panel
       className={cn(
-        "bg-background flex flex-col overflow-hidden rounded-lg border",
+        "flex flex-col",
         !column.is_accepting_appointments && "opacity-70",
         className,
       )}
@@ -475,14 +477,22 @@ function DoctorColumn({
     >
       <header className="space-y-1 border-b p-3">
         <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <h2 id={`queue-${column.doctor_id}`} className="truncate font-semibold">
+          {/* The doctor's name and specialty together are the link to their
+              page: one full-height tap target, not a 20px line of text. */}
+          <Link
+            href={`/doctors/${column.doctor_id}`}
+            className="group/doctor flex min-h-tap min-w-0 flex-col justify-center rounded-md"
+          >
+            <h2
+              id={`queue-${column.doctor_id}`}
+              className="truncate font-medium underline-offset-4 group-hover/doctor:underline"
+            >
               {column.doctor_name}
             </h2>
             <p className="text-muted-foreground truncate text-xs">
               {[column.specialty, column.department_name].filter(Boolean).join(" · ") || " "}
             </p>
-          </div>
+          </Link>
           {/* The number reception balances by — large, because it is read
               from across a counter. */}
           <div
@@ -573,6 +583,7 @@ function DoctorColumn({
                       place={places.get(entry.id) ?? null}
                       columns={columns}
                       canManage={canManage}
+                      canMarkSeen={canManage && column.involvement_enabled === false}
                       canCollect={canCollect}
                       draggable={canManage && !marking && RANKABLE.has(entry.status)}
                       marking={marking}
@@ -622,7 +633,7 @@ function DoctorColumn({
           ) : null}
         </div>
       ) : null}
-    </section>
+    </Panel>
   );
 }
 
@@ -833,6 +844,7 @@ function ColumnRow({
   place,
   columns,
   canManage,
+  canMarkSeen,
   canCollect,
   draggable,
   marking,
@@ -847,6 +859,11 @@ function ColumnRow({
   place: number | null;
   columns: DoctorQueue[];
   canManage: boolean;
+  /**
+   * Seen is offered only for a doctor whose own entry is off ("Doctors
+   * involvement"); a doctor who records their own visits closes them.
+   */
+  canMarkSeen: boolean;
   canCollect: boolean;
   draggable: boolean;
   /** "Seen" was clicked and the undo window is still open. */
@@ -989,7 +1006,7 @@ function ColumnRow({
           {/* Seen and Move wrap as a pair: Move alone on a second line read
               as belonging to the next patient. */}
           <div className="flex gap-2">
-            {canManage ? (
+            {canMarkSeen ? (
               <Button
                 size="sm"
                 variant="outline"

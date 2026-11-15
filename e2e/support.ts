@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, test, type Browser, type Locator, type Page } from "@playwright/test";
 
 /**
  * Shared helpers for the end-to-end specs.
@@ -116,12 +116,15 @@ export async function sentForAdmission(page: Page): Promise<string> {
   await page.goto("/reception");
   const row = page.getByTestId("queue-row").filter({ hasText: name });
   await expect(row).toBeVisible({ timeout: 30_000 });
-  await openLine(row);
-  await row.getByTestId("mark-seen").click();
-
-  // The undo window passes, then the row moves to "seen".
   const seen = page.getByTestId("seen-row").filter({ hasText: name });
-  await expect(seen).toBeVisible({ timeout: 20_000 });
+  // Seen is offered only while Rao's own entry is off ("Doctors involvement").
+  await withRaoOff(page, async () => {
+    await page.reload();
+    await openLine(row);
+    await row.getByTestId("mark-seen").click();
+    // The undo window passes, then the row moves to "seen".
+    await expect(seen).toBeVisible({ timeout: 20_000 });
+  });
   await openLine(seen);
   await seen.getByTestId("send-to-admission").click();
   await page.getByRole("dialog").getByRole("button", { name: "Send", exact: true }).click();
@@ -532,4 +535,49 @@ export async function latestInviteLink(email: string): Promise<string> {
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   throw new Error(`No invite email for ${email} in ${outbox}`);
+}
+
+/**
+ * Dr Vikram Rao's doctor id, read through the signed-in page.
+ *
+ * "Doctors involvement" (Docs/superpowers/specs/2026-11-15-doctor-page-and-involvement-design.md):
+ * reception's Seen exists only while a doctor's own entry is off, so specs that
+ * press Seen switch Rao off for that step and back on after. Specs run one at
+ * a time (`workers: 1`), so the switch never leaks into another spec.
+ */
+export async function raoDoctorId(page: Page): Promise<string> {
+  const response = await page.request.get("/bff/doctors", { params: { limit: 100 } });
+  expect(response.ok(), await response.text()).toBeTruthy();
+  const body = (await response.json()) as { items: { id: string; display_name: string }[] };
+  const rao = body.items.find((doctor) => /Vikram/.test(doctor.display_name));
+  if (!rao) throw new Error("Dr Vikram Rao is not in the demo hospital");
+  return rao.id;
+}
+
+/** Turn Dr Rao's own data entry on or off, as the hospital admin. */
+export async function setRaoInvolvement(browser: Browser, enabled: boolean): Promise<void> {
+  const context = await browser.newContext();
+  try {
+    const page = await context.newPage();
+    await signIn(page, ACCOUNTS.admin);
+    const id = await raoDoctorId(page);
+    const response = await page.request.put(`/bff/doctors/${id}/involvement`, {
+      data: { enabled },
+    });
+    expect(response.ok(), await response.text()).toBeTruthy();
+  } finally {
+    await context.close();
+  }
+}
+
+/** Run `step` with Dr Rao's own entry off, and always switch him back on. */
+export async function withRaoOff<T>(page: Page, step: () => Promise<T>): Promise<T> {
+  const browser = page.context().browser();
+  if (!browser) throw new Error("No browser to switch Dr Rao's involvement with");
+  await setRaoInvolvement(browser, false);
+  try {
+    return await step();
+  } finally {
+    await setRaoInvolvement(browser, true);
+  }
 }

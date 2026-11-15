@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { ForgotPasswordForm } from "@/features/auth/forgot-password-form";
+import { Panel } from "@/components/panel";
 
 export async function generateMetadata() {
   const t = await getTranslations("forgotPassword");
@@ -25,13 +26,13 @@ export default async function ForgotPasswordPage() {
           <div className="bg-primary text-primary-foreground flex size-12 items-center justify-center rounded-xl">
             <Activity aria-hidden className="size-6" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">{app("name")}</h1>
+          <h1 className="text-2xl font-medium tracking-tight">{app("name")}</h1>{/* restyle: inline — centred sign-in screen, not a screen header */}
           <p className="text-base font-medium">{t("title")}</p>
         </div>
 
-        <div className="bg-card rounded-xl border p-6 shadow-sm">
+        <Panel className="p-6">
           <ForgotPasswordForm />
-        </div>
+        </Panel>
 
         <div className="mt-6 flex flex-col items-center gap-4">
           <Link

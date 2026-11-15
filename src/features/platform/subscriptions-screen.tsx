@@ -32,6 +32,7 @@ import { PLATFORM_KEY, platformKeys, usePlatformList } from "@/features/platform
 import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import type { PlatformSubscription } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const PAGE_SIZE = 25;
 
@@ -91,7 +92,7 @@ export function SubscriptionsScreen({ canExtend }: { canExtend: boolean }) {
         <AdminEmpty message={t("subscriptionsEmpty")} />
       ) : (
         <>
-          <div className="overflow-x-auto rounded-lg border">
+          <Panel className="overflow-x-auto">
             <Table>
               <TableCaption className="sr-only">{t("subscriptionsTitle")}</TableCaption>
               <TableHeader>
@@ -143,7 +144,7 @@ export function SubscriptionsScreen({ canExtend }: { canExtend: boolean }) {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </Panel>
           <Pager page={list.data} offset={offset} pageSize={PAGE_SIZE} onOffsetChange={setOffset} />
         </>
       )}

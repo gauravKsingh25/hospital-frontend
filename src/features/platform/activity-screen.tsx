@@ -20,6 +20,7 @@ import { FilterTabs } from "@/features/platform/filter-tabs";
 import { ActionLabel } from "@/features/platform/overview-screen";
 import { platformKeys, usePlatformList } from "@/features/platform/use-platform";
 import type { AuditLogEntry } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const PAGE_SIZE = 50;
 
@@ -72,7 +73,7 @@ export function ActivityScreen() {
         <AdminEmpty message={t("noActivity")} />
       ) : (
         <>
-          <div className="overflow-x-auto rounded-lg border">
+          <Panel className="overflow-x-auto">
             <Table>
               <TableCaption className="sr-only">{t("activityTitle")}</TableCaption>
               <TableHeader>
@@ -105,7 +106,7 @@ export function ActivityScreen() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </Panel>
           <Pager
             page={activity.data}
             offset={offset}

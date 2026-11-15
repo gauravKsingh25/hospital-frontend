@@ -99,7 +99,7 @@ export function MedicationRound({
       ) : round.isError && !round.data ? (
         <LoadError onRetry={() => round.refetch()} />
       ) : doses.length === 0 ? (
-        <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-16 text-center">
+        <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-16 text-center">{/* restyle: inline — empty state */}
           <Pill aria-hidden className="size-6" />
           <p className="text-foreground text-sm font-medium">
             {showSigned ? t("noDoses") : t("roundClear")}

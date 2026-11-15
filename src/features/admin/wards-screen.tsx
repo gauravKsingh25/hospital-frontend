@@ -129,7 +129,7 @@ export function WardsScreen({
             <AdminEmpty message={t("bedsEmpty")} hint={t("bedsEmptyHint")} />
           ) : (
             <section aria-labelledby="beds-heading" className="space-y-3">
-              <h2 id="beds-heading" className="text-sm font-semibold">
+              <h2 id="beds-heading" className="text-sm font-medium">
                 {t("bedsInWard", { count: bedList.length })}
               </h2>
               <ul className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-10">

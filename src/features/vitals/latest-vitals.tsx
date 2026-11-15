@@ -12,6 +12,7 @@ import { VitalsDialog } from "@/features/vitals/vitals-dialog";
 import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import type { Vitals } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * The most recent vitals for a visit, with a way to take another set.
@@ -78,10 +79,10 @@ export function LatestVitals({
     : [];
 
   return (
-    <section className="space-y-3 rounded-lg border p-4" aria-labelledby="vitals-heading">
+    <Panel className="space-y-3 p-4" aria-labelledby="vitals-heading">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 id="vitals-heading" className="text-sm font-semibold">
+          <h2 id="vitals-heading" className="text-sm font-medium">
             {tWards("latestVitals")}
           </h2>
           {latest ? (
@@ -131,6 +132,6 @@ export function LatestVitals({
         onOpenChange={setRecording}
         onRecorded={() => void vitals.refetch()}
       />
-    </section>
+    </Panel>
   );
 }

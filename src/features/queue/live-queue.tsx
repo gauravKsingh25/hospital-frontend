@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Activity, Users } from "lucide-react";
+import { Activity, Check, Undo2, Users } from "lucide-react";
 
 import { QueueStatusChip } from "@/components/status-chip";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,9 @@ import { useElapsed } from "@/lib/hooks/use-elapsed";
 import { useWaitFormatter } from "@/lib/hooks/use-wait";
 import { cn } from "@/lib/utils";
 import type { QueueBoardEntry } from "@/types/api";
+import { Panel } from "@/components/panel";
+import { useDoctor } from "@/features/doctors/use-doctor";
+import { useMarkSeen } from "@/features/queue/use-queue-board";
 
 /**
  * The live OPD queue.
@@ -35,13 +38,26 @@ import type { QueueBoardEntry } from "@/types/api";
 export function LiveQueue({
   mine = false,
   canRecordVitals = false,
+  canMarkSeen = false,
+  currentUserId = null,
 }: {
   /** Use `/queue/mine` — the signed-in doctor's own list. */
   mine?: boolean;
   /** Offer the nurse's one-click vitals action on each row (CLAUDE.md §7b). */
   canRecordVitals?: boolean;
+  /**
+   * Holds `queue:manage`. Seen then shows on the rows of any doctor whose own
+   * entry is off ("Doctors involvement"), as on reception's board.
+   */
+  canMarkSeen?: boolean;
+  /**
+   * The signed-in user. A doctor whose entry is off can only look, so they get
+   * no Seen on their own patients even though they hold `queue:manage`.
+   */
+  currentUserId?: string | null;
 }) {
   const t = useTranslations("queue");
+  const seen = useMarkSeen();
 
   const queue = useQuery({
     queryKey: ["queue", mine ? "mine" : "all"],
@@ -70,7 +86,7 @@ export function LiveQueue({
 
   if (entries.length === 0) {
     return (
-      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-16 text-center">
+      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-16 text-center">{/* restyle: inline — empty state */}
         <Users aria-hidden className="size-6" />
         <p className="text-foreground text-sm font-medium">{t("empty")}</p>
         <p className="text-sm">{t("emptyHint")}</p>
@@ -79,7 +95,7 @@ export function LiveQueue({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border">
+    <Panel className="overflow-x-auto">
       <table className="w-full min-w-xl text-sm">
         <caption className="sr-only">{t("title")}</caption>
         <thead className="bg-muted/50 text-muted-foreground">
@@ -104,21 +120,40 @@ export function LiveQueue({
               key={entry.id}
               entry={entry}
               canRecordVitals={canRecordVitals}
+              canMarkSeen={canMarkSeen}
+              currentUserId={currentUserId}
+              marking={seen.pending.has(entry.id)}
+              onMarkSeen={() => seen.mark(entry.id)}
+              onUndoSeen={() => seen.undo(entry.id)}
             />
           ))}
         </tbody>
       </table>
-    </div>
+    </Panel>
   );
 }
 
 function QueueRow({
   entry,
   canRecordVitals,
+  canMarkSeen,
+  currentUserId,
+  marking,
+  onMarkSeen,
+  onUndoSeen,
 }: {
   entry: QueueBoardEntry;
   canRecordVitals: boolean;
+  canMarkSeen: boolean;
+  currentUserId: string | null;
+  /** Seen was pressed and its undo window is still open. */
+  marking: boolean;
+  onMarkSeen: () => void;
+  onUndoSeen: () => void;
 }) {
+  const { data: doctor } = useDoctor(entry.doctor_id, undefined, { poll: true });
+  const involved = doctor?.involvement_enabled ?? true;
+  const ownPatient = doctor !== undefined && doctor.user_id === currentUserId;
   const t = useTranslations("queue");
   const wait = useWaitFormatter();
   const common = useTranslations("common");
@@ -182,6 +217,32 @@ function QueueRow({
             </>
           ) : null}
 
+          {canMarkSeen && !involved && !ownPatient ? (
+            marking ? (
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-tap"
+                onClick={onUndoSeen}
+                aria-label={t("undoSeenAria", { name: entry.patient_name ?? "" })}
+              >
+                <Undo2 aria-hidden className="size-4" />
+                {t("undo")}
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-tap"
+                onClick={onMarkSeen}
+                aria-label={t("markSeenAria", { name: entry.patient_name ?? "" })}
+                data-testid="mark-seen"
+              >
+                <Check aria-hidden className="size-4" />
+                {t("markSeen")}
+              </Button>
+            )
+          ) : null}
         </div>
       </td>
     </tr>

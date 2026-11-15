@@ -33,6 +33,7 @@ import type {
   MessageTemplate,
   TemplatePreview as PreviewResult,
 } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const TEMPLATES_KEY = ["admin", "templates"] as const;
 
@@ -120,7 +121,7 @@ export function TemplatesScreen({ canManage }: { canManage: boolean }) {
                 type="button"
                 className={cn(
                   "hover:border-primary/50 hover:bg-accent/40 focus-visible:ring-ring w-full",
-                  "rounded-lg border p-3 text-left transition-colors focus-visible:ring-2",
+                  "rounded-md border p-3 text-left transition-colors focus-visible:ring-2", // restyle: inline — clickable option tile
                   "focus-visible:outline-none",
                   !template.is_active && "opacity-60",
                 )}
@@ -367,7 +368,7 @@ function TemplatePreview({ templateId, expected }: { templateId: string; expecte
   );
 
   return (
-    <div className="space-y-1.5 rounded-lg border p-3">
+    <Panel className="space-y-1.5 p-3">
       <div className="flex items-center justify-between gap-2">
         <p className="text-sm font-medium">{t("preview")}</p>
         <Button
@@ -400,6 +401,6 @@ function TemplatePreview({ templateId, expected }: { templateId: string; expecte
       ) : (
         <p className="text-muted-foreground text-xs">{t("previewHint")}</p>
       )}
-    </div>
+    </Panel>
   );
 }

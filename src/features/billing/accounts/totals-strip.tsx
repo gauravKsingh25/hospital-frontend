@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatMoney, isPositive } from "@/features/billing/money";
 import { cn } from "@/lib/utils";
 import type { AccountsSummary } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * The five numbers an accountant opens the screen for. Collected, billed and
@@ -70,7 +71,7 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-1 rounded-lg border p-3">
+    <Panel className="space-y-1 p-3">
       <p className="text-muted-foreground text-xs font-medium uppercase tracking-wide">{label}</p>
       <p
         className={cn("tabular text-xl font-semibold", tone === "caution" && "text-caution-foreground")}
@@ -79,6 +80,6 @@ function Card({
         {formatMoney(amount)}
       </p>
       <p className="text-muted-foreground text-xs">{children}</p>
-    </div>
+    </Panel>
   );
 }

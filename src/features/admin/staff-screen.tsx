@@ -23,6 +23,7 @@ import { api } from "@/lib/api/client";
 import { useDebounced } from "@/lib/hooks/use-debounced";
 import { cn } from "@/lib/utils";
 import type { Role, User } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const STAFF_KEY = ["admin", "users"] as const;
 
@@ -110,7 +111,7 @@ export function StaffScreen({
       {rows.length === 0 ? (
         <AdminEmpty message={t("staffEmpty")} hint={t("staffEmptyHint")} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border">
+        <Panel className="overflow-x-auto">
           <Table>
             <TableCaption className="sr-only">{t("staffTitle")}</TableCaption>
             <TableHeader>
@@ -178,7 +179,7 @@ export function StaffScreen({
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Panel>
       )}
 
       <StaffDialog

@@ -24,6 +24,7 @@ import { PERIODS, periodDays, type Period } from "@/features/reports/windows";
 import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import type { Dashboard, DateWindow } from "@/types/api";
+import { PageTitle } from "@/components/page-header";
 
 /**
  * The KPI dashboard (CLAUDE.md §13 step 10).
@@ -129,7 +130,7 @@ export function ReportsDashboard({
     <div className="space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <PageTitle>{t("title")}</PageTitle>
           {covered ? (
             <p className="text-muted-foreground text-sm" data-testid="period-dates">
               {covered.date_from === covered.date_to

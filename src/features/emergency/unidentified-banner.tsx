@@ -24,7 +24,7 @@ export function UnidentifiedBanner({
   return (
     <div
       role="status"
-      className="border-destructive/40 bg-destructive/10 flex flex-wrap items-center gap-3 rounded-lg border px-4 py-3"
+      className="border-destructive/40 bg-destructive/10 flex flex-wrap items-center gap-3 rounded-md border px-4 py-3" // restyle: inline — alert notice
       data-testid="unidentified-banner"
     >
       <UserSearch aria-hidden className="text-destructive size-5 shrink-0" />

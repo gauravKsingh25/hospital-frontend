@@ -54,7 +54,7 @@ export function PatientMessaging({
   return (
     <section className="space-y-2">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-sm font-semibold">{t("messagingTitle")}</h2>
+        <h2 className="text-sm font-medium">{t("messagingTitle")}</h2>
         {/*
           Not offered at all once a death is recorded. There is nothing useful
           to add on top of a suppression that can never be lifted, and a button
@@ -88,7 +88,7 @@ export function PatientMessaging({
       ) : blocks.isError && !blocks.data ? (
         <LoadError onRetry={() => blocks.refetch()} />
       ) : active.length === 0 ? (
-        <p className="text-muted-foreground rounded-lg border px-4 py-3 text-sm">
+        <p className="text-muted-foreground bg-card rounded-md border px-4 py-3 text-sm">{/* restyle: inline — a one-line notice */}
           {t("messagingOn")}
         </p>
       ) : (
@@ -96,7 +96,7 @@ export function PatientMessaging({
           {active.map((block) => (
             <li
               key={block.id}
-              className="border-foreground/25 bg-foreground/5 rounded-lg border px-4 py-3 text-sm"
+              className="border-foreground/25 bg-foreground/5 rounded-md border px-4 py-3 text-sm" // restyle: inline — a suppression notice
               data-testid="patient-suppression"
               data-reason={block.reason}
             >

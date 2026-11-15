@@ -88,7 +88,7 @@ export async function PrintedSummary({
         <p className="text-2xl font-bold">{hospital.name}</p>
       </header>
 
-      <h1 className="text-center text-xl font-bold underline underline-offset-4">
+      <h1 className="text-center text-xl font-bold underline underline-offset-4">{/* restyle: inline — printed document title */}
         {t("printTitle")}
       </h1>
       {signed ? null : (

@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import type { CatalogueItem, DiagnosticReport, Page, WorklistEntry } from "@/types/api";
 
 import { AccessionDialog } from "@/features/lab/accession-dialog";
+import { Panel } from "@/components/panel";
 
 /**
  * The bench worklist.
@@ -83,7 +84,7 @@ export function LabWorklist({
 
   if (entries.length === 0) {
     return (
-      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-lg border border-dashed py-16 text-center">
+      <div className="text-muted-foreground flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-16 text-center">{/* restyle: inline — empty state */}
         <FlaskConical aria-hidden className="size-6" />
         <p className="text-foreground text-sm font-medium">{t("empty")}</p>
         <p className="text-sm">{t("emptyHint")}</p>
@@ -93,7 +94,7 @@ export function LabWorklist({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border">
+      <Panel className="overflow-x-auto">
       <table className="w-full min-w-3xl text-sm">
         <caption className="sr-only">{t("title")}</caption>
         <thead className="bg-muted/50 text-muted-foreground">
@@ -125,7 +126,7 @@ export function LabWorklist({
           ))}
         </tbody>
       </table>
-      </div>
+      </Panel>
 
       <Pager page={worklist.data} offset={offset} pageSize={BOARD_PAGE_SIZE} onOffsetChange={setOffset} />
     </div>

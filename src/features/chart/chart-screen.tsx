@@ -40,6 +40,8 @@ import type {
   MedicineItem,
   Page,
 } from "@/types/api";
+import { Panel } from "@/components/panel";
+import { PageTitle } from "@/components/page-header";
 
 /** One allergy named by an `allergy_conflict` refusal (SAFE-01). */
 type AllergyClash = { id: string; label: string; severity: string; detail: string | null };
@@ -143,15 +145,15 @@ export function ChartScreen({
     <div className="space-y-6">
       <header
         className={cn(
-          "rounded-lg border p-4",
-          admission.patient_is_deceased ? "border-foreground/40 bg-foreground/5" : "bg-muted/30",
+          "shadow-panel rounded-xl border p-4", // restyle: inline — the patient identity header
+          admission.patient_is_deceased ? "border-foreground/40 bg-foreground/5" : "bg-card",
         )}
       >
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">
+            <PageTitle>
               {admission.patient_name ?? common("notRecorded")}
-            </h1>
+            </PageTitle>
             <p className="text-muted-foreground tabular text-sm">
               {admission.uhid}
               {admission.patient_age_years !== null && admission.patient_age_years !== undefined
@@ -174,9 +176,9 @@ export function ChartScreen({
         </div>
       </header>
 
-      <section className="space-y-3 rounded-lg border p-4" aria-labelledby="drugs-heading">
+      <Panel className="space-y-3 p-4" aria-labelledby="drugs-heading">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 id="drugs-heading" className="text-sm font-semibold">
+          <h2 id="drugs-heading" className="text-sm font-medium">
             {t("prescribedDrugs")}
           </h2>
           {canPrescribe ? (
@@ -252,10 +254,10 @@ export function ChartScreen({
             ))}
           </ul>
         )}
-      </section>
+      </Panel>
 
-      <section className="space-y-3 rounded-lg border p-4" aria-labelledby="doses-heading">
-        <h2 id="doses-heading" className="text-sm font-semibold">
+      <Panel className="space-y-3 p-4" aria-labelledby="doses-heading">
+        <h2 id="doses-heading" className="text-sm font-medium">
           {t("doses")}
         </h2>
 
@@ -275,7 +277,7 @@ export function ChartScreen({
             ))}
           </ul>
         )}
-      </section>
+      </Panel>
 
       <PrescribeDialog
         admissionId={admission.id}
@@ -595,7 +597,7 @@ function PrescribeDialog({
             <div
               role="alert"
               ref={revealOnMount}
-              className="border-critical/50 bg-critical/10 space-y-2 rounded-lg border p-3 text-left"
+              className="border-critical/50 bg-critical/10 space-y-2 rounded-md border p-3 text-left" // restyle: inline — alert notice
               data-testid="allergy-conflict"
             >
               <p className="text-critical text-sm font-semibold">{t("allergyConflictTitle")}</p>

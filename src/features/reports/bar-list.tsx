@@ -43,7 +43,7 @@ export function BarList({ rows, testId }: { rows: BarRow[]; testId?: string }) {
   const largest = rows.reduce((max, row) => Math.max(max, row.value), 0);
 
   return (
-    <ul className="space-y-2.5 rounded-lg border p-4" data-testid={testId}>
+    <ul className="bg-card shadow-panel space-y-2.5 rounded-xl border p-4" data-testid={testId}>{/* restyle: inline — a list styled as a panel */}
       {rows.map((row) => (
         <li key={row.key} data-testid="bar-row" data-label={row.label}>
           <div className="flex items-baseline justify-between gap-3">

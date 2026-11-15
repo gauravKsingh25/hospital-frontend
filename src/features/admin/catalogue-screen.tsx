@@ -36,6 +36,7 @@ import { AdminEmpty, AdminShell } from "@/features/admin/admin-shell";
 import { useAdminList, useAdminMutation } from "@/features/admin/use-admin-resource";
 import { api } from "@/lib/api/client";
 import type { Analyte, CatalogueItem, SpecimenType } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const CATALOGUE_KEY = ["admin", "catalogue"] as const;
 
@@ -117,7 +118,7 @@ export function CatalogueScreen({ canManage }: { canManage: boolean }) {
       {rows.length === 0 ? (
         <AdminEmpty message={t("catalogueEmpty")} hint={t("catalogueEmptyHint")} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border">
+        <Panel className="overflow-x-auto">
           <Table>
             <TableCaption className="sr-only">{t("catalogueTitle")}</TableCaption>
             <TableHeader>
@@ -170,7 +171,7 @@ export function CatalogueScreen({ canManage }: { canManage: boolean }) {
               })}
             </TableBody>
           </Table>
-        </div>
+        </Panel>
       )}
 
       <TestDialog open={creating} onOpenChange={setCreating} />

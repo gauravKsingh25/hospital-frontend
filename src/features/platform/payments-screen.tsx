@@ -21,6 +21,7 @@ import { PaymentReviewDialog } from "@/features/platform/payment-review-dialog";
 import { PaymentStatusChip } from "@/features/platform/platform-status";
 import { platformKeys, usePlatformList } from "@/features/platform/use-platform";
 import type { PaymentOrderStatus, PlatformPayment } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 const PAGE_SIZE = 25;
 type Filter = "all" | Extract<PaymentOrderStatus, "SUBMITTED" | "APPROVED" | "REJECTED">;
@@ -71,7 +72,7 @@ export function PaymentsScreen({ canReview }: { canReview: boolean }) {
         <AdminEmpty message={t(filter === "SUBMITTED" ? "paymentsNoneWaiting" : "paymentsEmpty")} />
       ) : (
         <>
-          <div className="overflow-x-auto rounded-lg border">
+          <Panel className="overflow-x-auto">
             <Table>
               <TableCaption className="sr-only">{t("paymentsTitle")}</TableCaption>
               <TableHeader>
@@ -136,7 +137,7 @@ export function PaymentsScreen({ canReview }: { canReview: boolean }) {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </Panel>
           <Pager
             page={payments.data}
             offset={offset}

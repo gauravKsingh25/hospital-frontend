@@ -52,7 +52,7 @@ export function SafetyBanner({
       // reader finishes the current sentence first.
       role={banner.has_critical_alert || banner.is_deceased ? "alert" : "status"}
       className={cn(
-        "flex flex-wrap items-start gap-x-3 gap-y-2 rounded-lg border px-4 py-3",
+        "flex flex-wrap items-start gap-x-3 gap-y-2 rounded-xl border px-4 py-3", // restyle: inline — the safety banner stays loud, never a quiet panel
         banner.has_critical_alert || banner.is_deceased
           ? "border-critical/50 bg-critical/10 text-critical"
           : "border-caution/50 bg-caution/15 text-caution-foreground",

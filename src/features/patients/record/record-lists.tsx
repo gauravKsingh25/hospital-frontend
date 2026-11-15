@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { LinkButton } from "@/components/ui/link-button";
 import { cn } from "@/lib/utils";
 import type { AdmissionSummary, DischargeSummary, ReportSummary } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /** A titled list section with an icon and a calm empty state. */
 export function RecordSection({
@@ -25,11 +26,11 @@ export function RecordSection({
   testId?: string;
 }) {
   return (
-    <section className="bg-card rounded-xl border" data-testid={testId}>
-      <div className="flex items-start gap-3 border-b px-4 py-3">
+    <Panel data-testid={testId}>
+      <div className="bg-band flex items-start gap-3 border-b px-4 py-3">
         <span className="text-primary mt-0.5 shrink-0">{icon}</span>
         <div>
-          <h2 className="text-base font-semibold">{title}</h2>
+          <h2 className="text-base font-medium">{title}</h2>
           {hint ? <p className="text-muted-foreground text-xs">{hint}</p> : null}
         </div>
       </div>
@@ -38,7 +39,7 @@ export function RecordSection({
       ) : (
         children
       )}
-    </section>
+    </Panel>
   );
 }
 

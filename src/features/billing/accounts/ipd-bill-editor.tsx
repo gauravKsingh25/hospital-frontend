@@ -34,6 +34,7 @@ import { api } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import type { Charge, ChargeCategory, Page, ServiceItem } from "@/types/api";
+import { Panel } from "@/components/panel";
 
 /**
  * The accountant's IPD bill editor (spec §5.5).
@@ -225,7 +226,7 @@ export function IpdBillEditor({
       </div>
 
       {final ? (
-        <div className="space-y-2 rounded-lg border p-3">
+        <Panel className="space-y-2 p-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1">
               <p className="font-medium">
@@ -273,7 +274,7 @@ export function IpdBillEditor({
               </Button>
             </div>
           ) : null}
-        </div>
+        </Panel>
       ) : data.stay.status === "DISCHARGED" || data.can_finalise ? (
         <p className="text-muted-foreground text-sm">{t("awaitingFinal")}</p>
       ) : (
@@ -370,7 +371,7 @@ export function Lines({
 
   if (lines.length === 0) {
     return (
-      <p className="text-muted-foreground rounded-lg border border-dashed py-8 text-center text-sm">
+      <p className="text-muted-foreground rounded-xl border border-dashed bg-card py-8 text-center text-sm">{/* restyle: inline — empty state */}
         {t("noLines")}
       </p>
     );
@@ -382,7 +383,7 @@ export function Lines({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border">
+    <Panel className="overflow-x-auto">
       <table className="w-full min-w-2xl text-sm">
         <caption className="sr-only">{t("lines")}</caption>
         <thead className="bg-muted/50 text-muted-foreground">
@@ -473,7 +474,7 @@ export function Lines({
           </tbody>
         ))}
       </table>
-    </div>
+    </Panel>
   );
 }
 
@@ -495,7 +496,7 @@ export function StagedPanel({
 }) {
   const t = useTranslations("ipdBill");
   return (
-    <div className="bg-caution/10 border-caution/40 space-y-2 rounded-lg border p-3" role="status">
+    <div className="bg-caution/10 border-caution/40 space-y-2 rounded-md border p-3" role="status">{/* restyle: inline — alert notice */}
       <p className="text-sm font-medium" data-testid="unsaved-count">
         {t("unsavedCount", { count: staged.length })}
       </p>
