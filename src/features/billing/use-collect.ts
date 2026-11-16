@@ -9,6 +9,7 @@ import { isApiError } from "@/lib/api/error";
 import type { CollectPayment, CollectPaymentResult } from "@/types/api";
 
 import { formatMoney } from "@/features/billing/money";
+import { printVisitBill } from "@/features/billing/print/print-visit-bill";
 
 /**
  * Take everything a visit owes — the reception row's "Paid" and the payment
@@ -25,12 +26,25 @@ export function useCollect(encounterId: string) {
   return useMutation({
     mutationFn: (body: CollectPayment) =>
       api.post<CollectPaymentResult>(`/billing/accounts/${encounterId}/collect`, body),
+    // The receipt names the invoice that was just issued and paid, so the
+    // toast can print it — the bill a patient expects to be handed at the desk.
     onSuccess: (result) =>
       toast.success(
         t("collected", {
           amount: formatMoney(result.amount),
           receipt: result.receipts.map((receipt) => receipt.receipt_number).join(", "),
         }),
+        {
+          duration: 12_000,
+          action: {
+            label: t("printBill"),
+            onClick: () =>
+              void printVisitBill(
+                encounterId,
+                result.receipts.map((receipt) => receipt.invoice_id),
+              ),
+          },
+        },
       ),
     onError: (error) => toast.error(isApiError(error) ? error.message : String(error)),
     onSettled: () => {

@@ -540,7 +540,10 @@
     "confirmReceived": "{amount} प्राप्त हुए",
     "stayNote": "यह मरीज़ भर्ती है। IPD बिल लेखा विभाग बनाता है।",
     "reissuePreAdmission": "OPD बिल जारी करें",
-    "preAdmissionIssued": "OPD बिल {number} जारी हुआ।"
+    "preAdmissionIssued": "OPD बिल {number} जारी हुआ।",
+    "printBill": "बिल प्रिंट करें",
+    "printBillFor": "{name} का बिल प्रिंट करें",
+    "noBillToPrint": "इस विज़िट का कोई जारी बिल अभी नहीं है।"
   },
   "patients": {
     "title": "मरीज़",

@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import type { CollectPayment, QueueBoardEntry } from "@/types/api";
 
 import { formatMoney, isPositive } from "@/features/billing/money";
+import { PrintBillButton } from "@/features/billing/print/print-visit-bill";
 import { useCollect } from "@/features/billing/use-collect";
 
 // The dialog carries the QR encoder. Loaded on the first "Get payment" tap,
@@ -78,13 +79,20 @@ export function CollectStrip({
     const paid = justCollected?.amount ?? entry.amount_paid;
     if (!isPositive(paid ?? null)) return null;
     return (
-      <p
-        className={cn("text-success flex items-center gap-1.5 text-sm font-medium", className)}
-        data-testid="paid-chip"
-      >
-        <CircleCheck aria-hidden className="size-4" />
-        {t("paidAmount", { amount: formatMoney(paid) })}
-      </p>
+      <div className={cn("flex flex-wrap items-center gap-3", className)}>
+        <p
+          className="text-success flex items-center gap-1.5 text-sm font-medium"
+          data-testid="paid-chip"
+        >
+          <CircleCheck aria-hidden className="size-4" />
+          {t("paidAmount", { amount: formatMoney(paid) })}
+        </p>
+        <PrintBillButton
+          encounterId={entry.encounter_id}
+          invoiceIds={justCollected?.receipts.map((receipt) => receipt.invoice_id)}
+          patientName={entry.patient_name ?? undefined}
+        />
+      </div>
     );
   }
 

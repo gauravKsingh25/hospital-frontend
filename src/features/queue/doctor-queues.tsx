@@ -36,6 +36,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SendToAdmissionDialog } from "@/features/admissions/send-to-admission-dialog";
 import { CollectStrip } from "@/features/billing/collect-strip";
+import { PrintBillButton } from "@/features/billing/print/print-visit-bill";
 import { formatMoney, isPositive } from "@/features/billing/money";
 import { useTodaysAdmissionRequests } from "@/features/admissions/use-admission-requests";
 import { PriorityTags } from "@/features/queue/priority-tags";
@@ -702,13 +703,23 @@ function MoneyTag({ entry }: { entry: QueueBoardEntry }) {
     );
   }
   if (isPositive(entry.amount_paid ?? null)) {
+    // Paid at the desk: the bill is already issued, so it can be printed from
+    // the row at any time — the patient who comes back for a copy, or the one
+    // who left before the toast's "Print bill" was pressed.
     return (
-      <span
-        className="bg-success/10 text-success tabular flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold whitespace-nowrap"
-        data-testid="paid-chip"
-      >
-        <CircleCheck aria-hidden className="size-3.5" />
-        {tBilling("paidAmount", { amount: formatMoney(entry.amount_paid) })}
+      <span className="flex shrink-0 items-center gap-1">
+        <span
+          className="bg-success/10 text-success tabular flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold whitespace-nowrap"
+          data-testid="paid-chip"
+        >
+          <CircleCheck aria-hidden className="size-3.5" />
+          {tBilling("paidAmount", { amount: formatMoney(entry.amount_paid) })}
+        </span>
+        <PrintBillButton
+          compact
+          encounterId={entry.encounter_id}
+          patientName={entry.patient_name ?? undefined}
+        />
       </span>
     );
   }

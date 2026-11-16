@@ -540,7 +540,10 @@
     "confirmReceived": "Received {amount}",
     "stayNote": "This patient is admitted. The IPD bill is made by the accounts office.",
     "reissuePreAdmission": "Issue OPD bill",
-    "preAdmissionIssued": "OPD bill {number} issued."
+    "preAdmissionIssued": "OPD bill {number} issued.",
+    "printBill": "Print bill",
+    "printBillFor": "Print bill for {name}",
+    "noBillToPrint": "No issued bill for this visit yet."
   },
   "patients": {
     "title": "Patients",

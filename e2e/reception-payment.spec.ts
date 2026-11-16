@@ -63,3 +63,25 @@ test("cash takes two taps on Paid — the first only arms it", async ({ page }) 
   await paid.click();
   await expect(row.getByTestId("paid-chip")).toContainText("500");
 });
+
+test("once paid, reception prints the bill from the row", async ({ page }) => {
+  /**
+   * Collecting at the desk issues the invoice, so the bill a patient expects
+   * to be handed exists the moment the money is in. The row offers it beside
+   * "Paid" for as long as the patient is on the board, and it prints the same
+   * A4 bill the accounts screen does — in a hidden frame, without leaving.
+   */
+  const name = await registerAndQueue(page);
+  await signIn(page, ACCOUNTS.reception);
+  const row = await rowFor(page, name);
+
+  const paid = row.getByTestId("mark-paid");
+  await paid.click();
+  await paid.click();
+  await expect(row.getByTestId("paid-chip")).toContainText("500");
+
+  await row.getByTestId("print-visit-bill").first().click();
+  const bill = page.frameLocator('[data-testid="print-frame"]').last().getByTestId("printed-bill");
+  await expect(bill).toContainText(name, { timeout: 30_000 });
+  await expect(bill).toContainText("500");
+});
