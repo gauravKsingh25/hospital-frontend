@@ -42,3 +42,22 @@ export function parsePeriod(raw: string | readonly string[] | null | undefined):
 export function periodDays(period: Period): number {
   return period === "today" ? 1 : Number(period);
 }
+
+/**
+ * The tabs the page is split into, in the order they are shown.
+ *
+ * Kept here for the same reason as the periods: `reports/page.tsx` reads the
+ * `tab` parameter during a server render, so the first paint already shows the
+ * tab a shared link asked for. Which tabs a caller actually *gets* depends on
+ * the sections their permissions returned; that is decided in the dashboard,
+ * and an unavailable tab there falls back to the overview.
+ */
+export const TABS = ["overview", "money", "outpatients", "inpatients", "quality"] as const;
+
+export type Tab = (typeof TABS)[number];
+
+/** The `tab` search parameter as one of the tabs, or the overview. */
+export function parseTab(raw: string | readonly string[] | null | undefined): Tab {
+  const value = typeof raw === "string" ? raw : raw?.[0];
+  return TABS.find((tab) => tab === value) ?? "overview";
+}

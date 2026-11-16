@@ -30,20 +30,22 @@ export type BarRow = {
   display: string;
   /** A second line under the label: average wait, bed counts, whatever qualifies it. */
   detail?: string;
-  tone?: "default" | "warn" | "bad";
+  tone?: "default" | "warn" | "bad" | "muted";
 };
 
 const TONES = {
   default: "bg-primary/70",
   warn: "bg-caution",
   bad: "bg-destructive/80",
+  muted: "bg-muted-foreground/40",
 } as const;
 
 export function BarList({ rows, testId }: { rows: BarRow[]; testId?: string }) {
   const largest = rows.reduce((max, row) => Math.max(max, row.value), 0);
 
   return (
-    <ul className="bg-card shadow-panel space-y-2.5 rounded-xl border p-4" data-testid={testId}>{/* restyle: inline — a list styled as a panel */}
+    // A plain list: it always sits inside a report card, which draws the box.
+    <ul className="space-y-3" data-testid={testId}>
       {rows.map((row) => (
         <li key={row.key} data-testid="bar-row" data-label={row.label}>
           <div className="flex items-baseline justify-between gap-3">

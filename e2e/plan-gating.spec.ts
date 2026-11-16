@@ -54,9 +54,9 @@ test("reports on Standard show today, with no period to pick", async ({ page }) 
 
   await expect(page.getByTestId("today-only")).toBeVisible();
   await expect(page.getByTestId("period-today")).toHaveCount(0);
-  // No wards in the plan, so no panels of zeroes about them.
-  await expect(page.getByRole("heading", { name: "Beds", exact: true })).toHaveCount(0);
-  await expect(page.getByRole("heading", { name: "Inpatients", exact: true })).toHaveCount(0);
+  // No wards in the plan, so no tab of zeroes about them.
+  await expect(page.getByTestId("tab-inpatients")).toHaveCount(0);
+  await page.getByTestId("tab-money").click();
   await expect(page.getByRole("heading", { name: "Money", exact: true })).toBeVisible();
 });
 

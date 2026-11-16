@@ -40,23 +40,43 @@ function section(page: Page, name: string) {
   return page.locator(`[data-section="${name}"]`);
 }
 
+type TabName = "overview" | "money" | "outpatients" | "inpatients" | "quality";
+
+/**
+ * The page is split into tabs, and only the open tab is rendered — so a
+ * section that is not on screen is not in the DOM either. Tabs are offered
+ * only when the caller's permissions returned something for them.
+ */
+function tab(page: Page, name: TabName) {
+  return page.getByTestId(`tab-${name}`);
+}
+
+async function openTab(page: Page, name: TabName): Promise<void> {
+  await tab(page, name).click();
+  await expect(tab(page, name)).toHaveAttribute("aria-selected", "true");
+}
+
 test.describe("who sees which numbers", () => {
   test("a nurse gets operations and is shown no money at all", async ({ page }) => {
     await openReports(page, ACCOUNTS.nurse);
 
     await expect(section(page, SECTIONS.today)).toBeVisible();
-    await expect(section(page, SECTIONS.occupancy)).toBeVisible();
-    await expect(section(page, SECTIONS.footfall)).toBeVisible();
-
     // The reason the permission is split three ways rather than one.
-    await expect(section(page, SECTIONS.revenue)).toHaveCount(0);
-    await expect(section(page, SECTIONS.inpatient)).toHaveCount(0);
+    await expect(tab(page, "money")).toHaveCount(0);
+
+    await openTab(page, "outpatients");
+    await expect(section(page, SECTIONS.footfall)).toBeVisible();
     await expect(section(page, SECTIONS.followUp)).toHaveCount(0);
+
+    await openTab(page, "inpatients");
+    await expect(section(page, SECTIONS.occupancy)).toBeVisible();
+    await expect(section(page, SECTIONS.inpatient)).toHaveCount(0);
   });
 
   test("a cashier gets money and no clinical outcomes", async ({ page }) => {
     await openReports(page, ACCOUNTS.cashier);
 
+    await openTab(page, "money");
     await expect(section(page, SECTIONS.revenue)).toBeVisible();
     // Earned, collected and outstanding are three separate tiles. They are
     // never summed, and the screen never offers a total.
@@ -64,24 +84,34 @@ test.describe("who sees which numbers", () => {
     await expect(page.getByTestId("stat-collected")).toBeVisible();
     await expect(page.getByTestId("stat-outstanding")).toBeVisible();
 
+    await openTab(page, "inpatients");
     await expect(section(page, SECTIONS.inpatient)).toHaveCount(0);
+    await openTab(page, "outpatients");
     await expect(section(page, SECTIONS.followUp)).toHaveCount(0);
   });
 
   test("a doctor gets clinical outcomes and no money", async ({ page }) => {
     await openReports(page, ACCOUNTS.doctor);
 
+    await expect(tab(page, "money")).toHaveCount(0);
+    await openTab(page, "inpatients");
     await expect(section(page, SECTIONS.inpatient)).toBeVisible();
+    await openTab(page, "outpatients");
     await expect(section(page, SECTIONS.followUp)).toBeVisible();
-    await expect(section(page, SECTIONS.revenue)).toHaveCount(0);
   });
 
   test("an administrator gets every section", async ({ page }) => {
     await openReports(page, ACCOUNTS.admin);
 
-    for (const name of Object.values(SECTIONS)) {
-      await expect(section(page, name)).toBeVisible();
-    }
+    await expect(section(page, SECTIONS.today)).toBeVisible();
+    await openTab(page, "money");
+    await expect(section(page, SECTIONS.revenue)).toBeVisible();
+    await openTab(page, "outpatients");
+    await expect(section(page, SECTIONS.footfall)).toBeVisible();
+    await expect(section(page, SECTIONS.followUp)).toBeVisible();
+    await openTab(page, "inpatients");
+    await expect(section(page, SECTIONS.occupancy)).toBeVisible();
+    await expect(section(page, SECTIONS.inpatient)).toBeVisible();
   });
 });
 
@@ -106,10 +136,9 @@ test.describe("the period filter", () => {
     await openReports(page, ACCOUNTS.admin);
     await expect(page.getByRole("group", { name: "Period" })).toHaveCount(1);
 
-    const sections = page.getByTestId("report-section");
-    const before = await sections.first().boundingBox();
+    const tabs = await page.getByRole("tablist").boundingBox();
     const filter = await page.getByRole("group", { name: "Period" }).boundingBox();
-    expect(filter?.y ?? Infinity).toBeLessThan(before?.y ?? 0);
+    expect(filter?.y ?? Infinity).toBeLessThan(tabs?.y ?? 0);
   });
 
   test("a wider period refetches, and is kept in the address", async ({ page }) => {
@@ -131,6 +160,17 @@ test.describe("the period filter", () => {
     });
   });
 
+  test("the open tab is kept in the address too", async ({ page }) => {
+    await openReports(page, ACCOUNTS.admin);
+    await openTab(page, "inpatients");
+    await expect(page).toHaveURL(/[?&]tab=inpatients(&|$)/);
+
+    await page.reload();
+    await expect(tab(page, "inpatients")).toHaveAttribute("aria-selected", "true", {
+      timeout: 45_000,
+    });
+  });
+
   test("a nonsense period in the address opens today rather than an error", async ({ page }) => {
     await signIn(page, ACCOUNTS.admin);
     await page.goto("/reports?period=365");
@@ -141,16 +181,14 @@ test.describe("the period filter", () => {
 });
 
 test.describe("the money", () => {
-  test("comes first, for someone allowed to see it", async ({ page }) => {
+  test("is the first tab after the overview, for someone allowed to see it", async ({ page }) => {
     await openReports(page, ACCOUNTS.admin);
-    await expect(page.getByTestId("report-section").first()).toHaveAttribute(
-      "data-section",
-      SECTIONS.revenue,
-    );
+    await expect(page.getByRole("tab").nth(1)).toHaveAttribute("data-testid", "tab-money");
   });
 
   test("is four plain numbers, with what was given up broken down", async ({ page }) => {
     await openReports(page, ACCOUNTS.cashier);
+    await openTab(page, "money");
 
     await expect(page.getByTestId("stat-earned")).toContainText("Billed");
     await expect(page.getByTestId("stat-collected")).toContainText("Received");
@@ -166,10 +204,7 @@ test.describe("the money", () => {
 
   test("a role without it starts with patients instead", async ({ page }) => {
     await openReports(page, ACCOUNTS.nurse);
-    await expect(page.getByTestId("report-section").first()).toHaveAttribute(
-      "data-section",
-      SECTIONS.footfall,
-    );
+    await expect(page.getByRole("tab").nth(1)).toHaveAttribute("data-testid", "tab-outpatients");
   });
 });
 
@@ -193,13 +228,15 @@ test.describe("the dashboard", () => {
     await expect(waiting).not.toHaveText("0");
 
     // And in today's totals, not only in the live strip.
+    await openTab(page, "outpatients");
     await expect(page.getByTestId("stat-visits").locator("dd")).not.toHaveText("0");
   });
 
   test("draws the trend over a period, and not for a single day", async ({ page }) => {
     // One bar is not a trend, so Today has no chart.
     await openReports(page, ACCOUNTS.admin);
-    await expect(page.getByTestId("stat-visits")).toBeVisible();
+    await expect(tab(page, "overview")).toHaveAttribute("aria-selected", "true");
+    await expect(page.getByRole("heading", { name: "Needs attention" })).toBeVisible();
     await expect(page.locator(".recharts-wrapper")).toHaveCount(0);
 
     // The chart is behind `next/dynamic`, which nothing at build time can
@@ -208,18 +245,18 @@ test.describe("the dashboard", () => {
     await expect(page.locator(".recharts-wrapper")).toBeVisible({ timeout: 45_000 });
   });
 
-  test("folds the ward list away until it is asked for", async ({ page }) => {
+  test("lists the fullest wards on their own tab, and the rest on request", async ({ page }) => {
     /**
-     * Every ward used to be listed, always — dozens of rows pushing the money
-     * section off the bottom of the page. The headline numbers stay; the list
-     * opens on request.
+     * The ward list used to be folded away entirely, because dozens of rows
+     * pushed the money off the bottom of one long page. On its own tab it no
+     * longer competes with anything, so the fullest eight show straight away
+     * and a longer list opens on request.
      */
     await openReports(page, ACCOUNTS.admin);
+    await openTab(page, "inpatients");
     const wards = page.getByTestId("occupancy-by-ward");
-    await expect(wards).toBeHidden();
-
-    await page.getByRole("button", { name: /Show all \d+ wards?/ }).click();
     await expect(wards).toBeVisible();
+    expect(await wards.getByTestId("bar-row").count()).toBeLessThanOrEqual(8);
   });
 
   test("is reachable from the sidebar by a role that holds the permission", async ({ page }) => {

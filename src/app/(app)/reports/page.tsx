@@ -5,7 +5,7 @@ import { ReportsDashboard } from "@/features/reports/dashboard";
 // From `windows.ts`, not from the client component that also uses it — a
 // constant re-exported through a `"use client"` module arrives here as a
 // client-reference stub, not a number.
-import { parsePeriod, periodDays } from "@/features/reports/windows";
+import { parsePeriod, parseTab, periodDays } from "@/features/reports/windows";
 import { getCurrentUser, serverFetch } from "@/lib/api/server";
 import { hasFeature } from "@/lib/entitlements";
 import { can } from "@/lib/permissions";
@@ -33,16 +33,17 @@ export async function generateMetadata() {
 export default async function ReportsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ period?: string | string[] }>;
+  searchParams: Promise<{ period?: string | string[]; tab?: string | string[] }>;
 }) {
   const user = await getCurrentUser();
 
   if (!can(user, "report:operational")) return <NoPermission />;
 
+  const params = await searchParams;
   // A plan without period reports sees today, whatever the address asks for:
   // the API refuses a longer window, and an error page is no way to say so.
   const fullReports = hasFeature(user, "reports_full");
-  const period = fullReports ? parsePeriod((await searchParams).period) : "today";
+  const period = fullReports ? parsePeriod(params.period) : "today";
   const dashboard = await serverFetch<Dashboard>(
     `/reports/dashboard?trailing_days=${periodDays(period)}`,
   );
@@ -55,6 +56,7 @@ export default async function ReportsPage({
       key={period}
       initial={dashboard}
       initialPeriod={period}
+      initialTab={parseTab(params.tab)}
       todayOnly={!fullReports}
     />
   );
