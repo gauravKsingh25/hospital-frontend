@@ -28,7 +28,11 @@ COPY . .
 # The generated API types are committed (see scripts/codegen.mjs), so the
 # build needs no Python and no running backend. `npm run codegen:check` is a
 # CI step against the backend, not part of the image build.
-RUN npm run build
+#
+# `public/` is created if absent: the app ships no static files today, git
+# does not keep an empty folder, and the runtime stage copies it — so a clean
+# clone (CI, a deploy) would otherwise fail on "/app/public: not found".
+RUN mkdir -p public && npm run build
 
 # --- runtime ---------------------------------------------------------------
 FROM node:22-alpine AS runtime

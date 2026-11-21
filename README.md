@@ -14,6 +14,18 @@ npm run dev               # http://localhost:3000 — needs the API on API_BASE_
 `http://127.0.0.1:8000/api/v1`). It is server-side only: the browser never
 talks to FastAPI directly, only to this app's `/bff` proxy.
 
+### In Docker
+
+```bash
+docker compose up -d --build   # http://localhost:3000 — the production image
+```
+
+The image (`Dockerfile`, Next.js `standalone`) is what a deploy ships. It
+reads `API_BASE_URL` at runtime, not build time, so one image serves every
+environment. Compose points it at the host's port 8000
+(`host.docker.internal`); for another API set `DOCKER_API_BASE_URL`, and
+`WEB_PORT` to publish on a different port.
+
 ## Commands
 
 | Command | What it does |
