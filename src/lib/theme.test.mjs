@@ -4,7 +4,7 @@
 // that every text colour stays readable on the ground it sits on: a restyle
 // must never trade a misread dose for a softer grey.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
@@ -86,9 +86,18 @@ test("every text pair is at least AA", () => {
 });
 
 test("fonts: Instrument Sans + Devanagari stack, DM Mono for numbers", () => {
-  assert.match(layout, /Instrument_Sans/);
-  assert.match(layout, /DM_Mono/);
-  assert.match(layout, /Noto_Sans_Devanagari/);
+  // Self-hosted from the repo: a build must never depend on Google Fonts
+  // answering (its `/l/font?kit=` addresses break Turbopack with a 500).
+  assert.doesNotMatch(layout, /from\s+["']next\/font\/google["']/);
+  for (const file of [
+    "InstrumentSans.woff2",
+    "DMMono-Regular.woff2",
+    "DMMono-Medium.woff2",
+    "NotoSansDevanagari.woff2",
+  ]) {
+    assert.ok(layout.includes(`./fonts/${file}`), `layout loads ${file}`);
+    assert.ok(existsSync(new URL(`../app/fonts/${file}`, import.meta.url)), `${file} is committed`);
+  }
   assert.doesNotMatch(layout, /\bInter\b/);
   assert.match(css, /--font-sans:\s*var\(--font-latin\),\s*var\(--font-devanagari\)/);
   assert.match(css, /--font-mono:\s*var\(--font-dm-mono\)/);
@@ -103,6 +112,10 @@ test("mono numbers keep Hindi in Noto and have the rupee sign", () => {
   // `.tabular` holds translated words too ("बकाया", a doctor's name), so the
   // mono stack must fall through to Devanagari, not to a system font.
   assert.match(css, /--font-mono:\s*var\(--font-dm-mono\),\s*var\(--font-devanagari\)/);
-  // ₹ (U+20B9) is in DM Mono's latin-ext subset, not latin.
-  assert.match(layout, /DM_Mono\(\{\s*subsets:\s*\["latin",\s*"latin-ext"\]/);
+  // ₹ (U+20B9) is not in DM Mono at all, so it comes from that same
+  // Devanagari fallback — `scripts/build-fonts.py` keeps U+20B9 in its subset.
+  assert.match(
+    readFileSync(new URL("../../scripts/build-fonts.py", import.meta.url), "utf8"),
+    /DEVANAGARI = \([^)]*U\+20B9/,
+  );
 });

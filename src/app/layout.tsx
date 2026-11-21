@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
-import { DM_Mono, Instrument_Sans, Noto_Sans_Devanagari } from "next/font/google";
+import localFont from "next/font/local";
 
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,12 +9,18 @@ import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 /**
- * Self-hosted, subset to the scripts in use.
+ * Self-hosted from files in this repo (`src/app/fonts/`), subset to the
+ * scripts in use.
  *
- * `next/font` downloads and serves the font from this origin at build time,
- * which matters for three reasons: the CSP can keep `font-src 'self'`, no
- * request leaves for a third party carrying a hospital's referrer, and a
- * hospital network that blocks Google still renders correctly.
+ * Served from this origin, which matters for three reasons: the CSP can keep
+ * `font-src 'self'`, no request leaves for a third party carrying a hospital's
+ * referrer, and a hospital network that blocks Google still renders correctly.
+ *
+ * The files are committed rather than fetched by `next/font/google` at build
+ * time: Google intermittently answers with a `fonts.gstatic.com/l/font?kit=…`
+ * address that Turbopack cannot resolve, and the whole app then fails with a
+ * 500 — a deploy build included. `scripts/build-fonts.py` rebuilds them from
+ * the google/fonts sources (SIL Open Font License; licences in the folder).
  *
  * Instrument Sans for text and DM Mono for numbers (Frost and slate). Instrument
  * Sans has no Devanagari coverage, so Noto Sans Devanagari is stacked in
@@ -23,23 +29,29 @@ import "./globals.css";
  * those in whatever the browser fell back to. Stacking lets each glyph come
  * from the family that actually has it, in the same line of text.
  */
-const instrument = Instrument_Sans({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600"],
+const instrument = localFont({
+  // Variable: one file serves 400–600, the weights the UI uses.
+  src: "./fonts/InstrumentSans.woff2",
+  weight: "400 600",
   variable: "--font-latin",
   display: "swap",
 });
 
-// latin-ext carries the rupee sign (U+20B9), which `.tabular` money shows.
-const mono = DM_Mono({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500"],
+// DM Mono has no rupee sign (U+20B9) upstream — it never did, Google's subset
+// only declared the range — so ₹ falls through the mono stack to Noto Sans
+// Devanagari, whose file carries it.
+const mono = localFont({
+  src: [
+    { path: "./fonts/DMMono-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/DMMono-Medium.woff2", weight: "500", style: "normal" },
+  ],
   variable: "--font-dm-mono",
   display: "swap",
 });
 
-const devanagari = Noto_Sans_Devanagari({
-  subsets: ["devanagari"],
+const devanagari = localFont({
+  src: "./fonts/NotoSansDevanagari.woff2",
+  weight: "400 600",
   variable: "--font-devanagari",
   display: "swap",
 });
